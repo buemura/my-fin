@@ -28,7 +28,7 @@ export const AccountsTable = () => {
   ];
 
   return (
-    <div className="flex flex-col border border-neutral-800 rounded-2xl">
+    <div className="flex flex-col border-2 border-neutral-800 rounded-2xl bg-neutral-900">
       <div className="-m-1.5 overflow-x-auto">
         <div className="p-1.5 min-w-full inline-block align-middle">
           <div className="overflow-hidden">
@@ -37,25 +37,25 @@ export const AccountsTable = () => {
                 <tr>
                   <th
                     scope="col"
-                    className="px-6 py-3 text-start font-medium text-neutral-400"
+                    className="px-6 py-3 text-start text-lg font-medium text-neutral-400"
                   >
                     Name
                   </th>
                   <th
                     scope="col"
-                    className="px-6 py-3 text-start font-medium text-neutral-400"
+                    className="px-6 py-3 text-start text-lg font-medium text-neutral-400"
                   >
                     Amount
                   </th>
                   <th
                     scope="col"
-                    className="px-6 py-3 text-start font-medium text-neutral-400"
+                    className="px-6 py-3 text-start text-lg font-medium text-neutral-400"
                   >
                     Last Updated
                   </th>
                   <th
                     scope="col"
-                    className="px-6 py-3 text-start font-medium text-neutral-400"
+                    className="px-6 py-3 text-start text-lg font-medium text-neutral-400"
                   >
                     Action
                   </th>
@@ -80,7 +80,7 @@ const AccountRow = (account: AccountType) => {
   return (
     <tr
       key={account.id}
-      className="hover:bg-neutral-900 dark:hover:bg-gray-700"
+      className="hover:bg-neutral-800 dark:hover:bg-gray-700"
     >
       <td className="px-6 py-4 whitespace-nowrap font-medium text-neutral-100">
         {account.name}
