@@ -1,3 +1,3 @@
 export default function Investiments() {
-  return <div>Investiments</div>;
+  return <div className="w-screen bg-neutral-950 p-10">Investiments</div>;
 }
