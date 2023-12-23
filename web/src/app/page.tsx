@@ -1,3 +1,3 @@
 export default function Home() {
-  return <></>;
+  return <div className="w-screen bg-neutral-950"></div>;
 }
