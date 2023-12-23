@@ -1,5 +1,10 @@
+"use client";
+import { useState } from "react";
+
+import { ConfirmationModal } from "@/components/ui/modal/confirmation-modal";
 import { AccountListType, AccountType } from "@/types/account";
 import { PaginationMetadata } from "@/types/pagination-metadata";
+import { formatBRL } from "@/utils/currency";
 
 const tableHeader = ["Name", "Amount", "Last Updated", "Action"];
 
@@ -23,7 +28,7 @@ export const AccountsTable = ({ data, metadata }: AccountListType) => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-neutral-800">
-                {data?.map((account) => (
+                {data.accounts?.map((account) => (
                   <AccountRow {...account} />
                 ))}
               </tbody>
@@ -38,41 +43,76 @@ export const AccountsTable = ({ data, metadata }: AccountListType) => {
 };
 
 const AccountRow = (account: AccountType) => {
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const handleDeleteAccount = () => {
+    console.log("Delete account action on id", account.id);
+  };
+
   return (
-    <tr
-      key={account.id}
-      className="hover:bg-neutral-800 dark:hover:bg-gray-700"
-    >
-      <td className="px-6 py-4 whitespace-nowrap font-medium text-neutral-100">
-        {account.name}
-      </td>
-      <td className="px-6 py-4 whitespace-nowrap text-neutral-100">
-        R$ {account.amount}
-      </td>
-      <td className="px-6 py-4 whitespace-nowrap text-neutral-100">
-        {account.updatedAt.toLocaleDateString("pt-BR")}
-      </td>
-      <td className="px-6 py-4 whitespace-nowrap font-medium flex gap-x-2">
-        <button
-          type="button"
-          className="font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none"
-        >
-          Edit
-        </button>
-        <button
-          type="button"
-          className="font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none"
-        >
-          Delete
-        </button>
-      </td>
-    </tr>
+    <>
+      <tr
+        key={account.id}
+        className="hover:bg-neutral-800 dark:hover:bg-gray-700"
+      >
+        <td className="px-6 py-4 whitespace-nowrap font-medium text-neutral-100">
+          {account.name}
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap text-neutral-100">
+          {formatBRL(account.amount)}
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap text-neutral-100">
+          {account.updatedAt.toLocaleDateString("pt-BR")}
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap font-medium flex gap-x-2">
+          <button
+            type="button"
+            className="font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none"
+          >
+            Edit
+          </button>
+          <button
+            type="button"
+            className="font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none"
+            onClick={() => setShowDeleteModal(!showDeleteModal)}
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+
+      <ConfirmationModal
+        modalTitle="Delete Account"
+        modalText={`Are you sure you want to delete ${account.name} account ?`}
+        showModal={showDeleteModal}
+        setShowModal={setShowDeleteModal}
+        confirmAction={handleDeleteAccount}
+      />
+    </>
   );
 };
 
 const Pagination = (metadata: PaginationMetadata) => {
-  const pagesArray = (length: number) => {
-    return Array.from({ length }, (_, index) => index + 1);
+  const renderPages = (metadata: PaginationMetadata) => {
+    const pages = Array.from(
+      { length: metadata.totalPages },
+      (_, index) => index + 1
+    );
+
+    return (
+      <>
+        {pages?.map((page) => (
+          <button
+            type="button"
+            className="min-w-[40px] flex justify-center items-center text-neutral-100 hover:bg-neutral-800 py-2.5 text-sm rounded-full disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10"
+            aria-current="page"
+            disabled={metadata.page === page}
+          >
+            {page}
+          </button>
+        ))}
+      </>
+    );
   };
 
   return (
@@ -86,15 +126,7 @@ const Pagination = (metadata: PaginationMetadata) => {
           <span className="sr-only">Previous</span>
         </button>
 
-        {pagesArray(metadata.totalPages).map((page) => (
-          <button
-            type="button"
-            className="min-w-[40px] flex justify-center items-center text-neutral-100 hover:bg-neutral-800 py-2.5 text-sm rounded-full disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10"
-            aria-current="page"
-          >
-            {page}
-          </button>
-        ))}
+        {renderPages(metadata)}
 
         <button
           type="button"

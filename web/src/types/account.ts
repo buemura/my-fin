@@ -7,7 +7,12 @@ export type AccountType = {
   updatedAt: Date;
 };
 
+export type Accounts = {
+  accounts: AccountType[];
+  totalAmount: number;
+};
+
 export type AccountListType = {
-  data: AccountType[];
+  data: Accounts;
   metadata: PaginationMetadata;
 };
