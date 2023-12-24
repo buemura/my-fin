@@ -19,6 +19,7 @@ export const AccountsTable = ({ data, metadata }: AccountListType) => {
                 <tr>
                   {tableHeader?.map((h) => (
                     <th
+                      key={h}
                       scope="col"
                       className="px-6 py-3 text-start text-lg font-medium text-neutral-400"
                     >
@@ -29,7 +30,7 @@ export const AccountsTable = ({ data, metadata }: AccountListType) => {
               </thead>
               <tbody className="divide-y divide-neutral-800">
                 {data.accounts?.map((account) => (
-                  <AccountRow {...account} />
+                  <AccountRow key={account.id} {...account} />
                 ))}
               </tbody>
             </table>
@@ -51,10 +52,7 @@ const AccountRow = (account: AccountType) => {
 
   return (
     <>
-      <tr
-        key={account.id}
-        className="hover:bg-neutral-800 dark:hover:bg-gray-700"
-      >
+      <tr className="hover:bg-neutral-800 dark:hover:bg-gray-700">
         <td className="px-6 py-4 whitespace-nowrap font-medium text-neutral-100">
           {account.name}
         </td>
@@ -82,6 +80,7 @@ const AccountRow = (account: AccountType) => {
       </tr>
 
       <ConfirmationModal
+        key={account.id}
         modalTitle="Delete Account"
         modalText={`Are you sure you want to delete ${account.name} account ?`}
         showModal={showDeleteModal}
@@ -103,6 +102,7 @@ const Pagination = (metadata: PaginationMetadata) => {
       <>
         {pages?.map((page) => (
           <button
+            key={page}
             type="button"
             className="min-w-[40px] flex justify-center items-center text-neutral-100 hover:bg-neutral-800 py-2.5 text-sm rounded-full disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:bg-white/10"
             aria-current="page"

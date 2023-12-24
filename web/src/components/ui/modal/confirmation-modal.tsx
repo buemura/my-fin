@@ -6,8 +6,8 @@ interface ConfirmationModalProps {
   modalTitle: string;
   modalText: string;
   showModal: boolean;
-  setShowModal: Dispatch<SetStateAction<boolean>>;
-  confirmAction: Function;
+  setShowModal: (input: boolean) => void;
+  confirmAction: () => void;
 }
 
 export function ConfirmationModal({

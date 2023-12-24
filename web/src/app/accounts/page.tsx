@@ -33,8 +33,8 @@ export default function Accounts() {
     metadata: {
       page: 1,
       items: 3,
-      totalPages: 5,
-      totalItems: 100,
+      totalPages: 1,
+      totalItems: 3,
     },
   };
 
