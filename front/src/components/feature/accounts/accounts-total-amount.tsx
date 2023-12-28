@@ -1,4 +1,4 @@
-import { formatBRL } from "../../../utils/currency";
+import { formatBRL } from "@/utils/currency";
 
 interface TotalAmountProps {
   total: number;

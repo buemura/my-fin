@@ -1,4 +1,4 @@
-import { PaginationMetadata } from "../../../types/pagination-metadata";
+import { PaginationMetadata } from "@/types/pagination-metadata";
 
 export const Pagination = (metadata: PaginationMetadata) => {
   return (

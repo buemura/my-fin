@@ -1,4 +1,4 @@
-import { Sidebar } from "../components/side-bar";
+import { Sidebar } from "@/components/side-bar";
 
 export function Expenses() {
   return (

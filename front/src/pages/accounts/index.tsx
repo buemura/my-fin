@@ -2,9 +2,9 @@ import {
   AccountsTable,
   MonthDifference,
   TotalAmount,
-} from "../../components/feature/accounts";
-import { Sidebar } from "../../components/side-bar";
-import { AccountListType } from "../../types/account";
+} from "@/components/feature/accounts";
+import { Sidebar } from "@/components/side-bar";
+import { AccountListType } from "@/types/account";
 
 export function Accounts() {
   const accountList: AccountListType = {

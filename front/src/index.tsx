@@ -10,8 +10,8 @@ import {
   Investiments,
   Settings,
   Transactions,
-} from "./pages";
-import "./styles/index.css";
+} from "@/pages";
+import "@/styles/index.css";
 
 const root = document.getElementById("root");
 

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { AccountType } from "../types/account";
+import { AccountType } from "@/types/account";
 
 export async function getAccountById(id: string): Promise<AccountType | null> {
   try {

@@ -1,4 +1,4 @@
-import { AccountListType } from "../../../types/account";
+import { AccountListType } from "@/types/account";
 import { Pagination } from "./accounts-table-pagination";
 import { AccountRow } from "./accounts-table-row";
 

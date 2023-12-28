@@ -1,8 +1,8 @@
 import { Show, createSignal } from "solid-js";
 
-import { AccountType } from "../../../types/account";
-import { formatBRL } from "../../../utils/currency";
-import { ConfirmationModal } from "../../ui/modal/confirmation-modal";
+import { ConfirmationModal } from "@/components/ui/modal/confirmation-modal";
+import { AccountType } from "@/types/account";
+import { formatBRL } from "@/utils/currency";
 
 export const AccountRow = (account: AccountType) => {
   const [showDeleteModal, setShowDeleteModal] = createSignal(false);
