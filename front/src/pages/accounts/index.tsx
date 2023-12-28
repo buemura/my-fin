@@ -2,10 +2,11 @@ import {
   AccountsTable,
   MonthDifference,
   TotalAmount,
-} from "@/components/feature/accounts";
-import { AccountListType } from "@/types/account";
+} from "../../components/feature/accounts";
+import { Sidebar } from "../../components/side-bar";
+import { AccountListType } from "../../types/account";
 
-export default function Accounts() {
+export function Accounts() {
   const accountList: AccountListType = {
     data: {
       accounts: [
@@ -39,14 +40,20 @@ export default function Accounts() {
   };
 
   return (
-    <main className="w-screen bg-neutral-950 p-10 flex flex-col gap-10">
-      <h1 className="text-neutral-100 text-4xl mt-4">Accounts</h1>
-      <div className="flex flex-col gap-10 mt-10 sm:flex-row">
-        <TotalAmount total={accountList.data.totalAmount} />
-        <MonthDifference />
-      </div>
+    <div class="flex">
+      <Sidebar />
+      <main class="h-screen w-screen bg-neutral-950 p-10 flex flex-col gap-10">
+        <h1 class="text-neutral-100 text-4xl mt-4">Accounts</h1>
+        <div class="flex flex-col gap-10 mt-10 sm:flex-row">
+          <TotalAmount total={accountList.data.totalAmount} />
+          <MonthDifference />
+        </div>
 
-      <AccountsTable data={accountList.data} metadata={accountList.metadata} />
-    </main>
+        <AccountsTable
+          data={accountList.data}
+          metadata={accountList.metadata}
+        />
+      </main>
+    </div>
   );
 }

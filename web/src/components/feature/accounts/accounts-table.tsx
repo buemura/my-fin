@@ -5,6 +5,7 @@ import { ConfirmationModal } from "@/components/ui/modal/confirmation-modal";
 import { AccountListType, AccountType } from "@/types/account";
 import { PaginationMetadata } from "@/types/pagination-metadata";
 import { formatBRL } from "@/utils/currency";
+import Link from "next/link";
 
 const tableHeader = ["Name", "Amount", "Last Updated", "Action"];
 
@@ -63,12 +64,12 @@ const AccountRow = (account: AccountType) => {
           {account.updatedAt.toLocaleDateString("pt-BR")}
         </td>
         <td className="px-6 py-4 whitespace-nowrap font-medium flex gap-x-2">
-          <button
-            type="button"
+          <Link
+            href={`/accounts/${account.id}`}
             className="font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none"
           >
             Edit
-          </button>
+          </Link>
           <button
             type="button"
             className="font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none"
