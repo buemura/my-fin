@@ -3,6 +3,7 @@ import { Route, Router } from "@solidjs/router";
 import { render } from "solid-js/web";
 
 import {
+  AccountEdit,
   Accounts,
   Dashboard,
   Expenses,
@@ -20,6 +21,7 @@ render(
       <Route path="/" component={Dashboard} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/accounts" component={Accounts} />
+      <Route path="/accounts/:id/edit" component={AccountEdit} />
       <Route path="/expenses" component={Expenses} />
       <Route path="/investiments" component={Investiments} />
       <Route path="/settings" component={Settings} />

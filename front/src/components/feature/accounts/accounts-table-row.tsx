@@ -25,7 +25,7 @@ export const AccountRow = (account: AccountType) => {
         </td>
         <td class="px-6 py-4 whitespace-nowrap font-medium flex gap-x-2">
           <a
-            href={`/accounts/${account.id}`}
+            href={`/accounts/${account.id}/edit`}
             class="font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none"
           >
             Edit
