@@ -7,7 +7,7 @@ import { FiLogOut, FiSettings } from "solid-icons/fi";
 
 export function Sidebar() {
   return (
-    <div class="flex flex-col items-center h-screen w-max p-1 bg-neutral-900">
+    <div class="flex flex-col items-center min-h-screen w-max p-1 bg-neutral-900">
       <div class="mt-6">
         <h1 class="font-semibold uppercase text-2xl text-neutral-100">
           My Fin

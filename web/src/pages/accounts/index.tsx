@@ -18,7 +18,7 @@ export function Accounts() {
   return (
     <div class="flex">
       <Sidebar />
-      <main class="h-screen w-screen bg-neutral-950 p-10 flex flex-col gap-10">
+      <main class="min-h-screen w-screen bg-neutral-950 p-10 flex flex-col gap-10">
         <h1 class="text-neutral-100 text-4xl mt-4 mb-10">Accounts</h1>
 
         <Show when={accountList.loading}>
