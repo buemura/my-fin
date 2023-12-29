@@ -24,7 +24,7 @@ export function AccountEdit() {
         </Show>
 
         <Show when={account()}>
-          <form class="flex flex-col gap-4 bg-neutral-800 p-6 rounded-md">
+          <form class="flex flex-col gap-4 bg-neutral-900 p-6 rounded-2xl border-2 border-neutral-800">
             <div class="flex flex-col justify-evenly gap-2 sm:flex-row">
               <div class="w-full flex flex-col">
                 <label
@@ -35,11 +35,12 @@ export function AccountEdit() {
                 </label>
                 <input
                   id={`account-${account()?.id}-edit-name`}
-                  class="bg-neutral-900 text-neutral-100 rounded-md p-2 outline-none"
+                  class="border-2 border-neutral-800 bg-neutral-950 text-neutral-100 rounded-md p-2 outline-none"
                   type="text"
                   value={account()?.name}
                 />
               </div>
+
               <div class="w-full flex flex-col">
                 <label
                   for={`account-${account()?.id}-edit-amount`}
@@ -49,7 +50,7 @@ export function AccountEdit() {
                 </label>
                 <input
                   id={`account-${account()?.id}-edit-amount`}
-                  class="bg-neutral-900 text-neutral-100 rounded-md p-2 outline-none"
+                  class="border-2 border-neutral-800 bg-neutral-950 text-neutral-100 rounded-md p-2 outline-none"
                   type="number"
                   value={account()?.amount}
                 />

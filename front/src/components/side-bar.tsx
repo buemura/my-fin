@@ -1,8 +1,9 @@
-import { FaMoneyBill, FaWallet } from "react-icons/fa";
-import { FaArrowRightArrowLeft } from "react-icons/fa6";
-import { IoMdSettings } from "react-icons/io";
-import { LuCandlestickChart } from "react-icons/lu";
-import { MdLogout } from "react-icons/md";
+import { BiRegularCandles, BiRegularWallet } from "solid-icons/bi";
+import {
+  FaRegularMoneyBill1,
+  FaSolidArrowRightArrowLeft,
+} from "solid-icons/fa";
+import { FiLogOut, FiSettings } from "solid-icons/fi";
 
 export function Sidebar() {
   return (
@@ -18,31 +19,31 @@ export function Sidebar() {
         {/* App options */}
         <div class="flex flex-col text-neutral-100">
           <a
-            class="hover:bg-neutral-800 p-1 rounded-sm flex gap-2"
+            class="hover:bg-neutral-800 p-1 rounded-sm flex gap-2 items-center"
             href="/accounts"
           >
-            <FaWallet class="w-4" />
+            <BiRegularWallet />
             <span>Accounts</span>
           </a>
           <a
-            class="hover:bg-neutral-800 p-1 rounded-sm flex gap-2"
+            class="hover:bg-neutral-800 p-1 rounded-sm flex gap-2 items-center"
             href="/expenses"
           >
-            <FaMoneyBill class="w-4" />
+            <FaRegularMoneyBill1 />
             <span>Expenses</span>
           </a>
           <a
-            class="hover:bg-neutral-800 p-1 rounded-sm flex gap-2"
+            class="hover:bg-neutral-800 p-1 rounded-sm flex gap-2 items-center"
             href="/transactions"
           >
-            <FaArrowRightArrowLeft class="w-4" />
+            <FaSolidArrowRightArrowLeft />
             <span>Transactions</span>
           </a>
           <a
-            class="hover:bg-neutral-800 p-1 rounded-sm flex gap-2"
+            class="hover:bg-neutral-800 p-1 rounded-sm flex gap-2 items-center"
             href="/investiments"
           >
-            <LuCandlestickChart class="w-4" />
+            <BiRegularCandles />
             <span>Investiments</span>
           </a>
         </div>
@@ -50,14 +51,17 @@ export function Sidebar() {
         {/* User Section */}
         <div class="flex flex-col text-neutral-100">
           <a
-            class="hover:bg-neutral-800 p-1 rounded-sm flex gap-2"
+            class="hover:bg-neutral-800 p-1 rounded-sm flex gap-2 items-center"
             href="/settings"
           >
-            <IoMdSettings class="w-4" />
+            <FiSettings />
             <span>Settings</span>
           </a>
-          <a class="hover:bg-neutral-800 p-1 rounded-sm flex gap-2" href="/">
-            <MdLogout class="w-4" />
+          <a
+            class="hover:bg-neutral-800 p-1 rounded-sm flex gap-2 items-center"
+            href="/"
+          >
+            <FiLogOut />
             <span>Sign Out</span>
           </a>
         </div>

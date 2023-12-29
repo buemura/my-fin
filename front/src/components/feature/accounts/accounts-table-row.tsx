@@ -1,6 +1,6 @@
 import { Show, createSignal } from "solid-js";
 
-import { ConfirmationModal } from "@/components/ui/modal/confirmation-modal";
+import { ConfirmationModal } from "@/components/ui/modal";
 import { AccountType } from "@/types/account";
 import { formatBRL } from "@/utils/currency";
 
@@ -21,7 +21,7 @@ export const AccountRow = (account: AccountType) => {
           {formatBRL(account.amount)}
         </td>
         <td class="px-6 py-4 whitespace-nowrap text-neutral-100">
-          {account.updatedAt.toLocaleDateString("pt-BR")}
+          {new Date(account.updatedAt).toLocaleDateString("pt-BR")}
         </td>
         <td class="px-6 py-4 whitespace-nowrap font-medium flex gap-x-2">
           <a
