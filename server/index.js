@@ -39,7 +39,9 @@ app.use(cors());
 
 app.get("/accounts", (req, res) => {
   console.log("GET - /accounts");
-  res.send(accountList);
+  setTimeout(() => {
+    res.send(accountList);
+  }, 500);
 });
 
 app.get("/accounts/:id", (req, res) => {
