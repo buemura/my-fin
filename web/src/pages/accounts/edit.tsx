@@ -2,18 +2,16 @@ import { useParams } from "@solidjs/router";
 import { Show, createResource } from "solid-js";
 
 import { getAccountById } from "@/api/accounts";
-import { Sidebar } from "@/components/navigation/side-bar";
+import { Layout } from "@/components/layout";
 
 export function AccountEdit() {
   const { id } = useParams();
   const [account] = createResource(id, getAccountById);
 
   return (
-    <div class="flex">
-      <Sidebar />
-
-      <main class="h-screen w-screen bg-neutral-950 p-10 flex flex-col gap-10">
-        <h1 class="text-neutral-100 text-4xl mt-4">Accounts Edit</h1>
+    <Layout>
+      <main class="bg-neutral-950 px-8 flex flex-col gap-10">
+        <h1 class="text-neutral-100 text-4xl">Accounts Edit</h1>
 
         <Show when={account.loading}>
           <h1 class="text-white">Loading...</h1>
@@ -63,6 +61,6 @@ export function AccountEdit() {
           </form>
         </Show>
       </main>
-    </div>
+    </Layout>
   );
 }

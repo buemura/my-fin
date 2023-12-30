@@ -17,7 +17,7 @@ export function Accounts() {
 
   return (
     <Layout>
-      <main class="w-full bg-neutral-950 p-8 flex flex-col gap-10">
+      <main class="w-full bg-neutral-950 px-8 flex flex-col gap-10">
         <h1 class="text-neutral-100 text-4xl">Accounts</h1>
 
         <Show when={accountList.loading}>
