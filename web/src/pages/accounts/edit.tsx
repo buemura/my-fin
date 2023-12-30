@@ -2,7 +2,7 @@ import { useParams } from "@solidjs/router";
 import { Show, createResource } from "solid-js";
 
 import { getAccountById } from "@/api/accounts";
-import { Sidebar } from "@/components/side-bar";
+import { Sidebar } from "@/components/navigation/side-bar";
 
 export function AccountEdit() {
   const { id } = useParams();
