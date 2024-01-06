@@ -20,7 +20,7 @@ export function Layout(props: { children: JSX.Element }): JSX.Element {
           </div>
         </Show>
 
-        <div class="flex-grow overflow-y-auto pt-16">{props.children}</div>
+        <div class="flex-grow overflow-y-auto pt-20">{props.children}</div>
       </div>
     </div>
   );
