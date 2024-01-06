@@ -15,14 +15,12 @@ export function Layout(props: { children: JSX.Element }): JSX.Element {
 
       <div class="flex flex-grow">
         <Show when={hideSidebar()}>
-          <div class="fixed h-screen flex-none bg-neutral-900 pt-16">
+          <div class="h-screen flex-none bg-neutral-900 pt-16 fixed sm:relative">
             <Sidebar />
           </div>
         </Show>
 
-        <div class="flex-grow overflow-y-auto sm:pl-32 pt-16">
-          {props.children}
-        </div>
+        <div class="flex-grow overflow-y-auto pt-16">{props.children}</div>
       </div>
     </div>
   );
