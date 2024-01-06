@@ -60,6 +60,13 @@ app.get("/accounts/:id", (req, res) => {
 
 app.post("/accounts", (req, res) => {
   console.log("POST - /accounts");
+  const { name, amount } = req.body;
+  accountList.data.accounts.push({
+    id: accountList.data.accounts.length + 1,
+    name,
+    amount,
+    updatedAt: new Date(),
+  });
   res.send(accountList);
 });
 
