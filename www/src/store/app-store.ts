@@ -6,7 +6,7 @@ type SideBarStore = {
 };
 
 export const useSidebarStore = create<SideBarStore>((set) => ({
-  sidebarVisible: true,
+  sidebarVisible: false,
   toggleSidebar: () =>
     set((state: SideBarStore) => ({ sidebarVisible: !state.sidebarVisible })),
 }));

@@ -45,8 +45,9 @@ app.get("/accounts", (req, res) => {
 });
 
 app.get("/accounts/:id", (req, res) => {
-  console.log("GET - /accounts/:id");
   const { id } = req.params;
+  console.log(`GET - /accounts/${id}`);
+
   const account = accountList.data.accounts.find(
     (account) => account.id === id
   );
@@ -67,6 +68,21 @@ app.post("/accounts", (req, res) => {
     amount,
     updatedAt: new Date(),
   });
+  res.send(accountList);
+});
+
+app.delete("/accounts/:id", (req, res) => {
+  const { id } = req.params;
+  console.log(`DELETE - /accounts/${id}`);
+
+  const accountIndex = accountList.data.accounts.findIndex(
+    (acc) => acc.id === id
+  );
+
+  if (accountIndex) {
+    accountList.data.accounts.splice(accountIndex, 1);
+  }
+
   res.send(accountList);
 });
 

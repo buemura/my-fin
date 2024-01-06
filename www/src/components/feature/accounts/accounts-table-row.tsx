@@ -1,16 +1,24 @@
 "use client";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import { deleteAccountById } from "@/api/accounts";
 import { ConfirmationModal } from "@/components/ui/modal";
 import { AccountType } from "@/types/account";
 import { formatBRL } from "@/utils/currency";
-import Link from "next/link";
 
 export const AccountRow = (account: AccountType) => {
+  const router = useRouter();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  const handleDeleteAccount = () => {
-    console.log("Delete account action on id", account.id);
+  const handleDeleteAccount = async () => {
+    const res = await deleteAccountById(account.id);
+    if (!res) {
+      alert("Unable to delete account");
+      router.refresh();
+    }
+    router.refresh();
   };
 
   return (

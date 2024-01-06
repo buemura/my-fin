@@ -42,3 +42,16 @@ export async function createAccount(
     return null;
   }
 }
+
+export async function deleteAccountById(
+  id: string
+): Promise<AccountType | null> {
+  try {
+    const { data } = await axios.delete<AccountType>(
+      `http://localhost:8080/accounts/${id}`
+    );
+    return data;
+  } catch (error) {
+    return null;
+  }
+}
