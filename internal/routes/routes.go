@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"log/slog"
 	"net/http"
 	"time"
 
@@ -10,8 +11,8 @@ import (
 )
 
 type AccountListData struct {
-	Accounts    []account.Account `json:"accounts"`
-	TotalAmount int               `json:"totalAmount"`
+	Accounts    []*account.Account `json:"accounts"`
+	TotalAmount int                `json:"totalAmount"`
 }
 
 type Metadata struct {
@@ -22,22 +23,22 @@ type Metadata struct {
 }
 
 type AccountList struct {
-	Data     AccountListData `json:"data"`
-	Metadata Metadata        `json:"metadata"`
+	Data     *AccountListData `json:"data"`
+	Metadata *Metadata        `json:"metadata"`
 }
 
 func SetupRoutes(e *echo.Echo) {
-	accounts := []account.Account{
+	accounts := []*account.Account{
 		{ID: "7056166d-a2e0-48b5-bd5c-e37385a9b682", Name: "Nubank", Amount: 12000000, UpdatedAt: time.Now()},
 		{ID: "a8f1cd1f-5456-4667-bdbd-787344082a30", Name: "Itau", Amount: 7000000, UpdatedAt: time.Now()},
 		{ID: "457e9c0d-cadc-41fb-887d-c2d74f7ca8b4", Name: "Inter", Amount: 3000000, UpdatedAt: time.Now()},
 	}
 
 	accountList := AccountList{
-		Data: AccountListData{
+		Data: &AccountListData{
 			Accounts: accounts,
 		},
-		Metadata: Metadata{
+		Metadata: &Metadata{
 			Page:       1,
 			Items:      3,
 			TotalPages: 1,
@@ -64,18 +65,41 @@ func SetupRoutes(e *echo.Echo) {
 	})
 
 	e.POST("/api/accounts", func(c echo.Context) error {
-		a := new(account.Account)
+		a := new(account.AccountCreate)
 		if err := c.Bind(a); err != nil {
+			slog.Error(err.Error())
 			return c.String(http.StatusBadRequest, "bad request")
 		}
 
-		accounts = append(accounts, account.Account{
+		accounts = append(accounts, &account.Account{
 			ID:        uuid.NewString(),
 			Name:      a.Name,
 			Amount:    a.Amount,
 			UpdatedAt: time.Now(),
 		})
+		accountList.Data.Accounts = accounts
 
+		return c.JSON(200, accountList)
+	})
+
+	e.PUT("/api/accounts/:id", func(c echo.Context) error {
+		id := c.Param("id")
+
+		a := new(account.AccountCreate)
+		if err := c.Bind(a); err != nil {
+			slog.Error(err.Error())
+			return c.String(http.StatusBadRequest, "bad request")
+		}
+
+		accIndex := 0
+		for i, v := range accounts {
+			if v.ID == id {
+				accIndex = i
+				break
+			}
+		}
+		accounts[accIndex].Name = a.Name
+		accounts[accIndex].Amount = a.Amount
 		return c.JSON(200, accountList)
 	})
 
@@ -93,6 +117,6 @@ func SetupRoutes(e *echo.Echo) {
 	})
 }
 
-func removeIndex(arr []account.Account, index int) []account.Account {
+func removeIndex(arr []*account.Account, index int) []*account.Account {
 	return append(arr[:index], arr[index+1:]...)
 }
