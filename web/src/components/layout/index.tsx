@@ -1,28 +1,26 @@
-import { JSX, Show } from "solid-js";
-
 import { Header } from "@/components/navigation/header";
 import { Sidebar } from "@/components/navigation/side-bar";
-import { useSidebar } from "@/store/app-store";
+import { useSidebarStore } from "@/store/app-store";
 
-export function Layout(props: { children: JSX.Element }): JSX.Element {
-  const { hideSidebar } = useSidebar();
+export function Layout(props: { children: React.ReactNode }) {
+  const { sidebarVisible } = useSidebarStore();
 
   return (
-    <div class="flex flex-col h-screen w-screen bg-neutral-950">
-      <div class="fixed w-full z-20">
+    <div className="flex flex-col h-screen w-screen bg-neutral-950">
+      <div className="fixed w-full z-20">
         <Header />
       </div>
 
-      <div class="flex flex-grow">
-        <Show when={hideSidebar()}>
-          <div class="h-screen flex-none bg-neutral-900 pt-16 fixed sm:relative z-10">
+      <div className="flex flex-grow">
+        {sidebarVisible && (
+          <div className="h-screen flex-none bg-neutral-900 pt-20 fixed z-10">
             <Sidebar />
           </div>
-        </Show>
+        )}
 
         <div
-          class={`flex-grow overflow-y-auto pt-20 ${
-            hideSidebar() && "opacity-35 sm:opacity-100"
+          className={`flex-grow overflow-y-auto pt-20 ${
+            sidebarVisible && "opacity-35 sm:opacity-100 sm:pl-36"
           }`}
         >
           {props.children}

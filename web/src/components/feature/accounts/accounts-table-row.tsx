@@ -1,54 +1,60 @@
-import { Show, createSignal } from "solid-js";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
+import { deleteAccountById } from "@/api/accounts";
 import { ConfirmationModal } from "@/components/ui/modal";
 import { AccountType } from "@/types/account";
 import { formatBRL } from "@/utils/currency";
 
 export const AccountRow = (account: AccountType) => {
-  const [showDeleteModal, setShowDeleteModal] = createSignal(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  const handleDeleteAccount = () => {
-    console.log("Delete account action on id", account.id);
+  const handleDeleteAccount = async () => {
+    const res = await deleteAccountById(account.id);
+    if (!res) {
+      alert("Unable to delete account");
+    }
+    location.reload();
   };
 
   return (
     <>
-      <tr class="hover:bg-neutral-800 dark:hover:bg-gray-700">
-        <td class="px-6 py-4 whitespace-nowrap font-medium text-neutral-100">
+      <tr className="hover:bg-neutral-800 dark:hover:bg-gray-700">
+        <td className="px-6 py-4 whitespace-nowrap font-medium text-neutral-100">
           {account.name}
         </td>
-        <td class="px-6 py-4 whitespace-nowrap text-neutral-100">
+        <td className="px-6 py-4 whitespace-nowrap text-neutral-100">
           {formatBRL(account.amount)}
         </td>
-        <td class="px-6 py-4 whitespace-nowrap text-neutral-100">
+        <td className="px-6 py-4 whitespace-nowrap text-neutral-100">
           {new Date(account.updatedAt).toLocaleDateString("pt-BR")}
         </td>
-        <td class="px-6 py-4 whitespace-nowrap font-medium flex gap-x-2">
-          <a
-            href={`/accounts/${account.id}/edit`}
-            class="font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none"
+        <td className="px-6 py-4 whitespace-nowrap font-medium flex gap-x-2">
+          <Link
+            to={`/accounts/${account.id}`}
+            className="font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none"
           >
             Edit
-          </a>
+          </Link>
           <button
             type="button"
-            class="font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none"
-            onClick={() => setShowDeleteModal(!showDeleteModal())}
+            className="font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none"
+            onClick={() => setShowDeleteModal(!showDeleteModal)}
           >
             Delete
           </button>
         </td>
       </tr>
 
-      <Show when={showDeleteModal()}>
+      {showDeleteModal && (
         <ConfirmationModal
           modalTitle="Delete Account"
           modalText={`Are you sure you want to delete ${account.name} account ?`}
-          showModal={showDeleteModal()}
+          showModal={showDeleteModal}
           setShowModal={setShowDeleteModal}
           confirmAction={handleDeleteAccount}
         />
-      </Show>
+      )}
     </>
   );
 };

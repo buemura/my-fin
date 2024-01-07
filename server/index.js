@@ -2,6 +2,10 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 
+async function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 const accountList = {
   data: {
     accounts: [
@@ -59,7 +63,7 @@ app.get("/accounts/:id", (req, res) => {
   return res.send(account);
 });
 
-app.post("/accounts", (req, res) => {
+app.post("/accounts", async (req, res) => {
   console.log("POST - /accounts");
   const { name, amount } = req.body;
   accountList.data.accounts.push({

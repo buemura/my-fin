@@ -1,59 +1,59 @@
-import { BiRegularCandles, BiRegularWallet } from "solid-icons/bi";
-import {
-  FaRegularMoneyBill1,
-  FaSolidArrowRightArrowLeft,
-} from "solid-icons/fa";
-import { FiLogOut, FiSettings } from "solid-icons/fi";
+import { BiWallet } from "react-icons/bi";
+import { BiMoney } from "react-icons/bi";
+import { GoArrowSwitch } from "react-icons/go";
+import { LuCandlestickChart } from "react-icons/lu";
+import { TbSettings } from "react-icons/tb";
+import { MdLogout } from "react-icons/md";
 
 export function Sidebar() {
   return (
-    <div class="flex flex-col gap-6 bg-neutral-900">
+    <div className="flex flex-col gap-6 bg-neutral-900">
       {/* App options */}
-      <div class="flex flex-col text-neutral-100">
+      <div className="flex flex-col text-neutral-100">
         <a
-          class="hover:bg-neutral-800 px-2 p-1 rounded-sm flex gap-2 items-center"
+          className="hover:bg-neutral-800 px-2 p-1 rounded-sm flex gap-2 items-center"
           href="/accounts"
         >
-          <BiRegularWallet />
+          <BiWallet />
           <span>Accounts</span>
         </a>
         <a
-          class="hover:bg-neutral-800 px-2 p-1 rounded-sm flex gap-2 items-center"
+          className="hover:bg-neutral-800 px-2 p-1 rounded-sm flex gap-2 items-center"
           href="/expenses"
         >
-          <FaRegularMoneyBill1 />
+          <BiMoney />
           <span>Expenses</span>
         </a>
         <a
-          class="hover:bg-neutral-800 px-2 p-1 rounded-sm flex gap-2 items-center"
+          className="hover:bg-neutral-800 px-2 p-1 rounded-sm flex gap-2 items-center"
           href="/transactions"
         >
-          <FaSolidArrowRightArrowLeft />
+          <GoArrowSwitch />
           <span>Transactions</span>
         </a>
         <a
-          class="hover:bg-neutral-800 px-2 p-1 rounded-sm flex gap-2 items-center"
+          className="hover:bg-neutral-800 px-2 p-1 rounded-sm flex gap-2 items-center"
           href="/investiments"
         >
-          <BiRegularCandles />
+          <LuCandlestickChart />
           <span>Investiments</span>
         </a>
       </div>
 
       {/* User Section */}
-      <div class="flex flex-col text-neutral-100">
+      <div className="flex flex-col text-neutral-100">
         <a
-          class="hover:bg-neutral-800 px-2 p-1 rounded-sm flex gap-2 items-center"
+          className="hover:bg-neutral-800 px-2 p-1 rounded-sm flex gap-2 items-center"
           href="/settings"
         >
-          <FiSettings />
+          <TbSettings />
           <span>Settings</span>
         </a>
         <a
-          class="hover:bg-neutral-800 px-2 p-1 rounded-sm flex gap-2 items-center"
+          className="hover:bg-neutral-800 px-2 p-1 rounded-sm flex gap-2 items-center"
           href="/"
         >
-          <FiLogOut />
+          <MdLogout />
           <span>Sign Out</span>
         </a>
       </div>
