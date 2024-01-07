@@ -10,7 +10,7 @@ export type CreateAccountProps = {
 export async function getAccountList(): Promise<AccountListType | null> {
   try {
     const { data } = await axios.get<AccountListType>(
-      `http://localhost:8080/accounts`
+      `http://localhost:8080/api/accounts`
     );
     return data;
   } catch (error) {
@@ -21,7 +21,7 @@ export async function getAccountList(): Promise<AccountListType | null> {
 export async function getAccountById(id: string): Promise<AccountType | null> {
   try {
     const { data } = await axios.get<AccountType>(
-      `http://localhost:8080/accounts/${id}`
+      `http://localhost:8080/api/accounts/${id}`
     );
     return data;
   } catch (error) {
@@ -34,7 +34,7 @@ export async function createAccount(
 ): Promise<AccountType | null> {
   try {
     const { data } = await axios.post<AccountType>(
-      `http://localhost:8080/accounts`,
+      `http://localhost:8080/api/accounts`,
       body
     );
     return data;
@@ -48,7 +48,7 @@ export async function deleteAccountById(
 ): Promise<AccountType | null> {
   try {
     const { data } = await axios.delete<AccountType>(
-      `http://localhost:8080/accounts/${id}`
+      `http://localhost:8080/api/accounts/${id}`
     );
     return data;
   } catch (error) {
