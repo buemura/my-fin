@@ -11,8 +11,8 @@ export const TableSkeleton = ({ rowsCount }: TableSkeletonProps) => {
         <div className="flex-1 space-y-6 py-1">
           <div className="h-8 bg-neutral-800 rounded"></div>
           <div className="space-y-3">
-            {count.map(() => (
-              <TableRowSkeleton />
+            {count.map((index) => (
+              <TableRowSkeleton key={index} />
             ))}
           </div>
         </div>

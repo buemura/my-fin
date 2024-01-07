@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 
 import { CreateAccountProps, createAccount } from "@/api/accounts";
 import { useRouterNavigate } from "@/hooks";
@@ -15,7 +15,7 @@ export function AccountNew() {
     mutationFn: (account: CreateAccountProps) => createAccount(account),
   });
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     mutate({ name, amount });
 
