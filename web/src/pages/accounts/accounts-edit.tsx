@@ -1,70 +1,96 @@
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
+
+import {
+  UpdateAccountProps,
+  getAccountById,
+  updateAccountById,
+} from "@/api/accounts";
+import { Layout } from "@/components/layout";
+import { useRouterNavigate } from "@/hooks";
 import { useState } from "react";
 
-import { CreateAccountProps, createAccount } from "@/api/accounts";
-import { useRouterNavigate } from "@/hooks";
-import { Layout } from "@/components/layout";
-import { useMutation } from "@tanstack/react-query";
-
-export function AccountNew() {
+export function AccountsEdit() {
+  const { id } = useParams();
   const { routerNavigate } = useRouterNavigate();
 
   const [name, setName] = useState("");
   const [amount, setAmount] = useState(1);
 
-  const { isPending, isError, mutate } = useMutation({
-    mutationFn: (account: CreateAccountProps) => createAccount(account),
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["account", id],
+    queryFn: async () => getAccountById(String(id)),
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const { isPending, isError, mutate } = useMutation({
+    mutationFn: (props: UpdateAccountProps) => updateAccountById(props),
+  });
+
+  const handleUpdateAccount = async (e: React.FormEvent) => {
     e.preventDefault();
-    mutate({ name, amount });
+    mutate({ id: String(id), name, amount });
 
     if (isError) {
-      alert("Unable to create");
-      routerNavigate("/accounts/new");
+      alert("Unable to update");
+      routerNavigate(`/accounts/${id}`);
     }
     routerNavigate("/accounts");
   };
 
+  if (isLoading) {
+    return (
+      <Layout>
+        <h1 className="text-white">Loading...</h1>
+      </Layout>
+    );
+  }
+
+  if (!data || error) {
+    return (
+      <Layout>
+        <h1 className="text-white">Account {id} not found</h1>
+      </Layout>
+    );
+  }
+
   return (
     <Layout>
       <main className="bg-neutral-950 px-8 flex flex-col gap-10">
-        <h1 className="text-neutral-100 text-4xl">Accounts New</h1>
+        <h1 className="text-neutral-100 text-4xl">Accounts Edit</h1>
 
         <form
           className="flex flex-col gap-4 bg-neutral-900 p-6 rounded-2xl border-2 border-neutral-800"
-          onSubmit={handleSubmit}
+          onSubmit={handleUpdateAccount}
         >
           <div className="flex flex-col justify-evenly gap-2 sm:flex-row">
             <div className="w-full flex flex-col">
               <label
-                htmlFor={`account-new-name`}
+                htmlFor={`account-${data.id}-edit-name`}
                 className="text-neutral-100 text-lg"
               >
                 Name
               </label>
               <input
-                id={`account-new-name`}
+                id={`account-${data.id}-edit-name`}
                 className="border-2 border-neutral-800 bg-neutral-950 text-neutral-100 rounded-md p-2 outline-none"
                 type="text"
-                placeholder="Bank Name"
+                defaultValue={data.name}
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
 
             <div className="w-full flex flex-col">
               <label
-                htmlFor={`account-new-amount`}
+                htmlFor={`account-${data.id}-edit-amount`}
                 className="text-neutral-100 text-lg"
               >
                 Amount
               </label>
               <input
-                id={`account-new-amount`}
+                id={`account-${data.id}-edit-amount`}
                 className="border-2 border-neutral-800 bg-neutral-950 text-neutral-100 rounded-md p-2 outline-none"
                 type="number"
-                min={1}
-                placeholder="1"
+                defaultValue={data.amount}
                 onChange={(e) => setAmount(Number(e.target.value))}
               />
             </div>
