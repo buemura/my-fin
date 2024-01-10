@@ -4,7 +4,7 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/buemura/my-fin/internal/routes"
+	"github.com/buemura/my-fin/internal/api/routes"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
