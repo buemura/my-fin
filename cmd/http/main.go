@@ -4,10 +4,30 @@ import (
 	"log/slog"
 	"os"
 
+	"github.com/buemura/my-fin/config"
 	"github.com/buemura/my-fin/internal/api/routes"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
+
+func init() {
+	config.LoadConfigs()
+}
+
+func main() {
+	// Logger
+	slogger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	slog.SetDefault(slogger)
+
+	// Http Server
+	app := echo.New()
+	setupServerMiddlewares(app)
+
+	host := "127.0.0.1:" + config.PORT
+	if err := app.Start(host); err != nil {
+		slog.Error(err.Error())
+	}
+}
 
 func setupServerMiddlewares(app *echo.Echo) {
 	app.Use(middleware.Recover())
@@ -24,18 +44,4 @@ func setupServerMiddlewares(app *echo.Echo) {
 	}))
 	app.Use(middleware.RateLimiter(middleware.NewRateLimiterMemoryStore(20)))
 	routes.SetupRoutes(app)
-}
-
-func main() {
-	// Logger
-	slogger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
-	slog.SetDefault(slogger)
-
-	// Http Server
-	app := echo.New()
-	setupServerMiddlewares(app)
-
-	if err := app.Start("127.0.0.1:8080"); err != nil {
-		slog.Error(err.Error())
-	}
 }

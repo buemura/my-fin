@@ -10,3 +10,9 @@ func LoadUserSigninUsecase() *usecase.UserSigninUsecase {
 	userSigninUsecase := usecase.NewUserSigninUsecase(userRepo)
 	return userSigninUsecase
 }
+
+func LoadUserSignupUsecase() *usecase.UserSignupUsecase {
+	userRepo := repositories.NewGormUserRepository()
+	userSignupUsecase := usecase.NewUserSignupUsecase(userRepo)
+	return userSignupUsecase
+}
