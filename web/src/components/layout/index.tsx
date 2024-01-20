@@ -6,7 +6,7 @@ export function Layout(props: { children: React.ReactNode }) {
   const { sidebarVisible } = useSidebarStore();
 
   return (
-    <div className="flex flex-col h-screen w-screen bg-neutral-950">
+    <div className="flex flex-col min-h-screen w-screen bg-neutral-950">
       <div className="fixed w-full z-20">
         <Header />
       </div>
