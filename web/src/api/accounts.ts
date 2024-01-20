@@ -2,6 +2,12 @@ import axios from "axios";
 
 import { AccountListType, AccountType } from "@/types/account";
 
+export type GetAccountListProps = {
+  userId: string;
+  page?: number;
+  items?: number;
+};
+
 export type CreateAccountProps = {
   name: string;
   amount: number;
@@ -15,11 +21,18 @@ export type UpdateAccountProps = {
 
 const apiUser = "http://127.0.0.1:8080/api/user";
 
-export async function getAccountList(): Promise<AccountListType | null> {
+export async function getAccountList(
+  props: GetAccountListProps
+): Promise<AccountListType | null> {
   try {
-    const { data } = await axios.get<AccountListType>(
-      `${apiUser}/c3e857a5-f881-4d0e-b85e-7bdb15e6639a/accounts`
-    );
+    let url = `${apiUser}/${props.userId}/accounts`;
+    if (props.page) {
+      url += `?page=${props.page}`;
+      if (props.items) {
+        url += `&items=${props.items}`;
+      }
+    }
+    const { data } = await axios.get<AccountListType>(url);
     return data;
   } catch (error) {
     return null;

@@ -1,10 +1,10 @@
 import { useRouterNavigate } from "@/hooks/useRouterNavigate";
 
 export function NotFound() {
-  const { routerNavigate } = useRouterNavigate();
+  const router = useRouterNavigate();
 
   const handleGoBack = () => {
-    return routerNavigate("/");
+    return router.navigate("/");
   };
 
   return (

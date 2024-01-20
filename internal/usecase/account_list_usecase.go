@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"log/slog"
+	"math"
 
 	"github.com/buemura/my-fin/internal/domain/account"
 )
@@ -37,8 +38,8 @@ func (acu *AccountListUsecase) Execute(request account.AccountListInput) (*accou
 		Metadata: &account.Metadata{
 			Page:       request.Page,
 			Items:      request.Items,
-			TotalPages: totals.TotalItems / request.Items, // TODO: Calculate this value
-			TotalItems: totals.TotalItems,                 // TODO: return this value from database
+			TotalPages: int(math.Ceil(float64(totals.TotalItems) / float64(request.Items))),
+			TotalItems: totals.TotalItems,
 		},
 	}, nil
 }

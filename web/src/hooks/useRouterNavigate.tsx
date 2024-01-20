@@ -1,7 +1,5 @@
-import { useNavigate } from "react-router-dom";
-
 export const useRouterNavigate = () => {
-  const navigate = useNavigate();
-  const routerNavigate = (route: string) => navigate(route);
-  return { routerNavigate };
+  const navigate = (route: string) => (location.href = route);
+  const reload = () => location.reload();
+  return { navigate, reload };
 };

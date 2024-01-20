@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 
 export function AccountsEdit() {
   const { id } = useParams();
-  const { routerNavigate } = useRouterNavigate();
+  const router = useRouterNavigate();
 
   const [name, setName] = useState("");
   const [amount, setAmount] = useState(1);
@@ -43,9 +43,9 @@ export function AccountsEdit() {
 
     if (isError) {
       alert("Unable to update");
-      routerNavigate(`/accounts/${id}`);
+      router.reload();
     }
-    routerNavigate("/accounts");
+    router.navigate("/accounts");
   };
 
   if (isLoading) {

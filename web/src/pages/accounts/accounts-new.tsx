@@ -6,7 +6,7 @@ import { Layout } from "@/components/layout";
 import { useMutation } from "@tanstack/react-query";
 
 export function AccountsNew() {
-  const { routerNavigate } = useRouterNavigate();
+  const router = useRouterNavigate();
 
   const [name, setName] = useState("");
   const [amount, setAmount] = useState(1);
@@ -21,9 +21,9 @@ export function AccountsNew() {
 
     if (isError) {
       alert("Unable to create");
-      routerNavigate("/accounts/new");
+      router.reload();
     }
-    routerNavigate("/accounts");
+    router.navigate("/accounts");
   };
 
   return (

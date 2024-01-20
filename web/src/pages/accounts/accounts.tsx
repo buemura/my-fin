@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { FaPlus } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 import { getAccountList } from "@/api/accounts";
 import {
@@ -12,9 +12,15 @@ import { Layout } from "@/components/layout";
 import { CardSkeleton, TableSkeleton } from "@/components/ui/skeleton";
 
 export function Accounts() {
+  const [queryParam] = useSearchParams();
+
   const { data, isLoading, error } = useQuery({
     queryKey: ["accounts"],
-    queryFn: getAccountList,
+    queryFn: async () =>
+      getAccountList({
+        userId: "c3e857a5-f881-4d0e-b85e-7bdb15e6639a",
+        page: Number(queryParam.get("page")) ?? 1,
+      }),
   });
 
   if (isLoading) {
