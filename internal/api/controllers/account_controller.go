@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/buemura/my-fin/internal/api/helpers"
+	"github.com/buemura/my-fin/internal/constant"
 	"github.com/buemura/my-fin/internal/domain/account"
 	"github.com/buemura/my-fin/internal/usecase"
 	"github.com/buemura/my-fin/pkg/utils"
@@ -78,23 +79,12 @@ func (h *AccountController) Delete(c echo.Context) error {
 func (h *AccountController) List(c echo.Context) error {
 	slog.Info("[AccountController.List] - Validating parameters")
 	userId := c.Param("userId")
-
-	pageStr := c.QueryParam("page")
-	page, err := strconv.Atoi(pageStr)
-	if err != nil {
-		return helpers.BuildErrorResponse(c, err.Error())
-	}
-
-	itemsStr := c.QueryParam("items")
-	items, err := strconv.Atoi(itemsStr)
-	if err != nil {
-		return helpers.BuildErrorResponse(c, err.Error())
-	}
+	page, items := getPaginationParams(c)
 
 	res, err := h.AccountListUsecase.Execute(account.AccountListInput{
 		UserId: userId,
-		Page:   &page,
-		Items:  &items,
+		Page:   page,
+		Items:  items,
 	})
 	if err != nil {
 		return helpers.BuildErrorResponse(c, err.Error())
@@ -136,4 +126,22 @@ func (h *AccountController) Update(c echo.Context) error {
 		return helpers.BuildErrorResponse(c, err.Error())
 	}
 	return c.JSON(http.StatusOK, res)
+}
+
+func getPaginationParams(c echo.Context) (int, int) {
+	var page, items int
+	var err error
+
+	pageStr := c.QueryParam("page")
+	page, err = strconv.Atoi(pageStr)
+	if err != nil {
+		page = constant.DEFAULT_ACCOUNT_PAGE
+	}
+	itemsStr := c.QueryParam("items")
+	items, err = strconv.Atoi(itemsStr)
+	if err != nil {
+		items = constant.DEFAULT_ACCOUNT_ITEMS
+	}
+
+	return page, items
 }

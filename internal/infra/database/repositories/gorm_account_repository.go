@@ -30,7 +30,7 @@ func (r *gormAccountRepository) FindById(id string) (*account.Account, error) {
 
 func (r *gormAccountRepository) FindByUserId(userId string, offset, limit int) ([]*account.Account, error) {
 	var accs []*account.Account
-	result := r.db.Find(&accs, "user_id = ?", userId).Offset(offset).Limit(limit)
+	result := r.db.Limit(limit).Offset(offset).Find(&accs, "user_id = ?", userId)
 	if result.Error != nil {
 		if result.Error == gorm.ErrRecordNotFound {
 			return nil, nil

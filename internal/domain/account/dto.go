@@ -13,8 +13,8 @@ type AccountUpdateInput struct {
 
 type AccountListInput struct {
 	UserId string `json:"userId"`
-	Page   *int   `json:"page"`
-	Items  *int   `json:"items"`
+	Page   int    `json:"page"`
+	Items  int    `json:"items"`
 }
 
 type AccountListOutput struct {
