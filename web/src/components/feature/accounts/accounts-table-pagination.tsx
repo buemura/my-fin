@@ -24,7 +24,7 @@ export const Pagination = (metadata: PaginationMetadata) => {
           <span className="sr-only">Previous</span>
         </button>
 
-        {renderPages(metadata, handlePageClick)}
+        <Pages metadata={metadata} pegeClick={handlePageClick} />
 
         <button
           type="button"
@@ -40,10 +40,12 @@ export const Pagination = (metadata: PaginationMetadata) => {
   );
 };
 
-const renderPages = (
-  metadata: PaginationMetadata,
-  pegeClick: (page: number) => void
-) => {
+interface PagesProps {
+  metadata: PaginationMetadata;
+  pegeClick: (page: number) => void;
+}
+
+const Pages = ({ metadata, pegeClick }: PagesProps) => {
   const pages = Array.from(
     { length: metadata.totalPages },
     (_, index) => index + 1
