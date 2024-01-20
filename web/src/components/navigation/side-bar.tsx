@@ -1,61 +1,62 @@
-import { BiWallet } from "react-icons/bi";
-import { BiMoney } from "react-icons/bi";
+import { ROUTES } from "@/router";
+import { BiMoney, BiWallet } from "react-icons/bi";
 import { GoArrowSwitch } from "react-icons/go";
 import { LuCandlestickChart } from "react-icons/lu";
-import { TbSettings } from "react-icons/tb";
 import { MdLogout } from "react-icons/md";
+import { TbSettings } from "react-icons/tb";
+import { Link } from "react-router-dom";
 
 export function Sidebar() {
   return (
     <div className="flex flex-col gap-6 bg-neutral-900">
       {/* App options */}
       <div className="flex flex-col text-neutral-100">
-        <a
+        <Link
           className="hover:bg-neutral-800 px-2 p-1 rounded-sm flex gap-2 items-center"
-          href="/accounts"
+          to={ROUTES.ACCOUNTS}
         >
           <BiWallet />
           <span>Accounts</span>
-        </a>
-        <a
+        </Link>
+        <Link
           className="hover:bg-neutral-800 px-2 p-1 rounded-sm flex gap-2 items-center"
-          href="/expenses"
+          to={ROUTES.EXPENSES}
         >
           <BiMoney />
           <span>Expenses</span>
-        </a>
-        <a
+        </Link>
+        <Link
           className="hover:bg-neutral-800 px-2 p-1 rounded-sm flex gap-2 items-center"
-          href="/transactions"
+          to={ROUTES.TRANSACTIONS}
         >
           <GoArrowSwitch />
           <span>Transactions</span>
-        </a>
-        <a
+        </Link>
+        <Link
           className="hover:bg-neutral-800 px-2 p-1 rounded-sm flex gap-2 items-center"
-          href="/investiments"
+          to={ROUTES.INVESTIMENTS}
         >
           <LuCandlestickChart />
           <span>Investiments</span>
-        </a>
+        </Link>
       </div>
 
       {/* User Section */}
       <div className="flex flex-col text-neutral-100">
-        <a
+        {/* <Link
           className="hover:bg-neutral-800 px-2 p-1 rounded-sm flex gap-2 items-center"
-          href="/settings"
+          to={ROUTES.SETT}
         >
           <TbSettings />
           <span>Settings</span>
-        </a>
-        <a
+        </Link> */}
+        <Link
           className="hover:bg-neutral-800 px-2 p-1 rounded-sm flex gap-2 items-center"
-          href="/"
+          to={ROUTES.ROOT}
         >
           <MdLogout />
           <span>Sign Out</span>
-        </a>
+        </Link>
       </div>
     </div>
   );

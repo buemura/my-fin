@@ -5,13 +5,17 @@ import { deleteAccountById } from "@/api/accounts";
 import { ConfirmationModal } from "@/components/ui/modal";
 import { AccountType } from "@/types/account";
 import { formatBRL } from "@/utils/currency";
+import { useRouterNavigate } from "@/hooks";
+import { ROUTES } from "@/router";
 
 export const AccountRow = (account: AccountType) => {
+  const router = useRouterNavigate();
+
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const handleDeleteAccount = async () => {
     await deleteAccountById(account.id);
-    location.reload();
+    router.reload();
   };
 
   return (
@@ -28,7 +32,7 @@ export const AccountRow = (account: AccountType) => {
         </td>
         <td className="px-6 py-4 whitespace-nowrap font-medium flex gap-x-2">
           <Link
-            to={`/accounts/${account.id}`}
+            to={`${ROUTES.ACCOUNTS}/${account.id}`}
             className="font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none"
           >
             Edit

@@ -1,5 +1,7 @@
 import { FiMenu } from "react-icons/fi";
+import { Link } from "react-router-dom";
 
+import { ROUTES } from "@/router";
 import { useSidebarStore } from "@/store/app-store";
 
 export function Header() {
@@ -11,9 +13,9 @@ export function Header() {
         className="hover:bg-neutral-800 rounded-lg p-1 w-10 h-10 cursor-pointer"
         onClick={() => toggleSidebar()}
       />
-      <a href="/dashboard" className="uppercase text-3xl">
+      <Link to={ROUTES.DASHBOARD} className="uppercase text-3xl">
         My Fin
-      </a>
+      </Link>
     </div>
   );
 }

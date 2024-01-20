@@ -1,4 +1,5 @@
 import { useRouterNavigate } from "@/hooks";
+import { ROUTES } from "@/router";
 import { PaginationMetadata } from "@/types/pagination-metadata";
 
 export const Pagination = (metadata: PaginationMetadata) => {
@@ -8,7 +9,7 @@ export const Pagination = (metadata: PaginationMetadata) => {
   const disableNext = metadata.page + 1 > metadata.totalPages;
 
   const handlePageClick = (page: number) => {
-    router.navigate(`/accounts?page=${page}`);
+    router.navigate(`${ROUTES.ACCOUNTS}?page=${page}`);
   };
 
   return (

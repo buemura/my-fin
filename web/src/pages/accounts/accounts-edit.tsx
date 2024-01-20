@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 
 import {
   UpdateAccountProps,
@@ -8,7 +9,7 @@ import {
 } from "@/api/accounts";
 import { Layout } from "@/components/layout";
 import { useRouterNavigate } from "@/hooks";
-import { useEffect, useState } from "react";
+import { ROUTES } from "@/router";
 
 export function AccountsEdit() {
   const { id } = useParams();
@@ -45,7 +46,7 @@ export function AccountsEdit() {
       alert("Unable to update");
       router.reload();
     }
-    router.navigate("/accounts");
+    router.navigate(ROUTES.ACCOUNTS);
   };
 
   if (isLoading) {
@@ -67,7 +68,12 @@ export function AccountsEdit() {
   return (
     <Layout>
       <main className="bg-neutral-950 p-8 flex flex-col gap-10">
-        <h1 className="text-neutral-100 text-4xl">Accounts / Edit</h1>
+        <h1 className="text-neutral-100 text-4xl">
+          <Link to={ROUTES.ACCOUNTS} className="text-neutral-500">
+            Accounts
+          </Link>{" "}
+          / Edit
+        </h1>
 
         <form
           className="flex flex-col gap-4 bg-neutral-900 p-6 rounded-2xl border-2 border-neutral-800"
@@ -102,6 +108,7 @@ export function AccountsEdit() {
                 className="border-2 border-neutral-800 bg-neutral-950 text-neutral-100 rounded-md p-2 outline-none"
                 type="number"
                 defaultValue={amount}
+                min={0}
                 onChange={(e) => setAmount(Number(e.target.value))}
               />
             </div>

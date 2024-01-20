@@ -10,6 +10,7 @@ import {
 } from "@/components/feature/accounts";
 import { Layout } from "@/components/layout";
 import { CardSkeleton, TableSkeleton } from "@/components/ui/skeleton";
+import { ROUTES } from "@/router";
 
 export function Accounts() {
   const [queryParam] = useSearchParams();
@@ -78,7 +79,7 @@ export function Accounts() {
 const NewAccountButton = () => {
   return (
     <Link
-      to="/accounts/new"
+      to={ROUTES.ACCOUNTS_NEW}
       className="max-w-max px-4 py-2 text-white text-sm bg-blue-700 rounded-lg flex gap-1 items-center"
     >
       <FaPlus />

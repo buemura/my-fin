@@ -1,9 +1,11 @@
+import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 import { CreateAccountProps, createAccount } from "@/api/accounts";
-import { useRouterNavigate } from "@/hooks";
 import { Layout } from "@/components/layout";
-import { useMutation } from "@tanstack/react-query";
+import { useRouterNavigate } from "@/hooks";
+import { ROUTES } from "@/router";
 
 export function AccountsNew() {
   const router = useRouterNavigate();
@@ -23,13 +25,18 @@ export function AccountsNew() {
       alert("Unable to create");
       router.reload();
     }
-    router.navigate("/accounts");
+    router.navigate(ROUTES.ACCOUNTS);
   };
 
   return (
     <Layout>
       <main className="bg-neutral-950 p-8 flex flex-col gap-10">
-        <h1 className="text-neutral-100 text-4xl">Accounts / New</h1>
+        <h1 className="text-neutral-100 text-4xl">
+          <Link to={ROUTES.ACCOUNTS} className="text-neutral-500">
+            Accounts
+          </Link>{" "}
+          / New
+        </h1>
 
         <form
           className="flex flex-col gap-4 bg-neutral-900 p-6 rounded-2xl border-2 border-neutral-800"
