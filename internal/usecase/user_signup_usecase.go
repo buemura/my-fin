@@ -5,6 +5,7 @@ import (
 	"log/slog"
 
 	"github.com/buemura/my-fin/internal/domain/user"
+	"github.com/buemura/my-fin/internal/infra/encryption"
 )
 
 type UserSignupUsecase struct {
@@ -27,6 +28,12 @@ func (usu *UserSignupUsecase) Execute(input user.UserSignupInput) (*user.User, e
 		return nil, err
 	}
 
+	hashedPassword, err := encryption.HashPassword(input.Password)
+	if err != nil {
+		return nil, err
+	}
+
+	input.Password = hashedPassword
 	u := user.NewUser(input)
 	usu.repo.Save(u)
 	return u, nil

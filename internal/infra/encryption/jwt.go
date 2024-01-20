@@ -14,7 +14,7 @@ type TokenMetada struct {
 
 var JwtSecret = viper.GetString("JWT_SECRET")
 
-func GenerateToken(userId string, role string) (string, error) {
+func GenerateToken(userId string) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 
 	claims := token.Claims.(jwt.MapClaims)
