@@ -51,7 +51,7 @@ export function Accounts() {
 
   return (
     <Layout>
-      <main className="w-full bg-neutral-950 px-8 py-8 flex flex-col gap-10">
+      <main className="w-full bg-neutral-950 p-8 flex flex-col gap-10">
         <h1 className="text-neutral-100 text-4xl">Accounts</h1>
 
         <div className="flex flex-col gap-10 sm:flex-row">
