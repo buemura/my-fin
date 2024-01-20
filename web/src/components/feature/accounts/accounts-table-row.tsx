@@ -10,10 +10,7 @@ export const AccountRow = (account: AccountType) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const handleDeleteAccount = async () => {
-    const res = await deleteAccountById(account.id);
-    if (!res) {
-      alert("Unable to delete account");
-    }
+    await deleteAccountById(account.id);
     location.reload();
   };
 

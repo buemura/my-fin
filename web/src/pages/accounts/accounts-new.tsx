@@ -29,7 +29,7 @@ export function AccountsNew() {
   return (
     <Layout>
       <main className="bg-neutral-950 px-8 flex flex-col gap-10">
-        <h1 className="text-neutral-100 text-4xl">Accounts New</h1>
+        <h1 className="text-neutral-100 text-4xl">Accounts / New</h1>
 
         <form
           className="flex flex-col gap-4 bg-neutral-900 p-6 rounded-2xl border-2 border-neutral-800"

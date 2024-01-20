@@ -1,6 +1,8 @@
 package repositories
 
 import (
+	"fmt"
+
 	"github.com/buemura/my-fin/internal/domain/account"
 	"github.com/buemura/my-fin/internal/infra/database"
 	"gorm.io/gorm"
@@ -40,10 +42,11 @@ func (r *gormAccountRepository) FindByUserId(userId string, offset, limit int) (
 	return accs, nil
 }
 
-func (r *gormAccountRepository) GetTotalAmountByUserId(userId string) (int, error) {
-	var totalAmount int
-	r.db.Raw("SELECT SUM(amount) AS totalAmount FROM account").Row().Scan(&totalAmount)
-	return totalAmount, nil
+func (r *gormAccountRepository) GetTotalsByUserId(userId string) (*account.AccountTotals, error) {
+	var totals account.AccountTotals
+	r.db.Raw("SELECT SUM(amount) AS TotalAmount, COUNT(id) AS TotalItems FROM account WHERE user_id = ?", userId).Row().Scan(&totals)
+	fmt.Println(&totals)
+	return &totals, nil
 }
 
 func (r *gormAccountRepository) Save(acc *account.Account) (*account.Account, error) {

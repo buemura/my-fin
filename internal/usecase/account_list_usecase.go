@@ -24,7 +24,7 @@ func (acu *AccountListUsecase) Execute(request account.AccountListInput) (*accou
 		return nil, err
 	}
 
-	totalAmount, err := acu.repo.GetTotalAmountByUserId(request.UserId)
+	totals, err := acu.repo.GetTotalsByUserId(request.UserId)
 	if err != nil {
 		return nil, err
 	}
@@ -32,13 +32,13 @@ func (acu *AccountListUsecase) Execute(request account.AccountListInput) (*accou
 	return &account.AccountList{
 		Data: &account.AccountListOutput{
 			Accounts:    accs,
-			TotalAmount: totalAmount,
+			TotalAmount: totals.TotalAmount,
 		},
 		Metadata: &account.Metadata{
 			Page:       request.Page,
 			Items:      request.Items,
-			TotalPages: len(accs), // TODO: Calculate this value
-			TotalItems: len(accs), // TODO: return this value from database
+			TotalPages: totals.TotalItems / request.Items, // TODO: Calculate this value
+			TotalItems: totals.TotalItems,                 // TODO: return this value from database
 		},
 	}, nil
 }

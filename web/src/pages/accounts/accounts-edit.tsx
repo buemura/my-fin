@@ -8,7 +8,7 @@ import {
 } from "@/api/accounts";
 import { Layout } from "@/components/layout";
 import { useRouterNavigate } from "@/hooks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function AccountsEdit() {
   const { id } = useParams();
@@ -26,9 +26,20 @@ export function AccountsEdit() {
     mutationFn: (props: UpdateAccountProps) => updateAccountById(props),
   });
 
+  useEffect(() => {
+    if (data) {
+      setName(data.name);
+      setAmount(data.amount);
+    }
+  }, [data]);
+
   const handleUpdateAccount = async (e: React.FormEvent) => {
     e.preventDefault();
-    mutate({ id: String(id), name, amount });
+    mutate({
+      id: String(id),
+      name,
+      amount,
+    });
 
     if (isError) {
       alert("Unable to update");
@@ -56,7 +67,7 @@ export function AccountsEdit() {
   return (
     <Layout>
       <main className="bg-neutral-950 px-8 flex flex-col gap-10">
-        <h1 className="text-neutral-100 text-4xl">Accounts Edit</h1>
+        <h1 className="text-neutral-100 text-4xl">Accounts / Edit</h1>
 
         <form
           className="flex flex-col gap-4 bg-neutral-900 p-6 rounded-2xl border-2 border-neutral-800"
@@ -65,32 +76,32 @@ export function AccountsEdit() {
           <div className="flex flex-col justify-evenly gap-2 sm:flex-row">
             <div className="w-full flex flex-col">
               <label
-                htmlFor={`account-${data.id}-edit-name`}
+                htmlFor={`account-${id}-edit-name`}
                 className="text-neutral-100 text-lg"
               >
                 Name
               </label>
               <input
-                id={`account-${data.id}-edit-name`}
+                id={`account-${id}-edit-name`}
                 className="border-2 border-neutral-800 bg-neutral-950 text-neutral-100 rounded-md p-2 outline-none"
                 type="text"
-                defaultValue={data.name}
+                defaultValue={name}
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
 
             <div className="w-full flex flex-col">
               <label
-                htmlFor={`account-${data.id}-edit-amount`}
+                htmlFor={`account-${id}-edit-amount`}
                 className="text-neutral-100 text-lg"
               >
                 Amount
               </label>
               <input
-                id={`account-${data.id}-edit-amount`}
+                id={`account-${id}-edit-amount`}
                 className="border-2 border-neutral-800 bg-neutral-950 text-neutral-100 rounded-md p-2 outline-none"
                 type="number"
-                defaultValue={data.amount}
+                defaultValue={amount}
                 onChange={(e) => setAmount(Number(e.target.value))}
               />
             </div>
