@@ -2,7 +2,7 @@ import { useRouterNavigate } from "@/hooks/useRouterNavigate";
 import { ROUTES } from "@/router";
 
 export function NotFound() {
-  const router = useRouterNavigate();
+  const { router } = useRouterNavigate();
 
   return (
     <div className="w-screen h-screen flex flex-col justify-center items-center">

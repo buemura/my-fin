@@ -27,7 +27,7 @@ const editAccountSchema = z.object({
 type EditAccountSchema = z.infer<typeof editAccountSchema>;
 
 export function AccountEditDialog(account: AccountType) {
-  const router = useRouterNavigate();
+  const { router } = useRouterNavigate();
 
   const { register, handleSubmit } = useForm<EditAccountSchema>({
     resolver: zodResolver(editAccountSchema),

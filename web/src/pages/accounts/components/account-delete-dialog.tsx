@@ -14,7 +14,7 @@ import { useRouterNavigate } from "@/hooks";
 import { AccountType } from "@/types";
 
 export function AccountDeleteDialog(account: AccountType) {
-  const router = useRouterNavigate();
+  const { router } = useRouterNavigate();
 
   const handleDeleteAccount = async () => {
     await deleteAccountById(account.id);

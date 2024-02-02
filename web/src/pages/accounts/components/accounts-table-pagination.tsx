@@ -6,7 +6,7 @@ import { ROUTES } from "@/router";
 import { PaginationMetadata } from "@/types/pagination-metadata";
 
 export const Pagination = (metadata: PaginationMetadata) => {
-  const router = useRouterNavigate();
+  const { router } = useRouterNavigate();
 
   const disablePrevious = metadata.page - 1 === 0;
   const disableNext = metadata.page + 1 > metadata.totalPages;

@@ -30,7 +30,7 @@ const createAccountSchema = z.object({
 type CreateAccountSchema = z.infer<typeof createAccountSchema>;
 
 export function AccountNewDialog() {
-  const router = useRouterNavigate();
+  const { router } = useRouterNavigate();
 
   const { register, handleSubmit } = useForm<CreateAccountSchema>({
     resolver: zodResolver(createAccountSchema),

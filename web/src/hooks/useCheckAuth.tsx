@@ -6,7 +6,7 @@ import { UserAuthType } from "@/types";
 import { useRouterNavigate } from "./useRouterNavigate";
 
 export const useCheckAuth = (user: UserAuthType | null) => {
-  const router = useRouterNavigate();
+  const { router } = useRouterNavigate();
 
   if (!user) {
     router.navigate(ROUTES.SIGNIN);
