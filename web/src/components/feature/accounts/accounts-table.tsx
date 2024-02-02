@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 import {
   Button,
   Table,
@@ -7,10 +9,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui";
+import { ROUTES } from "@/router";
 import { AccountListType } from "@/types/account";
 import { formatBRL } from "@/utils/currency";
+import { AccountDeleteDialog } from "./account-delete-dialog";
 import { Pagination } from "./accounts-table-pagination";
-import { AccountRow } from "./accounts-table-row";
+import { AccountEditDialog } from "./account-edit-dialog";
 
 const tableHeader = ["Name", "Amount", "Last Updated", "Action"];
 
@@ -34,57 +38,14 @@ export const AccountsTable = ({ data, metadata }: AccountListType) => {
                   {new Date(acc.updatedAt).toLocaleDateString("pt-BR")}
                 </TableCell>
                 <TableCell>
-                  <Button
-                    variant="ghost"
-                    className="text-blue-400 hover:text-blue-400"
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    className="text-red-400 hover:text-red-400"
-                  >
-                    Remove
-                  </Button>
+                  <AccountEditDialog {...acc} />
+                  <AccountDeleteDialog {...acc} />
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
         <Pagination {...metadata} />
-      </div>
-    </div>
-  );
-
-  return (
-    <div className="flex flex-col border-2 border-neutral-800 rounded-2xl bg-neutral-900">
-      <div className="-m-1.5 overflow-x-auto">
-        <div className="p-1.5 min-w-full inline-block align-middle">
-          <div className="overflow-hidden">
-            <table className="min-w-full divide-y divide-neutral-800">
-              <thead>
-                <tr>
-                  {tableHeader?.map((h) => (
-                    <th
-                      key={h}
-                      scope="col"
-                      className="px-6 py-3 text-start text-lg font-medium text-neutral-400"
-                    >
-                      {h}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-neutral-800">
-                {data.accounts?.map((account) => (
-                  <AccountRow key={account.id} {...account} />
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <Pagination {...metadata} />
-        </div>
       </div>
     </div>
   );
