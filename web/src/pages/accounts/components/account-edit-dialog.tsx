@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 import { updateAccountById } from "@/api";
 import {
@@ -17,17 +19,24 @@ import {
 import { useRouterNavigate } from "@/hooks";
 import { AccountType } from "@/types";
 
+const editAccountSchema = z.object({
+  name: z.string(),
+  amount: z.coerce.number(),
+});
+
+type EditAccountSchema = z.infer<typeof editAccountSchema>;
+
 export function AccountEditDialog(account: AccountType) {
   const router = useRouterNavigate();
 
-  const [name, setName] = useState(account.name);
-  const [amount, setAmount] = useState(account.amount);
+  const { register, handleSubmit } = useForm<EditAccountSchema>({
+    resolver: zodResolver(editAccountSchema),
+  });
 
-  const handleEditAccount = async () => {
+  const handleEditAccount = async (data: EditAccountSchema) => {
     await updateAccountById({
       id: account.id,
-      name,
-      amount,
+      ...data,
     });
     router.reload();
   };
@@ -46,39 +55,44 @@ export function AccountEditDialog(account: AccountType) {
           <DialogDescription></DialogDescription>
         </DialogHeader>
 
-        <Label htmlFor="account-edit-name">Bank Name</Label>
-        <Input
-          id="account-edit-name"
-          type="text"
-          placeholder="Bank Name"
-          defaultValue={account.name}
-          onChange={(e) => setName(e.target.value)}
-        />
+        <form className="space-y-6" onSubmit={handleSubmit(handleEditAccount)}>
+          <div>
+            <Label htmlFor="account-edit-name">Bank Name</Label>
+            <Input
+              id="account-edit-name"
+              type="text"
+              placeholder="Bank Name"
+              defaultValue={account.name}
+              {...register("name")}
+            />
+          </div>
 
-        <Label htmlFor="account-edit-amount">Amount</Label>
-        <Input
-          id="account-edit-amount"
-          type="text"
-          placeholder="Amount"
-          defaultValue={account.amount}
-          onChange={(e) => setAmount(Number(e.target.value))}
-        />
+          <div>
+            <Label htmlFor="account-edit-amount">Amount</Label>
+            <Input
+              id="account-edit-amount"
+              type="text"
+              placeholder="Amount"
+              defaultValue={account.amount}
+              {...register("amount")}
+            />
+          </div>
 
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button type="submit" variant="outline">
-              Cancel
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button type="submit" variant="outline">
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button
+              type="submit"
+              variant="default"
+              className="bg-blue-500 text-white"
+            >
+              Confirm
             </Button>
-          </DialogClose>
-          <Button
-            type="submit"
-            variant="default"
-            className="bg-blue-500 text-white"
-            onClick={handleEditAccount}
-          >
-            Confirm
-          </Button>
-        </DialogFooter>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );

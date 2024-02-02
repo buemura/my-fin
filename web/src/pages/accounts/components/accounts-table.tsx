@@ -1,7 +1,4 @@
-import { Link } from "react-router-dom";
-
 import {
-  Button,
   Table,
   TableBody,
   TableCell,
@@ -9,12 +6,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui";
-import { ROUTES } from "@/router";
 import { AccountListType } from "@/types/account";
 import { formatBRL } from "@/utils/currency";
 import { AccountDeleteDialog } from "./account-delete-dialog";
-import { Pagination } from "./accounts-table-pagination";
 import { AccountEditDialog } from "./account-edit-dialog";
+import { Pagination } from "./accounts-table-pagination";
 
 const tableHeader = ["Name", "Amount", "Last Updated", "Action"];
 
@@ -25,7 +21,7 @@ export const AccountsTable = ({ data, metadata }: AccountListType) => {
         <Table className="border bg-white dark:border-neutral-800 dark:bg-neutral-900">
           <TableHeader className="border-b">
             {tableHeader?.map((h) => (
-              <TableHead>{h}</TableHead>
+              <TableHead key={h}>{h}</TableHead>
             ))}
           </TableHeader>
 
