@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 
 import { NotFound } from "@/pages/404";
-import { Accounts, AccountsNew } from "@/pages/accounts";
+import { Accounts } from "@/pages/accounts";
 import { Dashboard } from "@/pages/dashboard";
 import { Expenses } from "@/pages/expenses";
 import { Investiments } from "@/pages/investiments";
@@ -29,7 +29,6 @@ export const router = createBrowserRouter([
       { path: ROUTES.ROOT, element: <Dashboard /> },
       { path: ROUTES.DASHBOARD, element: <Dashboard /> },
       { path: ROUTES.ACCOUNTS, element: <Accounts /> },
-      { path: ROUTES.ACCOUNTS_NEW, element: <AccountsNew /> },
       { path: ROUTES.EXPENSES, element: <Expenses /> },
       { path: ROUTES.INVESTIMENTS, element: <Investiments /> },
       { path: ROUTES.TRANSACTIONS, element: <Transactions /> },

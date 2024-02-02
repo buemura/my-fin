@@ -4,6 +4,7 @@ import { Link, useSearchParams } from "react-router-dom";
 
 import { getAccountList } from "@/api/accounts";
 import {
+  AccountNewDialog,
   AccountsTable,
   MonthDifference,
   TotalAmount,
@@ -78,12 +79,13 @@ export function Accounts() {
 
 const NewAccountButton = () => {
   return (
-    <Link
-      to={ROUTES.ACCOUNTS_NEW}
-      className="max-w-max px-4 py-2 text-white text-sm bg-blue-700 rounded-lg flex gap-1 items-center"
-    >
-      <FaPlus />
-      New Account
-    </Link>
+    <AccountNewDialog />
+    // <Link
+    //   to={ROUTES.ACCOUNTS_NEW}
+    //   className="max-w-max px-4 py-2 text-white text-sm bg-blue-700 rounded-lg flex gap-1 items-center"
+    // >
+    //   <FaPlus />
+    //   New Account
+    // </Link>
   );
 };
