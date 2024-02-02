@@ -2,14 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
 import { getAccountList } from "@/api/accounts";
+import { formatBRL } from "@/utils/currency";
 import { Layout } from "@/components/layout";
 import { CardSkeleton, TableSkeleton } from "@/components/ui/skeleton";
-import {
-  AccountNewDialog,
-  AccountsTable,
-  MonthDifference,
-  TotalAmount,
-} from "@/pages/accounts/components";
+import { AccountNewDialog, AccountsTable } from "@/pages/accounts/components";
 
 export function Accounts() {
   const [queryParam] = useSearchParams();
@@ -35,7 +31,7 @@ export function Accounts() {
           </div>
 
           <div className="flex justify-end">
-            <NewAccountButton />
+            <AccountNewDialog />
           </div>
           <TableSkeleton rowsCount={5} />
         </div>
@@ -61,12 +57,19 @@ export function Accounts() {
         <h1 className="dark:text-neutral-100 text-4xl">Accounts</h1>
 
         <div className="flex flex-col gap-10 sm:flex-row">
-          <TotalAmount total={data.data.totalAmount} />
-          <MonthDifference />
+          <div className="flex flex-col items-center border border-neutral-300 bg-white dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100 p-12 rounded-2xl">
+            <span className="text-xl">Total Net Worth</span>
+            <span className="text-xl">{formatBRL(data.data.totalAmount)}</span>
+          </div>
+
+          <div className="flex flex-col items-center p-12 rounded-2xl border border-neutral-300 bg-white dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100 text-xl">
+            <span className="text-xl">This month</span>
+            <span className="text-xl">+ R$ 2,000.00</span>
+          </div>
         </div>
 
         <div className="flex justify-end">
-          <NewAccountButton />
+          <AccountNewDialog />
         </div>
 
         <AccountsTable data={data.data} metadata={data.metadata} />
@@ -74,16 +77,3 @@ export function Accounts() {
     </Layout>
   );
 }
-
-const NewAccountButton = () => {
-  return (
-    <AccountNewDialog />
-    // <Link
-    //   to={ROUTES.ACCOUNTS_NEW}
-    //   className="max-w-max px-4 py-2 text-white text-sm bg-blue-700 rounded-lg flex gap-1 items-center"
-    // >
-    //   <FaPlus />
-    //   New Account
-    // </Link>
-  );
-};
