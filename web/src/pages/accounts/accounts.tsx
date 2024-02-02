@@ -27,8 +27,8 @@ export function Accounts() {
   if (isLoading) {
     return (
       <Layout>
-        <div className="w-full bg-neutral-950 px-8 flex flex-col gap-10">
-          <h1 className="text-neutral-100 text-4xl">Accounts</h1>
+        <div className="w-full dark:bg-neutral-950 px-8 flex flex-col gap-10">
+          <h1 className="dark:text-neutral-100 text-4xl">Accounts</h1>
 
           <div className="flex flex-col gap-10 sm:flex-row">
             <CardSkeleton />
@@ -47,8 +47,8 @@ export function Accounts() {
   if (!data || error) {
     return (
       <Layout>
-        <div className="h-full flex justify-center items-center">
-          <span className="text-white text-center">
+        <div className="h-full flex justify-center items-center dark:bg-neutral-950">
+          <span className="dark:text-white text-center">
             Failed to fetch accounts
           </span>
         </div>
@@ -58,8 +58,8 @@ export function Accounts() {
 
   return (
     <Layout>
-      <main className="w-full bg-neutral-950 p-8 flex flex-col gap-10">
-        <h1 className="text-neutral-100 text-4xl">Accounts</h1>
+      <main className="w-full dark:bg-neutral-950 p-8 flex flex-col gap-10">
+        <h1 className="dark:text-neutral-100 text-4xl">Accounts</h1>
 
         <div className="flex flex-col gap-10 sm:flex-row">
           <TotalAmount total={data.data.totalAmount} />
