@@ -1,6 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
 import { PlusCircleIcon } from "lucide-react";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import { CreateAccountProps, createAccount } from "@/api";
 import {
@@ -19,24 +22,31 @@ import {
 import { useRouterNavigate } from "@/hooks";
 import { ROUTES } from "@/router";
 
+const createAccountSchema = z.object({
+  name: z.string(),
+  amount: z.coerce.number(),
+});
+
+type CreateAccountSchema = z.infer<typeof createAccountSchema>;
+
 export function AccountNewDialog() {
   const router = useRouterNavigate();
-
-  const [name, setName] = useState("");
-  const [amount, setAmount] = useState(1);
+  const { register, handleSubmit } = useForm<CreateAccountSchema>({
+    resolver: zodResolver(createAccountSchema),
+  });
 
   const { isPending, isError, mutate } = useMutation({
     mutationFn: (account: CreateAccountProps) => createAccount(account),
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    mutate({ name, amount });
+  const handleCreateAccount = async (data: CreateAccountSchema) => {
+    mutate(data);
 
     if (isError) {
       alert("Unable to create");
       router.reload();
     }
+
     router.navigate(ROUTES.ACCOUNTS);
   };
 
@@ -58,38 +68,46 @@ export function AccountNewDialog() {
           <DialogDescription></DialogDescription>
         </DialogHeader>
 
-        <Label htmlFor="account-new-name">Name</Label>
-        <Input
-          id="account-new-name"
-          type="text"
-          placeholder="Bank Name"
-          onChange={(e) => setName(e.target.value)}
-        />
+        <form
+          className="space-y-6"
+          onSubmit={handleSubmit(handleCreateAccount)}
+        >
+          <div>
+            <Label htmlFor="account-new-name">Name</Label>
+            <Input
+              id="account-new-name"
+              type="text"
+              placeholder="Bank Name"
+              {...register("name")}
+            />
+          </div>
 
-        <Label htmlFor="account-new-amount">Amount</Label>
-        <Input
-          id="account-new-amount"
-          type="number"
-          min={1}
-          placeholder="1"
-          onChange={(e) => setAmount(Number(e.target.value))}
-        />
+          <div>
+            <Label htmlFor="account-new-amount">Amount</Label>
+            <Input
+              id="account-new-amount"
+              type="number"
+              min={1}
+              placeholder="1"
+              {...register("amount")}
+            />
+          </div>
 
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button type="submit" variant="outline">
-              Cancel
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button type="submit" variant="outline">
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button
+              type="submit"
+              variant="default"
+              className="bg-blue-500 text-white"
+            >
+              Confirm
             </Button>
-          </DialogClose>
-          <Button
-            type="submit"
-            variant="default"
-            className="bg-blue-500 text-white"
-            onClick={handleSubmit}
-          >
-            Confirm
-          </Button>
-        </DialogFooter>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );
