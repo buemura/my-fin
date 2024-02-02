@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import { ROUTES } from "@/router";
 import { useSidebarStore } from "@/store/app-store";
-import { ModeToggle } from "../mode-toggle";
+import { ModeToggle } from "../theme/mode-toggle";
 
 export function Header() {
   const { toggleSidebar } = useSidebarStore();

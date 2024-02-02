@@ -1,17 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
-import { FaPlus } from "react-icons/fa";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 import { getAccountList } from "@/api/accounts";
+import { Layout } from "@/components/layout";
+import { CardSkeleton, TableSkeleton } from "@/components/ui/skeleton";
 import {
   AccountNewDialog,
   AccountsTable,
   MonthDifference,
   TotalAmount,
-} from "@/components/feature/accounts";
-import { Layout } from "@/components/layout";
-import { CardSkeleton, TableSkeleton } from "@/components/ui/skeleton";
-import { ROUTES } from "@/router";
+} from "@/pages/accounts/components";
 
 export function Accounts() {
   const [queryParam] = useSearchParams();
