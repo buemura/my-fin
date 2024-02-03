@@ -6,21 +6,26 @@ import { updateAccountById } from "@/api";
 import {
   Button,
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
   Input,
-  Label,
 } from "@/components/ui";
 import { useRouterNavigate } from "@/hooks";
 import { AccountType } from "@/types";
 
 const editAccountSchema = z.object({
-  name: z.string(),
+  name: z.string().min(1, {
+    message: "Name cannot be empty",
+  }),
   amount: z.coerce.number(),
 });
 
@@ -29,8 +34,12 @@ type EditAccountSchema = z.infer<typeof editAccountSchema>;
 export function AccountEditDialog(account: AccountType) {
   const { router } = useRouterNavigate();
 
-  const { register, handleSubmit } = useForm<EditAccountSchema>({
+  const form = useForm<EditAccountSchema>({
     resolver: zodResolver(editAccountSchema),
+    defaultValues: {
+      name: account.name,
+      amount: account.amount,
+    },
   });
 
   const handleEditAccount = async (data: EditAccountSchema) => {
@@ -55,42 +64,41 @@ export function AccountEditDialog(account: AccountType) {
           <DialogDescription></DialogDescription>
         </DialogHeader>
 
-        <form className="space-y-6" onSubmit={handleSubmit(handleEditAccount)}>
-          <div>
-            <Label htmlFor="account-edit-name">Bank Name</Label>
-            <Input
-              id="account-edit-name"
-              type="text"
-              placeholder="Bank Name"
-              defaultValue={account.name}
-              {...register("name")}
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleEditAccount)}
+            className="space-y-8"
+          >
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Bank name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
 
-          <div>
-            <Label htmlFor="account-edit-amount">Amount</Label>
-            <Input
-              id="account-edit-amount"
-              type="text"
-              placeholder="Amount"
-              defaultValue={account.amount}
-              {...register("amount")}
+            <FormField
+              control={form.control}
+              name="amount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Amount</FormLabel>
+                  <FormControl>
+                    <Input type="number" placeholder="1000" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
-            <Button
-              type="submit"
-              variant="default"
-              className="bg-blue-500 text-white"
-            >
-              Confirm
-            </Button>
-          </DialogFooter>
-        </form>
+            <Button type="submit">Submit</Button>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );

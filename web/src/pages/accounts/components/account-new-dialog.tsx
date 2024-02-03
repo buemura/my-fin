@@ -1,29 +1,33 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { PlusCircleIcon } from "lucide-react";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 
 import { CreateAccountProps, createAccount } from "@/api";
 import {
   Button,
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
   Input,
-  Label,
 } from "@/components/ui";
 import { useRouterNavigate } from "@/hooks";
 import { ROUTES } from "@/router";
 
 const createAccountSchema = z.object({
-  name: z.string(),
+  name: z.string().min(1, {
+    message: "Name cannot be empty",
+  }),
   amount: z.coerce.number(),
 });
 
@@ -32,7 +36,7 @@ type CreateAccountSchema = z.infer<typeof createAccountSchema>;
 export function AccountNewDialog() {
   const { router } = useRouterNavigate();
 
-  const { register, handleSubmit } = useForm<CreateAccountSchema>({
+  const form = useForm<CreateAccountSchema>({
     resolver: zodResolver(createAccountSchema),
   });
 
@@ -69,44 +73,41 @@ export function AccountNewDialog() {
           <DialogDescription></DialogDescription>
         </DialogHeader>
 
-        <form
-          className="space-y-6"
-          onSubmit={handleSubmit(handleCreateAccount)}
-        >
-          <div>
-            <Label htmlFor="account-new-name">Name</Label>
-            <Input
-              id="account-new-name"
-              type="text"
-              placeholder="Bank Name"
-              {...register("name")}
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleCreateAccount)}
+            className="space-y-8"
+          >
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Bank name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
 
-          <div>
-            <Label htmlFor="account-new-amount">Amount</Label>
-            <Input
-              id="account-new-amount"
-              type="number"
-              min={1}
-              placeholder="1"
-              {...register("amount")}
+            <FormField
+              control={form.control}
+              name="amount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Amount</FormLabel>
+                  <FormControl>
+                    <Input type="number" placeholder="1000" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
-            <Button
-              type="submit"
-              variant="default"
-              className="bg-blue-500 text-white"
-            >
-              Confirm
-            </Button>
-          </DialogFooter>
-        </form>
+            <Button type="submit">Submit</Button>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );
