@@ -22,10 +22,10 @@ func (usu *UserSignupUsecase) Execute(input user.UserSignupInput) (*user.User, e
 	slog.Info("[UserSignupUsecase.Execute] - Sign up user: " + input.Email)
 	userExists, err := usu.repo.FindByEmail(input.Email)
 	if err != nil {
-		if userExists != nil {
-			return nil, errors.New("user already exists")
-		}
 		return nil, err
+	}
+	if userExists != nil {
+		return nil, errors.New("user already exists")
 	}
 
 	hashedPassword, err := encryption.HashPassword(input.Password)

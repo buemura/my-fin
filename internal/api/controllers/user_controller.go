@@ -5,6 +5,8 @@ import (
 	"net/http"
 
 	"github.com/buemura/my-fin/internal/api/helpers"
+	"github.com/buemura/my-fin/internal/api/middleware"
+	"github.com/buemura/my-fin/internal/constant"
 	"github.com/buemura/my-fin/internal/domain/user"
 	"github.com/buemura/my-fin/internal/usecase"
 	"github.com/buemura/my-fin/pkg/utils"
@@ -15,15 +17,18 @@ import (
 type UserController struct {
 	userSigninUsecase usecase.UserSigninUsecase
 	userSignupUsecase usecase.UserSignupUsecase
+	userGetUsecase    usecase.UserGetUsecase
 }
 
 func NewUserController(
 	userSigninUsecase usecase.UserSigninUsecase,
 	userSignupUsecase usecase.UserSignupUsecase,
+	userGetUsecase usecase.UserGetUsecase,
 ) *UserController {
 	return &UserController{
 		userSigninUsecase: userSigninUsecase,
 		userSignupUsecase: userSignupUsecase,
+		userGetUsecase:    userGetUsecase,
 	}
 }
 
@@ -72,6 +77,21 @@ func (h *UserController) SigninUser(c echo.Context) error {
 		Password: body.Password,
 	}
 	res, err := h.userSigninUsecase.Execute(input)
+	if err != nil {
+		return helpers.BuildErrorResponse(c, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, res)
+}
+
+func (h *UserController) GetMe(c echo.Context) error {
+	slog.Info("[UserController.GetMe] - Validating token")
+	user, ok := c.Get(constant.UserContextKey).(middleware.RquestUser)
+	if !ok {
+		return helpers.BuildErrorResponse(c, "permission denied")
+	}
+
+	res, err := h.userGetUsecase.Execute(user.ID)
 	if err != nil {
 		return helpers.BuildErrorResponse(c, err.Error())
 	}
