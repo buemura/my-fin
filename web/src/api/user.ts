@@ -35,15 +35,11 @@ export async function signinUser(body: SigninUserProps): Promise<UserAuthType> {
 
 export async function getUser({
   accessToken,
-}: GetUserProps): Promise<UserType | null> {
-  try {
-    const { data } = await axios.get<UserType>(`${apiUser}/me`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-    return data;
-  } catch (error) {
-    return null;
-  }
+}: GetUserProps): Promise<UserType> {
+  const { data } = await axios.get<UserType>(`${apiUser}/me`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  return data;
 }

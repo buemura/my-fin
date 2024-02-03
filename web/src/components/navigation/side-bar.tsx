@@ -5,8 +5,18 @@ import { MdLogout } from "react-icons/md";
 import { Link } from "react-router-dom";
 
 import { ROUTES } from "@/router";
+import { useUserStore } from "@/store";
+import { useRouterNavigate } from "@/hooks";
 
 export function Sidebar() {
+  const { logoutUser } = useUserStore();
+  const { router } = useRouterNavigate();
+
+  const handleLogout = () => {
+    logoutUser();
+    router.navigate(ROUTES.SIGNIN);
+  };
+
   return (
     <div className="flex flex-col gap-6 dark:bg-neutral-900">
       {/* App options */}
@@ -50,13 +60,13 @@ export function Sidebar() {
           <TbSettings />
           <span>Settings</span>
         </Link> */}
-        <Link
+        <div
           className="hover:bg-neutral-100 dark:hover:bg-neutral-800 px-2 p-1 rounded-sm flex gap-2 items-center"
-          to={ROUTES.ROOT}
+          onClick={handleLogout}
         >
           <MdLogout />
           <span>Sign Out</span>
-        </Link>
+        </div>
       </div>
     </div>
   );

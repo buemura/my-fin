@@ -1,17 +1,6 @@
 import { Layout } from "@/components/layout";
-import { useCheckAuth, useRouterNavigate } from "@/hooks";
-import { ROUTES } from "@/router";
-import { useUserStore } from "@/store";
 
 export function Dashboard() {
-  const { user } = useUserStore();
-  const { status } = useCheckAuth(user);
-  const { router } = useRouterNavigate();
-
-  if (status === "error") {
-    router.navigate(ROUTES.SIGNIN);
-  }
-
   return (
     <Layout>
       <main className="dark:bg-neutral-950 p-8 flex flex-col gap-10">
