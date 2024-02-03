@@ -9,17 +9,28 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  Icons,
 } from "@/components/ui";
 import { useRouterNavigate } from "@/hooks";
 import { useUserStore } from "@/store";
 import { AccountType } from "@/types";
+import { useMutation } from "@tanstack/react-query";
 
 export function AccountDeleteDialog(account: AccountType) {
   const { user } = useUserStore();
   const { router } = useRouterNavigate();
 
+  const { isPending, isError, mutate } = useMutation({
+    mutationFn: () => deleteAccountById(user?.user.id || "", account.id),
+  });
+
   const handleDeleteAccount = async () => {
-    await deleteAccountById(user?.user.id || "", account.id);
+    mutate();
+
+    if (isError) {
+      alert("Unable to delete");
+    }
+
     router.reload();
   };
 
@@ -49,6 +60,9 @@ export function AccountDeleteDialog(account: AccountType) {
             variant="destructive"
             onClick={handleDeleteAccount}
           >
+            {isPending && (
+              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            )}
             Confirm
           </Button>
         </DialogFooter>

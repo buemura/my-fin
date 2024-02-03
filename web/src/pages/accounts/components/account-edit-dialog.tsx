@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { updateAccountById } from "@/api";
+import { UpdateAccountProps, updateAccountById } from "@/api";
 import {
   Button,
   Dialog,
@@ -17,11 +17,13 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  Icons,
   Input,
 } from "@/components/ui";
 import { useRouterNavigate } from "@/hooks";
 import { AccountType } from "@/types";
 import { useUserStore } from "@/store";
+import { useMutation } from "@tanstack/react-query";
 
 const editAccountSchema = z.object({
   name: z.string().min(1, {
@@ -44,11 +46,21 @@ export function AccountEditDialog(account: AccountType) {
     },
   });
 
+  const { isPending, isError, mutate } = useMutation({
+    mutationFn: (data: UpdateAccountProps) =>
+      updateAccountById(user?.user.id || "", data),
+  });
+
   const handleEditAccount = async (data: EditAccountSchema) => {
-    await updateAccountById(user?.user.id || "", {
-      id: account.id,
+    mutate({
       ...data,
+      id: account.id,
     });
+
+    if (isError) {
+      alert("Unable to update");
+    }
+
     router.reload();
   };
 
@@ -98,7 +110,12 @@ export function AccountEditDialog(account: AccountType) {
                 </FormItem>
               )}
             />
-            <Button type="submit">Submit</Button>
+            <Button type="submit">
+              {isPending && (
+                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              Submit
+            </Button>
           </form>
         </Form>
       </DialogContent>

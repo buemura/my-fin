@@ -19,6 +19,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  Icons,
   Input,
 } from "@/components/ui";
 import { useRouterNavigate } from "@/hooks";
@@ -52,10 +53,9 @@ export function AccountNewDialog() {
 
     if (isError) {
       alert("Unable to create");
-      router.reload();
     }
 
-    router.navigate(ROUTES.ACCOUNTS);
+    router.reload();
   };
 
   return (
@@ -108,7 +108,12 @@ export function AccountNewDialog() {
                 </FormItem>
               )}
             />
-            <Button type="submit">Submit</Button>
+            <Button type="submit">
+              {isPending && (
+                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              Submit
+            </Button>
           </form>
         </Form>
       </DialogContent>
