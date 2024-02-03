@@ -21,6 +21,7 @@ import {
 } from "@/components/ui";
 import { useRouterNavigate } from "@/hooks";
 import { AccountType } from "@/types";
+import { useUserStore } from "@/store";
 
 const editAccountSchema = z.object({
   name: z.string().min(1, {
@@ -32,6 +33,7 @@ const editAccountSchema = z.object({
 type EditAccountSchema = z.infer<typeof editAccountSchema>;
 
 export function AccountEditDialog(account: AccountType) {
+  const { user } = useUserStore();
   const { router } = useRouterNavigate();
 
   const form = useForm<EditAccountSchema>({
@@ -43,7 +45,7 @@ export function AccountEditDialog(account: AccountType) {
   });
 
   const handleEditAccount = async (data: EditAccountSchema) => {
-    await updateAccountById({
+    await updateAccountById(user?.user.id || "", {
       id: account.id,
       ...data,
     });

@@ -2,19 +2,21 @@ import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
 import { getAccountList } from "@/api/accounts";
-import { formatBRL } from "@/utils/format-currency";
 import { Layout } from "@/components/layout";
 import { CardSkeleton, TableSkeleton } from "@/components/ui/skeleton";
 import { AccountNewDialog, AccountsTable } from "@/pages/accounts/components";
+import { useUserStore } from "@/store";
+import { formatBRL } from "@/utils";
 
 export function Accounts() {
+  const { user } = useUserStore();
   const [queryParam] = useSearchParams();
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["accounts"],
     queryFn: async () =>
       getAccountList({
-        userId: "c3e857a5-f881-4d0e-b85e-7bdb15e6639a",
+        userId: user?.user.id || "",
         page: Number(queryParam.get("page")) ?? 1,
       }),
   });

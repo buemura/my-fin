@@ -1,6 +1,7 @@
 import axios from "axios";
 
 import { AccountListType, AccountType } from "@/types/account";
+import { env } from "@/utils";
 
 export type GetAccountListProps = {
   userId: string;
@@ -19,7 +20,7 @@ export type UpdateAccountProps = {
   amount: number;
 };
 
-const apiUser = "http://127.0.0.1:8080/api/user";
+const apiUser = env.VITE_BACKEND_URL + "/user";
 
 export async function getAccountList(
   props: GetAccountListProps
@@ -39,23 +40,13 @@ export async function getAccountList(
   }
 }
 
-export async function getAccountById(id: string): Promise<AccountType | null> {
-  try {
-    const { data } = await axios.get<AccountType>(
-      `${apiUser}/c3e857a5-f881-4d0e-b85e-7bdb15e6639a/accounts/${id}`
-    );
-    return data;
-  } catch (error) {
-    return null;
-  }
-}
-
 export async function createAccount(
+  userId: string,
   body: CreateAccountProps
 ): Promise<AccountType | null> {
   try {
     const { data } = await axios.post<AccountType>(
-      `${apiUser}/c3e857a5-f881-4d0e-b85e-7bdb15e6639a/accounts`,
+      `${apiUser}/${userId}/accounts`,
       body
     );
     return data;
@@ -65,11 +56,12 @@ export async function createAccount(
 }
 
 export async function updateAccountById(
+  userId: string,
   props: UpdateAccountProps
 ): Promise<AccountType | null> {
   try {
     const { data } = await axios.put<AccountType>(
-      `${apiUser}/c3e857a5-f881-4d0e-b85e-7bdb15e6639a/accounts/${props.id}`,
+      `${apiUser}/${userId}/accounts/${props.id}`,
       {
         name: props.name,
         amount: props.amount,
@@ -82,11 +74,12 @@ export async function updateAccountById(
 }
 
 export async function deleteAccountById(
-  id: string
+  userId: string,
+  accountId: string
 ): Promise<AccountType | null> {
   try {
     const { data } = await axios.delete<AccountType>(
-      `${apiUser}/c3e857a5-f881-4d0e-b85e-7bdb15e6639a/accounts/${id}`
+      `${apiUser}/${userId}/accounts/${accountId}`
     );
     return data;
   } catch (error) {

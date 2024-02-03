@@ -23,6 +23,7 @@ import {
 } from "@/components/ui";
 import { useRouterNavigate } from "@/hooks";
 import { ROUTES } from "@/router";
+import { useUserStore } from "@/store";
 
 const createAccountSchema = z.object({
   name: z.string().min(1, {
@@ -34,6 +35,7 @@ const createAccountSchema = z.object({
 type CreateAccountSchema = z.infer<typeof createAccountSchema>;
 
 export function AccountNewDialog() {
+  const { user } = useUserStore();
   const { router } = useRouterNavigate();
 
   const form = useForm<CreateAccountSchema>({
@@ -41,7 +43,8 @@ export function AccountNewDialog() {
   });
 
   const { isPending, isError, mutate } = useMutation({
-    mutationFn: (account: CreateAccountProps) => createAccount(account),
+    mutationFn: (account: CreateAccountProps) =>
+      createAccount(user?.user.id || "", account),
   });
 
   const handleCreateAccount = async (data: CreateAccountSchema) => {

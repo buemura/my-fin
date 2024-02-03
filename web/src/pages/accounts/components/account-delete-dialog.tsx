@@ -11,13 +11,15 @@ import {
   DialogTrigger,
 } from "@/components/ui";
 import { useRouterNavigate } from "@/hooks";
+import { useUserStore } from "@/store";
 import { AccountType } from "@/types";
 
 export function AccountDeleteDialog(account: AccountType) {
+  const { user } = useUserStore();
   const { router } = useRouterNavigate();
 
   const handleDeleteAccount = async () => {
-    await deleteAccountById(account.id);
+    await deleteAccountById(user?.user.id || "", account.id);
     router.reload();
   };
 

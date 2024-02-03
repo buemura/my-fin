@@ -1,6 +1,7 @@
 import axios from "axios";
 
 import { UserAuthType, UserType } from "@/types/user";
+import { env } from "@/utils/env";
 
 export type SigninUserProps = {
   email: string;
@@ -15,7 +16,7 @@ export type GetUserProps = {
   accessToken: string;
 };
 
-const apiUser = "http://127.0.0.1:8080/api/user";
+const apiUser = env.VITE_BACKEND_URL + "/user";
 
 export async function signupUser(
   body: SignupUserProps
