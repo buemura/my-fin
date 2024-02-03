@@ -96,9 +96,7 @@ export function AccountNewDialog() {
 
           <DialogFooter>
             <DialogClose asChild>
-              <Button type="submit" variant="outline">
-                Cancel
-              </Button>
+              <Button variant="outline">Cancel</Button>
             </DialogClose>
             <Button
               type="submit"
