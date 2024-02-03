@@ -12,14 +12,15 @@ export const useCheckAuth = (user: UserAuthType | null) => {
     router.navigate(ROUTES.SIGNIN);
   }
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["user"],
-    queryFn: async () =>
-      getUser({
-        userId: user?.user.id || "",
-        accessToken: user?.accessToken || "",
-      }),
+  const userProps = {
+    userId: user?.user.id || "",
+    accessToken: user?.accessToken || "",
+  };
+
+  const query = useQuery({
+    queryKey: ["getUser"],
+    queryFn: async () => getUser(userProps),
   });
 
-  return { data, isLoading, error };
+  return query;
 };

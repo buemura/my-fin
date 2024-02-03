@@ -5,11 +5,11 @@ import { useUserStore } from "@/store";
 
 export function Dashboard() {
   const { user } = useUserStore();
-  const { data, error } = useCheckAuth(user);
+  const { status } = useCheckAuth(user);
   const { router } = useRouterNavigate();
 
-  if (!error || !data) {
-    return router.navigate(ROUTES.SIGNIN);
+  if (status === "error") {
+    router.navigate(ROUTES.SIGNIN);
   }
 
   return (

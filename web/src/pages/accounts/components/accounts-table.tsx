@@ -7,10 +7,11 @@ import {
   TableRow,
 } from "@/components/ui";
 import { AccountListType } from "@/types/account";
-import { formatBRL } from "@/utils/currency";
+import { formatBRL } from "@/utils/format-currency";
 import { AccountDeleteDialog } from "./account-delete-dialog";
 import { AccountEditDialog } from "./account-edit-dialog";
 import { Pagination } from "./accounts-table-pagination";
+import { formatDate } from "@/utils";
 
 const tableHeader = ["Name", "Amount", "Last Updated", "Action"];
 
@@ -30,9 +31,7 @@ export const AccountsTable = ({ data, metadata }: AccountListType) => {
               <TableRow key={acc.id}>
                 <TableCell>{acc.name}</TableCell>
                 <TableCell>{formatBRL(acc.amount)}</TableCell>
-                <TableCell>
-                  {new Date(acc.updatedAt).toLocaleDateString("pt-BR")}
-                </TableCell>
+                <TableCell>{formatDate(acc.updatedAt)}</TableCell>
                 <TableCell>
                   <AccountEditDialog {...acc} />
                   <AccountDeleteDialog {...acc} />

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
 import { getAccountList } from "@/api/accounts";
-import { formatBRL } from "@/utils/currency";
+import { formatBRL } from "@/utils/format-currency";
 import { Layout } from "@/components/layout";
 import { CardSkeleton, TableSkeleton } from "@/components/ui/skeleton";
 import { AccountNewDialog, AccountsTable } from "@/pages/accounts/components";

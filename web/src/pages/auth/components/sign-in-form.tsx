@@ -11,7 +11,13 @@ import {
   FormLabel,
   FormMessage,
   Input,
+  Icons,
 } from "@/components/ui";
+import { useUserStore } from "@/store";
+import { useMutation } from "@tanstack/react-query";
+import { signinUser } from "@/api";
+import { useRouterNavigate } from "@/hooks";
+import { ROUTES } from "@/router";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -25,6 +31,9 @@ const formSchema = z.object({
 type FormSchema = z.infer<typeof formSchema>;
 
 export function SignInForm() {
+  const { setUser } = useUserStore();
+  const { router } = useRouterNavigate();
+
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -33,9 +42,19 @@ export function SignInForm() {
     },
   });
 
-  function onFormSubmit(values: FormSchema) {
-    console.log(values);
-  }
+  const { isPending, mutate } = useMutation({
+    mutationFn: async (user: FormSchema) => await signinUser(user),
+    onError: () => {
+      alert("Unable to sign in");
+      router.reload();
+    },
+    onSuccess: (data) => {
+      setUser(data);
+      router.navigate(ROUTES.DASHBOARD);
+    },
+  });
+
+  const onFormSubmit = (payload: FormSchema) => mutate(payload);
 
   return (
     <Form {...form}>
@@ -69,6 +88,7 @@ export function SignInForm() {
         />
 
         <Button type="submit" className="w-full">
+          {isPending && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
           Sign In
         </Button>
       </form>

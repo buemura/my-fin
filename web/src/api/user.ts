@@ -12,7 +12,6 @@ export type SignupUserProps = SigninUserProps & {
 };
 
 export type GetUserProps = {
-  userId: string;
   accessToken: string;
 };
 
@@ -29,23 +28,16 @@ export async function signupUser(
   }
 }
 
-export async function signinUser(
-  body: SigninUserProps
-): Promise<UserAuthType | null> {
-  try {
-    const { data } = await axios.post<UserAuthType>(`${apiUser}/signin`, body);
-    return data;
-  } catch (error) {
-    return null;
-  }
+export async function signinUser(body: SigninUserProps): Promise<UserAuthType> {
+  const { data } = await axios.post<UserAuthType>(`${apiUser}/signin`, body);
+  return data;
 }
 
 export async function getUser({
-  userId,
   accessToken,
 }: GetUserProps): Promise<UserType | null> {
   try {
-    const { data } = await axios.get<UserType>(`${apiUser}/${userId}`, {
+    const { data } = await axios.get<UserType>(`${apiUser}/me`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
