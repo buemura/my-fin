@@ -18,15 +18,9 @@ export type GetUserProps = {
 
 const apiUser = env.VITE_BACKEND_URL + "/user";
 
-export async function signupUser(
-  body: SignupUserProps
-): Promise<UserType | null> {
-  try {
-    const { data } = await axios.post<UserType>(`${apiUser}/signup`, body);
-    return data;
-  } catch (error) {
-    return null;
-  }
+export async function signupUser(body: SignupUserProps): Promise<UserType> {
+  const { data } = await axios.post<UserType>(`${apiUser}/signup`, body);
+  return data;
 }
 
 export async function signinUser(body: SigninUserProps): Promise<UserAuthType> {

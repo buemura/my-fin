@@ -42,7 +42,7 @@ func (r *gormAccountRepository) FindByUserId(userId string, offset, limit int) (
 
 func (r *gormAccountRepository) GetTotalsByUserId(userId string) (*account.AccountTotals, error) {
 	var totals account.AccountTotals
-	r.db.Raw("SELECT SUM(amount) as total_amount, COUNT(id) AS total_items FROM account WHERE user_id = ?", userId).Scan(&totals)
+	r.db.Raw("SELECT SUM(balance) as total_balance, COUNT(id) AS total_items FROM account WHERE user_id = ?", userId).Scan(&totals)
 	return &totals, nil
 }
 

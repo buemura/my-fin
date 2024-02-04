@@ -1,8 +1,8 @@
 package account
 
 type AccountTotals struct {
-	TotalAmount int `json:"totalAmount"`
-	TotalItems  int `json:"totalItems"`
+	TotalBalance int `json:"totalBalance"`
+	TotalItems   int `json:"totalItems"`
 }
 
 type AccountRepository interface {

@@ -26,8 +26,11 @@ func (acu *AccountUpdateUsecase) Execute(accountId string, input account.Account
 	if input.Name != nil {
 		acc.Name = *input.Name
 	}
-	if input.Amount != nil {
-		acc.Amount = *input.Amount
+	if input.Balance != nil {
+		acc.Balance = *input.Balance
+	}
+	if input.Color != nil {
+		acc.Color = *input.Color
 	}
 
 	res, err := acu.repo.Save(acc)

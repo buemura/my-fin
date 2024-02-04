@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { AccountListType, AccountType } from "@/types/account";
+import { AccountColor, AccountListType, AccountType } from "@/types/account";
 import { env } from "@/utils";
 
 export type GetAccountListProps = {
@@ -10,22 +10,67 @@ export type GetAccountListProps = {
 };
 
 export type CreateAccountProps = {
+  userId: string;
   name: string;
-  amount: number;
+  balance: number;
+  color: AccountColor;
 };
 
-export type UpdateAccountProps = {
+export type UpdateAccountProps = Partial<CreateAccountProps> & {
   id: string;
-  name: string;
-  amount: number;
+  userId: string;
 };
 
 const apiUser = env.VITE_BACKEND_URL + "/user";
 
 export async function getAccountList(
   props: GetAccountListProps
-): Promise<AccountListType | null> {
-  try {
+): Promise<AccountListType> {
+  let url = `${apiUser}/${props.userId}/accounts`;
+  if (props.page) {
+    url += `?page=${props.page}`;
+    if (props.items) {
+      url += `&items=${props.items}`;
+    }
+  }
+  const { data } = await axios.get<AccountListType>(url);
+  return data;
+}
+
+export async function createAccount(
+  props: CreateAccountProps
+): Promise<AccountType> {
+  const { data } = await axios.post<AccountType>(
+    `${apiUser}/${props.userId}/accounts`,
+    props
+  );
+  return data;
+}
+
+export async function updateAccountById(
+  props: UpdateAccountProps
+): Promise<AccountType> {
+  const { data } = await axios.put<AccountType>(
+    `${apiUser}/${props.userId}/accounts/${props.id}`,
+    props
+  );
+  return data;
+}
+
+export async function deleteAccountById(
+  userId: string,
+  accountId: string
+): Promise<AccountType> {
+  const { data } = await axios.delete<AccountType>(
+    `${apiUser}/${userId}/accounts/${accountId}`
+  );
+  return data;
+}
+
+export class AccountService {
+  static async getAccountList(
+    props: GetAccountListProps
+  ): Promise<AccountListType> {
     let url = `${apiUser}/${props.userId}/accounts`;
     if (props.page) {
       url += `?page=${props.page}`;
@@ -35,54 +80,33 @@ export async function getAccountList(
     }
     const { data } = await axios.get<AccountListType>(url);
     return data;
-  } catch (error) {
-    return null;
   }
-}
 
-export async function createAccount(
-  userId: string,
-  body: CreateAccountProps
-): Promise<AccountType | null> {
-  try {
+  static async createAccount(props: CreateAccountProps): Promise<AccountType> {
     const { data } = await axios.post<AccountType>(
-      `${apiUser}/${userId}/accounts`,
-      body
+      `${apiUser}/${props.userId}/accounts`,
+      props
     );
     return data;
-  } catch (error) {
-    return null;
   }
-}
 
-export async function updateAccountById(
-  userId: string,
-  props: UpdateAccountProps
-): Promise<AccountType | null> {
-  try {
+  static async updateAccountById(
+    props: UpdateAccountProps
+  ): Promise<AccountType> {
     const { data } = await axios.put<AccountType>(
-      `${apiUser}/${userId}/accounts/${props.id}`,
-      {
-        name: props.name,
-        amount: props.amount,
-      }
+      `${apiUser}/${props.userId}/accounts/${props.id}`,
+      props
     );
     return data;
-  } catch (error) {
-    return null;
   }
-}
 
-export async function deleteAccountById(
-  userId: string,
-  accountId: string
-): Promise<AccountType | null> {
-  try {
+  static async deleteAccountById(
+    userId: string,
+    accountId: string
+  ): Promise<AccountType> {
     const { data } = await axios.delete<AccountType>(
       `${apiUser}/${userId}/accounts/${accountId}`
     );
     return data;
-  } catch (error) {
-    return null;
   }
 }

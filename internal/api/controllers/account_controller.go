@@ -53,9 +53,10 @@ func (h *AccountController) Create(c echo.Context) error {
 
 	userId := c.Param("userId")
 	input := account.AccountCreateInput{
-		UserId: userId,
-		Name:   body.Name,
-		Amount: body.Amount,
+		UserId:  userId,
+		Name:    body.Name,
+		Balance: body.Balance,
+		Color:   body.Color,
 	}
 
 	res, err := h.AccountCreateUsecase.Execute(input)
@@ -118,8 +119,9 @@ func (h *AccountController) Update(c echo.Context) error {
 	}
 
 	input := account.AccountUpdateInput{
-		Name:   body.Name,
-		Amount: body.Amount,
+		Name:    body.Name,
+		Balance: body.Balance,
+		Color:   body.Color,
 	}
 	res, err := h.AccountUpdateUsecase.Execute(accountId, input)
 	if err != nil {

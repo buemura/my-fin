@@ -1,10 +1,13 @@
 import { PaginationMetadata } from "./pagination-metadata";
 
+export type AccountColor = "orange" | "purple" | "green" | "blue" | "black";
+
 export type AccountType = {
   id: string;
+  userId: string;
   name: string;
   balance: number;
-  color: "orange" | "purple" | "green" | "blue";
+  color: AccountColor;
   updatedAt: Date;
 };
 

@@ -32,8 +32,8 @@ func (acu *AccountListUsecase) Execute(request account.AccountListInput) (*accou
 
 	return &account.AccountList{
 		Data: &account.AccountListOutput{
-			Accounts:    accs,
-			TotalAmount: totals.TotalAmount,
+			Accounts:     accs,
+			TotalBalance: totals.TotalBalance,
 		},
 		Metadata: &account.Metadata{
 			Page:       request.Page,
