@@ -73,7 +73,7 @@ export function AccountNewDialog() {
       <DialogTrigger asChild>
         <Button
           variant="default"
-          className="h-28 flex gap-2 border border-dashed bg-emerald-800 hover:bg-emerald-900"
+          className="h-28 w-full flex gap-2 border border-dashed bg-emerald-800 hover:bg-emerald-900"
         >
           <PlusCircleIcon />
           New account
