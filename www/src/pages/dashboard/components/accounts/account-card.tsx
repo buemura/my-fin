@@ -26,6 +26,7 @@ import { useRouterNavigate } from "@/hooks";
 import { useUserStore } from "@/store";
 import { AccountColor, AccountType } from "@/types";
 import { formatBRL, formatDate } from "@/utils";
+import { AccountDeleteDialog } from "./account-delete-dialog";
 
 const editAccountSchema = z.object({
   name: z.string().min(1, {
@@ -148,15 +149,19 @@ export function AccountCard(account: AccountType) {
               )}
             />
 
-            <Button
-              type="submit"
-              className="bg-emerald-700 hover:bg-emerald-800 text-white"
-            >
-              {isPending && (
-                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-              )}
-              Submit
-            </Button>
+            <div className="flex justify-between">
+              <Button
+                type="submit"
+                className="bg-emerald-700 hover:bg-emerald-800 text-white"
+              >
+                {isPending && (
+                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                Submit
+              </Button>
+
+              <AccountDeleteDialog {...account} />
+            </div>
           </form>
         </Form>
       </DialogContent>
