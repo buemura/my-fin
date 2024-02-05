@@ -24,6 +24,7 @@ import { useRouterNavigate } from "@/hooks";
 import { AccountType } from "@/types";
 import { useUserStore } from "@/store";
 import { useMutation } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
 
 const editAccountSchema = z.object({
   name: z.string().min(1, {
@@ -111,9 +112,7 @@ export function AccountEditDialog(account: AccountType) {
               )}
             />
             <Button type="submit">
-              {isPending && (
-                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-              )}
+              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Submit
             </Button>
           </form>

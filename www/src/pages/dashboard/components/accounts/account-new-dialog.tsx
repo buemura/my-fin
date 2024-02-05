@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { PlusCircleIcon } from "lucide-react";
+import { Loader2, PlusCircleIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -137,9 +137,7 @@ export function AccountNewDialog() {
               type="submit"
               className="bg-emerald-700 hover:bg-emerald-800 text-white"
             >
-              {isPending && (
-                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-              )}
+              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Submit
             </Button>
           </form>

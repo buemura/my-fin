@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { Trash2Icon } from "lucide-react";
+import { Loader2, Trash2Icon } from "lucide-react";
 
 import { AccountService } from "@/api";
 import {
@@ -64,9 +64,7 @@ export function AccountDeleteDialog(account: AccountType) {
             variant="destructive"
             onClick={handleDeleteAccount}
           >
-            {isPending && (
-              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-            )}
+            {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Confirm
           </Button>
         </DialogFooter>

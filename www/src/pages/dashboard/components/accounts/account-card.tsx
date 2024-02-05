@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { WalletIcon } from "lucide-react";
+import { Loader2, WalletIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -114,7 +114,12 @@ export function AccountCard(account: AccountType) {
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input type="text" placeholder="Bank name" {...field} />
+                    <Input
+                      type="text"
+                      placeholder="Bank name"
+                      className="bg-zinc-100 dark:bg-zinc-900"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -128,7 +133,12 @@ export function AccountCard(account: AccountType) {
                 <FormItem>
                   <FormLabel>Balance</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="1000" {...field} />
+                    <Input
+                      type="number"
+                      placeholder="1000"
+                      className="bg-zinc-100 dark:bg-zinc-900"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -142,7 +152,12 @@ export function AccountCard(account: AccountType) {
                 <FormItem>
                   <FormLabel>Color</FormLabel>
                   <FormControl>
-                    <Input type="text" placeholder="Black" {...field} />
+                    <Input
+                      type="text"
+                      placeholder="Black"
+                      className="bg-zinc-100 dark:bg-zinc-900"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -154,9 +169,7 @@ export function AccountCard(account: AccountType) {
                 type="submit"
                 className="bg-emerald-700 hover:bg-emerald-800 text-white"
               >
-                {isPending && (
-                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                )}
+                {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Submit
               </Button>
 

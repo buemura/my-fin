@@ -15,6 +15,7 @@ import { useRouterNavigate } from "@/hooks";
 import { useUserStore } from "@/store";
 import { AccountType } from "@/types";
 import { useMutation } from "@tanstack/react-query";
+import { Loader2 } from "lucide-react";
 
 export function AccountDeleteDialog(account: AccountType) {
   const { user } = useUserStore();
@@ -60,9 +61,7 @@ export function AccountDeleteDialog(account: AccountType) {
             variant="destructive"
             onClick={handleDeleteAccount}
           >
-            {isPending && (
-              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-            )}
+            {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Confirm
           </Button>
         </DialogFooter>

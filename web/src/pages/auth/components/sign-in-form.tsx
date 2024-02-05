@@ -18,6 +18,7 @@ import { useMutation } from "@tanstack/react-query";
 import { signinUser } from "@/api";
 import { useRouterNavigate } from "@/hooks";
 import { ROUTES } from "@/router";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -88,7 +89,7 @@ export function SignInForm() {
         />
 
         <Button type="submit" className="w-full">
-          {isPending && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
+          {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Sign In
         </Button>
       </form>
