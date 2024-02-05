@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
+import { PlusCircleIcon } from "lucide-react";
 
 import { AccountService } from "@/api";
+import { Button } from "@/components/ui";
 import { useUserStore } from "@/store";
 import { AccountListType } from "@/types";
 import { formatBRL } from "@/utils";
@@ -12,7 +14,18 @@ interface AccountListProps {
 }
 
 const AccountList = ({ data }: AccountListProps) => {
-  if (!data || !data.data.accounts.length) return <AccountNewDialog />;
+  if (!data || !data.data.accounts.length)
+    return (
+      <AccountNewDialog>
+        <Button
+          variant="default"
+          className="h-28 w-full flex gap-2 border border-dashed border-white text-white bg-emerald-800 hover:bg-emerald-900"
+        >
+          <PlusCircleIcon />
+          New account
+        </Button>
+      </AccountNewDialog>
+    );
 
   return (
     <>

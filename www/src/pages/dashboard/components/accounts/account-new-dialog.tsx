@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { Loader2, PlusCircleIcon } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -19,7 +19,6 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  Icons,
   Input,
 } from "@/components/ui";
 import { useRouterNavigate } from "@/hooks";
@@ -39,7 +38,7 @@ type CreateAccountSchema = z.infer<typeof createAccountSchema> & {
   color: AccountColor;
 };
 
-export function AccountNewDialog() {
+export function AccountNewDialog({ children }: { children: React.ReactNode }) {
   const { user } = useUserStore();
   const { router } = useRouterNavigate();
 
@@ -70,16 +69,7 @@ export function AccountNewDialog() {
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button
-          variant="default"
-          className="h-28 w-full flex gap-2 border border-dashed bg-emerald-800 hover:bg-emerald-900"
-        >
-          <PlusCircleIcon />
-          New account
-        </Button>
-      </DialogTrigger>
-
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>New account</DialogTitle>

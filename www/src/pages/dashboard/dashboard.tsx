@@ -1,6 +1,7 @@
 import { Header } from "@/components/navigation";
 import { Accounts } from "./components/accounts";
 import { Transactions } from "./components/transactions";
+import { FloatingButton } from "./components/floating-button";
 
 export function Dashboard() {
   return (
@@ -11,6 +12,8 @@ export function Dashboard() {
         <Accounts />
         <Transactions />
       </div>
+
+      <FloatingButton />
     </div>
   );
 }
