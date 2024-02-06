@@ -22,8 +22,8 @@ func setupTransactionRouter(app *echo.Group) {
 	)
 
 	a := app.Group("/user/:userId")
-	a.GET("/transaction", transactionController.List, middleware.EnsureAuth)
-	a.POST("/transaction", transactionController.Create, middleware.EnsureAuth)
-	a.PUT("/transaction/:transactionId", transactionController.Update, middleware.EnsureAuth)
-	a.DELETE("/transaction/:transactionId", transactionController.Delete, middleware.EnsureAuth)
+	a.GET("/transactions", transactionController.List, middleware.EnsureAuth)
+	a.POST("/transactions", transactionController.Create, middleware.EnsureAuth)
+	a.PUT("/transactions/:transactionId", transactionController.Update, middleware.EnsureAuth)
+	a.DELETE("/transactions/:transactionId", transactionController.Delete, middleware.EnsureAuth)
 }

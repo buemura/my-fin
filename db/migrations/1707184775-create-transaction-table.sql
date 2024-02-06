@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS public.transaction (
     account_id VARCHAR(255) REFERENCES public.account(id),
     category_id VARCHAR(255) REFERENCES public.category(id),
     name VARCHAR(45) NOT NULL,
-    amount VARCHAR(45) NOT NULL,
+    amount INTEGER NOT NULL,
     type VARCHAR(45) NOT NULL,
     date TIMESTAMP NOT NULL
 );

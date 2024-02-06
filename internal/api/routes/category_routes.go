@@ -20,8 +20,8 @@ func setupCategorytRouter(app *echo.Group) {
 		*accountUpdateUsecase,
 	)
 
-	app.GET("/category", accountController.List)
-	app.POST("/category", accountController.Create)
-	app.PUT("/category/:accountId", accountController.Update)
-	app.DELETE("/category/:accountId", accountController.Delete)
+	app.GET("/categories", accountController.List)
+	app.POST("/categories", accountController.Create)
+	app.PUT("/categories/:categoryId", accountController.Update)
+	app.DELETE("/categories/:categoryId", accountController.Delete)
 }
