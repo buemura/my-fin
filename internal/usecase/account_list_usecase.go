@@ -19,7 +19,7 @@ func NewAccountListUsecase(repo account.AccountRepository) *AccountListUsecase {
 
 func (acu *AccountListUsecase) Execute(request account.AccountListInput) (*account.AccountList, error) {
 	slog.Info("[AccountListUsecase.Execute] - Get account list for user: " + request.UserId)
-	offset, limit := getPaginationParam(request)
+	offset, limit := getAccountPaginationParam(request)
 	accs, err := acu.repo.FindByUserId(request.UserId, offset, limit)
 	if err != nil {
 		return nil, err
@@ -44,7 +44,7 @@ func (acu *AccountListUsecase) Execute(request account.AccountListInput) (*accou
 	}, nil
 }
 
-func getPaginationParam(request account.AccountListInput) (int, int) {
+func getAccountPaginationParam(request account.AccountListInput) (int, int) {
 	offset := request.Items * (request.Page - 1)
 	limit := request.Items
 	return offset, limit

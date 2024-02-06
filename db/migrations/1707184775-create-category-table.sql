@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS public.category (
     id VARCHAR(255) NOT NULL PRIMARY KEY,
     name VARCHAR(45) NOT NULL,
-    type VARCHAR(45) NULL
+    type VARCHAR(45) NOT NULL
 );
 
 INSERT INTO public.category (id, "name", "type") values ('db781ffa-85ac-404a-bef2-3ff77bc8b6d6', 'Salary', 'INCOME');

@@ -9,4 +9,5 @@ func SetupRoutes(app *echo.Echo) {
 	setupUserRouter(router)
 	setupAccountRouter(router)
 	setupCategorytRouter(router)
+	setupTransactionRouter(router)
 }
