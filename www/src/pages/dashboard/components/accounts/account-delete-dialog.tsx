@@ -43,7 +43,7 @@ export function AccountDeleteDialog(account: AccountType) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Trash2Icon className="p-2 rounded-lg w-10 h-10 text-red-500 cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-900" />
+        <Trash2Icon className="p-2 rounded-lg w-10 h-10 bg-red-100 dark:bg-red-900 text-red-500 dark:text-red-300 cursor-pointer hover:bg-red-200 dark:hover:bg-red-950" />
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-[425px]">
