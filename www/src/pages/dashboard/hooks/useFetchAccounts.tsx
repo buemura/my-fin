@@ -12,6 +12,7 @@ export const useFetchAccounts = () => {
     queryKey: ["accounts"],
     queryFn: async () =>
       AccountService.getAccountList({
+        accessToken: user?.accessToken || "",
         userId: user?.user.id || "",
         page: 1,
       }),

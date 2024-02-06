@@ -48,7 +48,7 @@ export function AccountNewForm() {
 
   const { isPending, isError, mutate } = useMutation({
     mutationFn: (account: CreateAccountProps) =>
-      AccountService.createAccount(account),
+      AccountService.createAccount(user?.accessToken || "", account),
   });
 
   const handleCreateAccount = async (data: CreateAccountSchema) => {

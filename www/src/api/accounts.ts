@@ -4,6 +4,7 @@ import { AccountColor, AccountListType, AccountType } from "@/types/account";
 import { env } from "@/utils";
 
 export type GetAccountListProps = {
+  accessToken: string;
   userId: string;
   page?: number;
   items?: number;
@@ -34,34 +35,46 @@ export class AccountService {
         url += `&items=${props.items}`;
       }
     }
-    const { data } = await axios.get<AccountListType>(url);
+    const { data } = await axios.get<AccountListType>(url, {
+      headers: {
+        Authorization: `Bearer ${props.accessToken}`,
+      },
+    });
     return data;
   }
 
-  static async createAccount(props: CreateAccountProps): Promise<AccountType> {
+  static async createAccount(
+    accessToken: string,
+    props: CreateAccountProps
+  ): Promise<AccountType> {
     const { data } = await axios.post<AccountType>(
       `${apiUser}/${props.userId}/accounts`,
-      props
+      props,
+      { headers: { Authorization: `Bearer ${accessToken}` } }
     );
     return data;
   }
 
   static async updateAccountById(
+    accessToken: string,
     props: UpdateAccountProps
   ): Promise<AccountType> {
     const { data } = await axios.put<AccountType>(
       `${apiUser}/${props.userId}/accounts/${props.id}`,
-      props
+      props,
+      { headers: { Authorization: `Bearer ${accessToken}` } }
     );
     return data;
   }
 
   static async deleteAccountById(
+    accessToken: string,
     userId: string,
     accountId: string
   ): Promise<AccountType> {
     const { data } = await axios.delete<AccountType>(
-      `${apiUser}/${userId}/accounts/${accountId}`
+      `${apiUser}/${userId}/accounts/${accountId}`,
+      { headers: { Authorization: `Bearer ${accessToken}` } }
     );
     return data;
   }

@@ -25,6 +25,7 @@ export function AccountDeleteDialog(account: AccountType) {
   const { isPending, isError, mutate } = useMutation({
     mutationFn: () =>
       AccountService.deleteAccountById(
+        user?.accessToken || "",
         user?.user.id || account.userId,
         account.id
       ),

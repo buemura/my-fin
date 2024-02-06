@@ -55,7 +55,7 @@ export function AccountCard(account: AccountType) {
 
   const { isPending, isError, mutate } = useMutation({
     mutationFn: (data: UpdateAccountProps) =>
-      AccountService.updateAccountById(data),
+      AccountService.updateAccountById(user?.accessToken || "", data),
   });
 
   const handleEditAccount = async (data: EditAccountSchema) => {
