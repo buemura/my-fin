@@ -1,4 +1,4 @@
-import { FloatingButton } from "@/components/feature/floating-button";
+import { CreateResourceButton } from "@/components/feature/create-resource-button";
 import { Header } from "@/components/navigation";
 import { Accounts } from "./components/accounts";
 import { Transactions } from "./components/transactions";
@@ -13,7 +13,7 @@ export function Dashboard() {
         <Transactions />
       </div>
 
-      <FloatingButton />
+      <CreateResourceButton />
     </div>
   );
 }

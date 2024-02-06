@@ -1,3 +1,5 @@
+import { PlusIcon } from "lucide-react";
+
 import {
   Dialog,
   DialogContent,
@@ -6,10 +8,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui";
-import { PlusIcon } from "lucide-react";
-import { TabsDemo } from "./create-tabs";
+import { CreateResourceTabs } from "./create-resource-tabs";
 
-export function FloatingButton() {
+export function CreateResourceButton() {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -24,7 +25,7 @@ export function FloatingButton() {
           <DialogTitle>New resource</DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
-        <TabsDemo />
+        <CreateResourceTabs />
       </DialogContent>
     </Dialog>
   );

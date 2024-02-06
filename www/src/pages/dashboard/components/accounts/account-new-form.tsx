@@ -1,12 +1,17 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { Loader2 } from "lucide-react";
+import { Check, ChevronDown, Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { AccountService, CreateAccountProps } from "@/api";
 import {
   Button,
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
   Form,
   FormControl,
   FormField,
@@ -14,10 +19,15 @@ import {
   FormLabel,
   FormMessage,
   Input,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
 } from "@/components/ui";
 import { useRouterNavigate } from "@/hooks";
 import { useUserStore } from "@/store";
 import { AccountColor } from "@/types";
+import { cn } from "@/lib/utils";
+import { capitalizeFirstLetter } from "@/utils";
 
 const createAccountSchema = z.object({
   userId: z.string().uuid(),
@@ -31,6 +41,8 @@ const createAccountSchema = z.object({
 type CreateAccountSchema = z.infer<typeof createAccountSchema> & {
   color: AccountColor;
 };
+
+const colors: AccountColor[] = ["black", "purple", "orange", "green"];
 
 export function AccountNewForm() {
   const { user } = useUserStore();
@@ -99,10 +111,65 @@ export function AccountNewForm() {
           control={form.control}
           name="color"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="flex flex-col">
               <FormLabel>Color</FormLabel>
               <FormControl>
-                <Input type="text" placeholder="1000" {...field} />
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        className="justify-between"
+                      >
+                        <div className="flex items-center">
+                          <div
+                            className="w-3 h-3 mr-2 rounded-full"
+                            style={{
+                              background: colors.find((c) => c === field.value),
+                            }}
+                          />
+                          {field.value
+                            ? capitalizeFirstLetter(
+                                colors.find((c) => c === field.value) || ""
+                              )
+                            : "Select color"}
+                        </div>
+                        <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[200px] p-0">
+                    <Command>
+                      <CommandInput placeholder="Search account..." />
+                      <CommandEmpty>No color found.</CommandEmpty>
+                      <CommandGroup>
+                        {colors.map((c) => (
+                          <CommandItem
+                            className="cursor-pointer"
+                            value={c}
+                            key={c}
+                            onSelect={() => form.setValue("color", c)}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                c === field.value ? "opacity-100" : "opacity-0"
+                              )}
+                            />
+                            <div
+                              className="w-3 h-3 mr-2 rounded-full"
+                              style={{
+                                background: c,
+                              }}
+                            />
+                            {capitalizeFirstLetter(c)}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
               </FormControl>
               <FormMessage />
             </FormItem>

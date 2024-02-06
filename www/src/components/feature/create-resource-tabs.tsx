@@ -1,22 +1,18 @@
 import { TrendingDown, TrendingUp, Wallet } from "lucide-react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { AccountNewForm } from "@/pages/dashboard/components/accounts/account-new-form";
 import { TransactionNewForm } from "@/pages/dashboard/components/transactions/transaction-new-form";
 import { TransactionTypeEnum } from "@/types";
 
-export function TabsDemo() {
+export function CreateResourceTabs() {
   return (
     <Tabs defaultValue="expense" className="">
       <TabsList className="grid w-full grid-cols-3">
