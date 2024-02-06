@@ -1,7 +1,7 @@
+import { FloatingButton } from "@/components/feature/floating-button";
 import { Header } from "@/components/navigation";
 import { Accounts } from "./components/accounts";
 import { Transactions } from "./components/transactions";
-import { FloatingButton } from "./components/floating-button";
 
 export function Dashboard() {
   return (

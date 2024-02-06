@@ -1,12 +1,17 @@
 import { PaginationMetadata } from "./pagination-metadata";
 
+export enum TransactionTypeEnum {
+  INCOME = "INCOME",
+  EXPENSE = "EXPENSE",
+}
+
 export type TransactionType = {
   id: string;
   accountId: string;
   categoryId: string;
   name: string;
   amount: number;
-  type: "INCOME" | "EXPENSE";
+  type: TransactionTypeEnum;
   date: Date;
 };
 
