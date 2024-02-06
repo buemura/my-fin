@@ -8,4 +8,5 @@ func SetupRoutes(app *echo.Echo) {
 	router := app.Group("/api")
 	setupUserRouter(router)
 	setupAccountRouter(router)
+	setupCategorytRouter(router)
 }
