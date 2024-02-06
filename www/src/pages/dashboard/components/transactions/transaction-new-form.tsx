@@ -33,7 +33,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui";
 import { useRouterNavigate } from "@/hooks";
-import { useUserStore } from "@/store";
+import { useAccountStore, useCategoryStore, useUserStore } from "@/store";
 import { TransactionTypeEnum } from "@/types";
 import { cn } from "@/lib/utils";
 
@@ -62,27 +62,10 @@ interface TransactionNewFormProps {
   defaultType?: TransactionTypeEnum | null | undefined;
 }
 
-const accounts = [
-  { id: "67ff1a32-fc8f-449e-b5ac-64d687765dc8", name: "Nubank" },
-  { id: "fc4fe91c-219d-459a-9cb2-c7a7b239225b", name: "Inter" },
-] as const;
-
-const categories = {
-  expense: [
-    { id: "c9cfc94f-eb3d-481e-94df-4f56185341e4", name: "House" },
-    { id: "88f3a5b1-5f85-4abf-a516-eeb26a14a412", name: "Food" },
-    { id: "db781ffa-85ac-404a-bef2-3ff77bc8b6d6", name: "Education" },
-  ],
-  income: [
-    { id: "864c5447-ff6c-43ae-afbc-266f967880bf", name: "Salary" },
-    { id: "f38c7886-2aa1-40a9-8015-b1a1393df240", name: "Freelance" },
-    { id: "b4d58383-8d0e-4b49-a409-70ec794e3290", name: "Investiment" },
-  ],
-} as const;
-
 export function TransactionNewForm({ defaultType }: TransactionNewFormProps) {
-  const { user } = useUserStore();
   const { router } = useRouterNavigate();
+  const { accounts } = useAccountStore();
+  const { categories } = useCategoryStore();
 
   const form = useForm<CreateTransactionSchema>({
     resolver: zodResolver(createTransactionSchema),
@@ -113,10 +96,9 @@ export function TransactionNewForm({ defaultType }: TransactionNewFormProps) {
     // router.reload();
   };
 
-  const getCategory =
-    form.getValues("type") === TransactionTypeEnum.EXPENSE
-      ? categories.expense
-      : categories.income;
+  const categoryList = categories.filter(
+    (category) => category.type === form.getValues("type")
+  );
 
   return (
     <Form {...form}>
@@ -229,7 +211,7 @@ export function TransactionNewForm({ defaultType }: TransactionNewFormProps) {
                       className="justify-between"
                     >
                       {field.value
-                        ? getCategory.find(
+                        ? categoryList.find(
                             (category) => category.id === field.value
                           )?.name
                         : "Select category"}
@@ -242,7 +224,7 @@ export function TransactionNewForm({ defaultType }: TransactionNewFormProps) {
                     <CommandInput placeholder="Search account..." />
                     <CommandEmpty>No category found.</CommandEmpty>
                     <CommandGroup>
-                      {getCategory.map((category) => (
+                      {categoryList.map((category) => (
                         <CommandItem
                           className="cursor-pointer"
                           value={category.name}

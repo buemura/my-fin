@@ -2,12 +2,13 @@ import { FilterIcon } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui";
+import { useFetchCategories } from "@/pages/dashboard/hooks";
+import { TransactionType, TransactionTypeEnum } from "@/types";
+import { getMonthFromString } from "@/utils";
 import { MonthFilter } from "./month-filter";
+import { TransactionCard } from "./transaction-card";
 import { TransactionFilter } from "./transaction-filter";
 import { YearFilter } from "./year-filter";
-import { TransactionType } from "@/types";
-import { TransactionCard } from "./transaction-card";
-import { getMonthFromString } from "@/utils";
 
 type TrxFilterType = "Transaction" | "Income" | "Expense";
 
@@ -18,7 +19,7 @@ const transactions: TransactionType[] = [
     categoryId: "4321",
     name: "Some expense",
     amount: 1200,
-    type: "EXPENSE",
+    type: TransactionTypeEnum.EXPENSE,
     date: new Date(),
   },
   {
@@ -27,7 +28,7 @@ const transactions: TransactionType[] = [
     categoryId: "4321",
     name: "Dinner",
     amount: 300,
-    type: "EXPENSE",
+    type: TransactionTypeEnum.EXPENSE,
     date: new Date(),
   },
   {
@@ -36,12 +37,14 @@ const transactions: TransactionType[] = [
     categoryId: "4321",
     name: "Salary",
     amount: 4400,
-    type: "INCOME",
+    type: TransactionTypeEnum.INCOME,
     date: new Date(),
   },
 ];
 
 export function Transactions() {
+  const { data } = useFetchCategories();
+
   const [trxFilter, setTrxFilter] = useState<TrxFilterType>("Transaction");
   const [monthFilter, setMonthFilter] = useState<string>("Jan");
   const [yearFilter, setYearFilter] = useState<number>(
