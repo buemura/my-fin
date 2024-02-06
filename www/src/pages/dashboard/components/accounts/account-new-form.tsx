@@ -28,6 +28,7 @@ import { useUserStore } from "@/store";
 import { AccountColor } from "@/types";
 import { cn } from "@/lib/utils";
 import { capitalizeFirstLetter } from "@/utils";
+import { colors } from "@/constants";
 
 const createAccountSchema = z.object({
   userId: z.string().uuid(),
@@ -41,8 +42,6 @@ const createAccountSchema = z.object({
 type CreateAccountSchema = z.infer<typeof createAccountSchema> & {
   color: AccountColor;
 };
-
-const colors: AccountColor[] = ["black", "purple", "orange", "green"];
 
 export function AccountNewForm() {
   const { user } = useUserStore();
