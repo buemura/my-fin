@@ -23,7 +23,7 @@ func main() {
 	app := echo.New()
 	setupServerMiddlewares(app)
 
-	host := "127.0.0.1:" + config.PORT
+	host := ":" + config.PORT
 	if err := app.Start(host); err != nil {
 		slog.Error(err.Error())
 	}
