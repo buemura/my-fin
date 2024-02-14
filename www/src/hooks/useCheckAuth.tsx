@@ -1,18 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { getUser } from "@/api";
-import { UserAuthType } from "@/types";
+import { useUserStore } from "@/store";
 
-export const useCheckAuth = (user: UserAuthType | null) => {
+export const useCheckAuth = () => {
+  const { user, logoutUser } = useUserStore();
+
   const userProps = {
     userId: user?.user.id || "",
     accessToken: user?.accessToken || "",
   };
 
-  const query = useQuery({
+  return useQuery({
     queryKey: ["getUser"],
-    queryFn: async () => getUser(userProps),
+    queryFn: async () => getUser(userProps).catch(() => logoutUser()),
   });
-
-  return query;
 };

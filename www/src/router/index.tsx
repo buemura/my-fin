@@ -1,6 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
-import { useCheckAuth } from "@/hooks";
 import { NotFound } from "@/pages/404";
 import { SignIn, SignUp } from "@/pages/auth";
 import { Dashboard } from "@/pages/dashboard";
@@ -69,9 +68,5 @@ function RedirectToRoot({ children }: { children: React.ReactNode }) {
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user } = useUserStore();
   if (!user) return <Navigate to={ROUTES.SIGNIN} />;
-
-  const { status } = useCheckAuth(user);
-  if (status === "error") return <Navigate to={ROUTES.SIGNIN} />;
-
   return children;
 }
