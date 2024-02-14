@@ -7,7 +7,7 @@ const apiUser = env.VITE_BACKEND_URL;
 
 export class CategoryService {
   static async getCategoryList(): Promise<ICategory[]> {
-    const url = `${apiUser}/category`;
+    const url = `${apiUser}/categories`;
     const { data } = await axios.get<ICategory[]>(url);
     return data;
   }

@@ -7,14 +7,14 @@ import { useCategoryStore } from "@/store";
 export const useFetchCategories = () => {
   const { setCategories } = useCategoryStore();
 
-  const { data, isSuccess, isLoading, error } = useQuery({
+  const query = useQuery({
     queryKey: ["categories"],
     queryFn: async () => CategoryService.getCategoryList(),
   });
 
   useEffect(() => {
-    setCategories(data || []);
-  }, [isSuccess]);
+    setCategories(query.data ?? []);
+  }, [query.isSuccess]);
 
-  return { data };
+  return query;
 };

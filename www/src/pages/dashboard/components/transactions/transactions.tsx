@@ -2,8 +2,7 @@ import { FilterIcon } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui";
-import { useFetchCategories } from "@/pages/dashboard/hooks";
-import { TransactionType, TransactionTypeEnum } from "@/types";
+import { useFetchTransactions } from "@/pages/dashboard/hooks";
 import { getMonthFromString } from "@/utils";
 import { MonthFilter } from "./month-filter";
 import { TransactionCard } from "./transaction-card";
@@ -12,38 +11,8 @@ import { YearFilter } from "./year-filter";
 
 type TrxFilterType = "Transaction" | "Income" | "Expense";
 
-const transactions: TransactionType[] = [
-  {
-    id: "1234",
-    accountId: "1234",
-    categoryId: "4321",
-    name: "Some expense",
-    amount: 1200,
-    type: TransactionTypeEnum.EXPENSE,
-    date: new Date(),
-  },
-  {
-    id: "1234",
-    accountId: "1234",
-    categoryId: "4321",
-    name: "Dinner",
-    amount: 300,
-    type: TransactionTypeEnum.EXPENSE,
-    date: new Date(),
-  },
-  {
-    id: "1234",
-    accountId: "1234",
-    categoryId: "4321",
-    name: "Salary",
-    amount: 4400,
-    type: TransactionTypeEnum.INCOME,
-    date: new Date(),
-  },
-];
-
 export function Transactions() {
-  const { data } = useFetchCategories();
+  const { data: trnsactions } = useFetchTransactions();
 
   const [trxFilter, setTrxFilter] = useState<TrxFilterType>("Transaction");
   const [monthFilter, setMonthFilter] = useState<string>("Jan");
@@ -60,7 +29,7 @@ export function Transactions() {
   console.log(params);
 
   return (
-    <div className="p-4 lg:p-8 rounded-2xl bg-zinc-100 dark:bg-zinc-900 min-h-1/2 lg:w-full lg:h-full space-y-10">
+    <div className="p-4 lg:p-8 rounded-2xl bg-zinc-100 dark:bg-zinc-900 h-full lg:w-full space-y-10">
       <div className="flex flex-col lg:justify-between gap-2 lg:flex-row">
         <div className="flex justify-between">
           <TransactionFilter title={trxFilter} setFilter={setTrxFilter} />
@@ -77,7 +46,7 @@ export function Transactions() {
       <div className="space-y-4">
         <span className="text-zinc-900 dark:text-white">My transactions</span>
         <div className="space-y-2">
-          {transactions.map((transaction) => (
+          {trnsactions?.map((transaction) => (
             <TransactionCard {...transaction} />
           ))}
         </div>

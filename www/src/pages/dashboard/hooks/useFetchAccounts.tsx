@@ -8,7 +8,7 @@ export const useFetchAccounts = () => {
   const { user } = useUserStore();
   const { setAccounts } = useAccountStore();
 
-  const { data, isSuccess, isLoading, error } = useQuery({
+  const query = useQuery({
     queryKey: ["accounts"],
     queryFn: async () =>
       AccountService.getAccountList({
@@ -19,8 +19,8 @@ export const useFetchAccounts = () => {
   });
 
   useEffect(() => {
-    setAccounts(data?.data.accounts || []);
-  }, [isSuccess]);
+    setAccounts(query.data?.data.accounts || []);
+  }, [query.isSuccess]);
 
-  return { data };
+  return query;
 };

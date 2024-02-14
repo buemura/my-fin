@@ -5,9 +5,11 @@ import { Header } from "@/components/navigation";
 import { useCheckAuth } from "@/hooks";
 import { Accounts } from "./components/accounts";
 import { Transactions } from "./components/transactions";
+import { useFetchCategories } from "./hooks";
 
 export function Dashboard() {
   const { isLoading } = useCheckAuth();
+  const _ = useFetchCategories();
 
   return (
     <div className="flex flex-col w-screen h-screen">
