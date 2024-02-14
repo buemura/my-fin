@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Check, ChevronDown, Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -23,12 +23,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui";
-import { useRouterNavigate } from "@/hooks";
+import { colors } from "@/constants";
+import { cn } from "@/lib/utils";
 import { useUserStore } from "@/store";
 import { AccountColor } from "@/types";
-import { cn } from "@/lib/utils";
 import { capitalizeFirstLetter } from "@/utils";
-import { colors } from "@/constants";
 
 const createAccountSchema = z.object({
   userId: z.string().uuid(),
@@ -44,8 +43,8 @@ type CreateAccountSchema = z.infer<typeof createAccountSchema> & {
 };
 
 export function AccountNewForm() {
+  const { invalidateQueries } = useQueryClient();
   const { user } = useUserStore();
-  const { router } = useRouterNavigate();
 
   const form = useForm<CreateAccountSchema>({
     resolver: zodResolver(createAccountSchema),
@@ -57,20 +56,15 @@ export function AccountNewForm() {
     },
   });
 
-  const { isPending, isError, mutate } = useMutation({
+  const { isPending, mutateAsync } = useMutation({
     mutationFn: (account: CreateAccountProps) =>
       AccountService.createAccount(user?.accessToken || "", account),
+    onSuccess: () => invalidateQueries({ queryKey: ["accounts"] }),
+    onError: () => alert("Unable to create"),
   });
 
-  const handleCreateAccount = async (data: CreateAccountSchema) => {
-    mutate(data);
-
-    if (isError) {
-      alert("Unable to create");
-    }
-
-    router.reload();
-  };
+  const handleCreateAccount = async (data: CreateAccountSchema) =>
+    await mutateAsync(data);
 
   return (
     <Form {...form}>
