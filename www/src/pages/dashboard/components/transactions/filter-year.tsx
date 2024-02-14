@@ -36,6 +36,7 @@ export function YearFilter({ title, setFilter }: YearFilterProps) {
         <DropdownMenuSeparator />
         {options.map((opt) => (
           <DropdownMenuCheckboxItem
+            key={opt}
             className="cursor-pointer"
             checked={title === opt}
             onCheckedChange={() => handleCheck(opt)}

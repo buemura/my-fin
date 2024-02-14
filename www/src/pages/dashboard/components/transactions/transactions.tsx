@@ -46,7 +46,7 @@ export function Transactions() {
         <span className="text-zinc-900 dark:text-white">My transactions</span>
         <div className="space-y-2">
           {trnsactions?.map((transaction) => (
-            <TransactionCard {...transaction} />
+            <TransactionCard key={transaction.id} {...transaction} />
           ))}
         </div>
       </div>

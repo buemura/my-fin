@@ -39,6 +39,7 @@ export function TransactionFilter({
         <DropdownMenuSeparator />
         {options.map((opt) => (
           <DropdownMenuCheckboxItem
+            key={opt}
             className="cursor-pointer"
             checked={title === opt}
             onCheckedChange={() => handleCheck(opt)}
