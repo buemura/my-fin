@@ -85,7 +85,11 @@ export function AccountNewForm() {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="Bank name" {...field} />
+                <Input
+                  placeholder="Bank name"
+                  className="bg-zinc-100 dark:bg-zinc-900"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -99,7 +103,12 @@ export function AccountNewForm() {
             <FormItem>
               <FormLabel>Balance</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="1000" {...field} />
+                <Input
+                  type="number"
+                  placeholder="1000"
+                  className="bg-zinc-100 dark:bg-zinc-900"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -119,7 +128,7 @@ export function AccountNewForm() {
                       <Button
                         variant="outline"
                         role="combobox"
-                        className="justify-between"
+                        className="justify-between bg-zinc-100 dark:bg-zinc-900"
                       >
                         <div className="flex items-center">
                           <div

@@ -9,7 +9,7 @@ import {
 } from "@/components/ui";
 import { ChevronDown } from "lucide-react";
 
-type TransactionFilterType = "Income" | "Expense" | "Transaction";
+export type TransactionFilterType = "Income" | "Expense" | "Transaction";
 
 const options: TransactionFilterType[] = ["Transaction", "Income", "Expense"];
 
