@@ -42,13 +42,13 @@ func (h *AccountController) Create(c echo.Context) error {
 	slog.Info("[AccountController.Create] - Validating parameters")
 	body := new(account.AccountCreateInput)
 	if err := c.Bind(&body); err != nil {
-		return helpers.BuildErrorResponse(c, err.Error())
+		return helpers.HandleHttpError(c, err)
 	}
 
 	slog.Info("[AccountController.Create] - Request body: " + utils.StructStringfy(&body))
 	validate := validator.New()
 	if err := validate.Struct(body); err != nil {
-		return helpers.BuildErrorResponse(c, err.Error())
+		return helpers.HandleHttpError(c, err)
 	}
 
 	userId := c.Param("userId")
@@ -61,7 +61,7 @@ func (h *AccountController) Create(c echo.Context) error {
 
 	res, err := h.AccountCreateUsecase.Execute(input)
 	if err != nil {
-		return helpers.BuildErrorResponse(c, err.Error())
+		return helpers.HandleHttpError(c, err)
 	}
 
 	return c.JSON(http.StatusCreated, res)
@@ -72,7 +72,7 @@ func (h *AccountController) Delete(c echo.Context) error {
 	accountId := c.Param("accountId")
 	err := h.AccountDeleteUsecase.Execute(accountId)
 	if err != nil {
-		return helpers.BuildErrorResponse(c, err.Error())
+		return helpers.HandleHttpError(c, err)
 	}
 	return c.NoContent(http.StatusNoContent)
 }
@@ -88,7 +88,7 @@ func (h *AccountController) List(c echo.Context) error {
 		Items:  items,
 	})
 	if err != nil {
-		return helpers.BuildErrorResponse(c, err.Error())
+		return helpers.HandleHttpError(c, err)
 	}
 	return c.JSON(http.StatusOK, res)
 }
@@ -98,7 +98,7 @@ func (h *AccountController) Get(c echo.Context) error {
 	accountId := c.Param("accountId")
 	res, err := h.AccountGetUsecase.Execute(accountId)
 	if err != nil {
-		return helpers.BuildErrorResponse(c, err.Error())
+		return helpers.HandleHttpError(c, err)
 	}
 	return c.JSON(http.StatusOK, res)
 }
@@ -109,13 +109,13 @@ func (h *AccountController) Update(c echo.Context) error {
 
 	body := new(account.AccountUpdateInput)
 	if err := c.Bind(&body); err != nil {
-		return helpers.BuildErrorResponse(c, err.Error())
+		return helpers.HandleHttpError(c, err)
 	}
 
 	slog.Info("[AccountController.Create] - Request body: " + utils.StructStringfy(&body))
 	validate := validator.New()
 	if err := validate.Struct(body); err != nil {
-		return helpers.BuildErrorResponse(c, err.Error())
+		return helpers.HandleHttpError(c, err)
 	}
 
 	input := account.AccountUpdateInput{
@@ -125,7 +125,7 @@ func (h *AccountController) Update(c echo.Context) error {
 	}
 	res, err := h.AccountUpdateUsecase.Execute(accountId, input)
 	if err != nil {
-		return helpers.BuildErrorResponse(c, err.Error())
+		return helpers.HandleHttpError(c, err)
 	}
 	return c.JSON(http.StatusOK, res)
 }

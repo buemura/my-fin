@@ -1,7 +1,6 @@
 package usecase
 
 import (
-	"errors"
 	"log/slog"
 
 	"github.com/buemura/my-fin/internal/domain/user"
@@ -25,7 +24,7 @@ func (usu *UserSignupUsecase) Execute(input user.UserSignupInput) (*user.User, e
 		return nil, err
 	}
 	if userExists != nil {
-		return nil, errors.New("user already exists")
+		return nil, user.ErrAlreadyExists
 	}
 
 	hashedPassword, err := encryption.HashPassword(input.Password)

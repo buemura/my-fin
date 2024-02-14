@@ -1,7 +1,6 @@
 package usecase
 
 import (
-	"errors"
 	"log/slog"
 
 	"github.com/buemura/my-fin/internal/domain/user"
@@ -25,12 +24,12 @@ func (usu *UserSigninUsecase) Execute(input user.UserSigninInput) (*user.UserSig
 		return nil, err
 	}
 	if usr == nil {
-		return nil, errors.New("user not found")
+		return nil, user.ErrNotFound
 	}
 
 	validPassword := encryption.ComparePassword(usr.Password, input.Password)
 	if !validPassword {
-		return nil, errors.New("invalid credential")
+		return nil, user.ErrInvalidCredential
 	}
 
 	token, err := encryption.GenerateToken(usr.ID)

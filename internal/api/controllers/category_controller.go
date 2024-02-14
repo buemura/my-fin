@@ -37,13 +37,13 @@ func (h *CategoryController) Create(c echo.Context) error {
 	slog.Info("[CategoryController.Create] - Validating parameters")
 	body := new(category.CategoryCreateInput)
 	if err := c.Bind(&body); err != nil {
-		return helpers.BuildErrorResponse(c, err.Error())
+		return helpers.HandleHttpError(c, err)
 	}
 
 	slog.Info("[CategoryController.Create] - Request body: " + utils.StructStringfy(&body))
 	validate := validator.New()
 	if err := validate.Struct(body); err != nil {
-		return helpers.BuildErrorResponse(c, err.Error())
+		return helpers.HandleHttpError(c, err)
 	}
 
 	input := category.CategoryCreateInput{
@@ -53,7 +53,7 @@ func (h *CategoryController) Create(c echo.Context) error {
 
 	res, err := h.CategoryCreateUsecase.Execute(input)
 	if err != nil {
-		return helpers.BuildErrorResponse(c, err.Error())
+		return helpers.HandleHttpError(c, err)
 	}
 
 	return c.JSON(http.StatusCreated, res)
@@ -64,7 +64,7 @@ func (h *CategoryController) Delete(c echo.Context) error {
 	categoryId := c.Param("categoryId")
 	err := h.CategoryDeleteUsecase.Execute(categoryId)
 	if err != nil {
-		return helpers.BuildErrorResponse(c, err.Error())
+		return helpers.HandleHttpError(c, err)
 	}
 	return c.NoContent(http.StatusNoContent)
 }
@@ -73,7 +73,7 @@ func (h *CategoryController) List(c echo.Context) error {
 	slog.Info("[CategoryController.List] - Validating parameters")
 	res, err := h.CategoryListUsecase.Execute()
 	if err != nil {
-		return helpers.BuildErrorResponse(c, err.Error())
+		return helpers.HandleHttpError(c, err)
 	}
 	return c.JSON(http.StatusOK, res)
 }
@@ -84,13 +84,13 @@ func (h *CategoryController) Update(c echo.Context) error {
 
 	body := new(category.CategoryUpdateInput)
 	if err := c.Bind(&body); err != nil {
-		return helpers.BuildErrorResponse(c, err.Error())
+		return helpers.HandleHttpError(c, err)
 	}
 
 	slog.Info("[CategoryController.Update] - Request body: " + utils.StructStringfy(&body))
 	validate := validator.New()
 	if err := validate.Struct(body); err != nil {
-		return helpers.BuildErrorResponse(c, err.Error())
+		return helpers.HandleHttpError(c, err)
 	}
 
 	input := category.CategoryUpdateInput{
@@ -99,7 +99,7 @@ func (h *CategoryController) Update(c echo.Context) error {
 	}
 	res, err := h.CategoryUpdateUsecase.Execute(categoryId, input)
 	if err != nil {
-		return helpers.BuildErrorResponse(c, err.Error())
+		return helpers.HandleHttpError(c, err)
 	}
 	return c.JSON(http.StatusOK, res)
 }

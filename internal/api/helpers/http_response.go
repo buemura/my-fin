@@ -1,30 +1,32 @@
 package helpers
 
 import (
+	"errors"
 	"net/http"
-	"strings"
 
+	"github.com/buemura/my-fin/internal/domain/account"
+	"github.com/buemura/my-fin/internal/domain/user"
 	"github.com/labstack/echo/v4"
 )
 
-var errorsMap = map[string]int{
-	"permission denied":   http.StatusForbidden,
-	"invalid credentials": http.StatusUnauthorized,
-	"not found":           http.StatusNotFound,
-	"alredy exists":       http.StatusUnprocessableEntity,
-	"service unavailable": http.StatusServiceUnavailable,
-}
+func HandleHttpError(c echo.Context, err error) error {
+	switch {
+	case errors.Is(err, user.ErrAlreadyExists):
+		return c.NoContent(http.StatusUnprocessableEntity)
 
-func BuildErrorResponse(c echo.Context, errMsg string) error {
-	for key, statusCode := range errorsMap {
-		if strings.Contains(strings.ToLower(errMsg), key) {
-			return c.JSON(statusCode, map[string]interface{}{
-				"error": errMsg,
-			})
-		}
+	case errors.Is(err, user.ErrInvalidCredential):
+		return c.NoContent(http.StatusUnauthorized)
+
+	case errors.Is(err, user.ErrNotFound):
+		return c.NoContent(http.StatusNotFound)
+
+	case errors.Is(err, user.ErrPermissionDenied):
+		return c.NoContent(http.StatusForbidden)
+
+	case errors.Is(err, account.ErrAccountNotFound):
+		return c.NoContent(http.StatusNotFound)
+
+	default:
+		return c.NoContent(http.StatusInternalServerError)
 	}
-
-	return c.JSON(http.StatusBadRequest, map[string]interface{}{
-		"error": errMsg,
-	})
 }

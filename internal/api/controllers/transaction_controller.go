@@ -39,13 +39,13 @@ func (h *TransactionController) Create(c echo.Context) error {
 	slog.Info("[TransactionController.Create] - Validating parameters")
 	body := new(transaction.TransactionCreateInput)
 	if err := c.Bind(&body); err != nil {
-		return helpers.BuildErrorResponse(c, err.Error())
+		return helpers.HandleHttpError(c, err)
 	}
 
 	slog.Info("[TransactionController.Create] - Request body: " + utils.StructStringfy(&body))
 	validate := validator.New()
 	if err := validate.Struct(body); err != nil {
-		return helpers.BuildErrorResponse(c, err.Error())
+		return helpers.HandleHttpError(c, err)
 	}
 
 	userId := c.Param("userId")
@@ -61,7 +61,7 @@ func (h *TransactionController) Create(c echo.Context) error {
 
 	res, err := h.TransactionCreateUsecase.Execute(input)
 	if err != nil {
-		return helpers.BuildErrorResponse(c, err.Error())
+		return helpers.HandleHttpError(c, err)
 	}
 
 	return c.JSON(http.StatusCreated, res)
@@ -72,7 +72,7 @@ func (h *TransactionController) Delete(c echo.Context) error {
 	transactionId := c.Param("transactionId")
 	err := h.TransactionDeleteUsecase.Execute(transactionId)
 	if err != nil {
-		return helpers.BuildErrorResponse(c, err.Error())
+		return helpers.HandleHttpError(c, err)
 	}
 	return c.NoContent(http.StatusNoContent)
 }
@@ -82,7 +82,7 @@ func (h *TransactionController) List(c echo.Context) error {
 	params := getTransactionSearchParams(c)
 	res, err := h.TransactionListUsecase.Execute(params)
 	if err != nil {
-		return helpers.BuildErrorResponse(c, err.Error())
+		return helpers.HandleHttpError(c, err)
 	}
 	return c.JSON(http.StatusOK, res)
 }
@@ -93,13 +93,13 @@ func (h *TransactionController) Update(c echo.Context) error {
 
 	body := new(transaction.TransactionUpdateInput)
 	if err := c.Bind(&body); err != nil {
-		return helpers.BuildErrorResponse(c, err.Error())
+		return helpers.HandleHttpError(c, err)
 	}
 
 	slog.Info("[TransactionController.Create] - Request body: " + utils.StructStringfy(&body))
 	validate := validator.New()
 	if err := validate.Struct(body); err != nil {
-		return helpers.BuildErrorResponse(c, err.Error())
+		return helpers.HandleHttpError(c, err)
 	}
 
 	input := transaction.TransactionUpdateInput{
@@ -112,7 +112,7 @@ func (h *TransactionController) Update(c echo.Context) error {
 	}
 	res, err := h.TransactionUpdateUsecase.Execute(transactionId, input)
 	if err != nil {
-		return helpers.BuildErrorResponse(c, err.Error())
+		return helpers.HandleHttpError(c, err)
 	}
 	return c.JSON(http.StatusOK, res)
 }

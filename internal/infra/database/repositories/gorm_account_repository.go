@@ -59,5 +59,8 @@ func (r *gormAccountRepository) Delete(accountId string) error {
 	if result.Error != nil {
 		return result.Error
 	}
+	if result.RowsAffected == 0 {
+		return account.ErrAccountNotFound
+	}
 	return nil
 }
