@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { getUser } from "@/api";
+import { UserService } from "@/api";
 import { useUserStore } from "@/store";
 
 export const useCheckAuth = () => {
@@ -13,6 +13,7 @@ export const useCheckAuth = () => {
 
   return useQuery({
     queryKey: ["getUser"],
-    queryFn: async () => getUser(userProps).catch(() => logoutUser()),
+    queryFn: async () =>
+      UserService.getUser(userProps).catch(() => logoutUser()),
   });
 };

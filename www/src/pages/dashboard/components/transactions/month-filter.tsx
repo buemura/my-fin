@@ -47,6 +47,7 @@ export function MonthFilter({ title, setFilter }: MonthFilterProps) {
         <DropdownMenuSeparator />
         {options.map((opt) => (
           <DropdownMenuCheckboxItem
+            key={opt}
             className="cursor-pointer"
             checked={title === opt}
             onCheckedChange={() => handleCheck(opt)}

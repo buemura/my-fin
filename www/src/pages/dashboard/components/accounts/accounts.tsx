@@ -28,7 +28,7 @@ const AccountList = ({ data }: AccountListProps) => {
   return (
     <>
       {data.data.accounts.map((account) => (
-        <AccountCard {...account} />
+        <AccountCard key={account.id} {...account} />
       ))}
     </>
   );
