@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/buemura/my-fin/internal/constant"
-	"github.com/buemura/my-fin/internal/infra/encryption"
+	"github.com/buemura/my-fin/internal/infra/adapters"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
 )
@@ -32,13 +32,13 @@ func extractAndValidateToken(c echo.Context) (jwt.MapClaims, error) {
 			"error": "Missing JWT Token",
 		})
 	}
-	jwtToken, err := encryption.ParseToken(token[1])
+	jwtToken, err := adapters.NewJwtTokenGenerator().Parse(token[1])
 	if err != nil {
 		return nil, c.JSON(http.StatusUnauthorized, map[string]string{
 			"error": "Unauthorized",
 		})
 	}
-	return jwtToken, nil
+	return jwtToken.(jwt.MapClaims), nil
 }
 
 func extractAndSetUser(c echo.Context, token jwt.MapClaims) error {

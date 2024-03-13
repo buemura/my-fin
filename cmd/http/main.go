@@ -5,13 +5,17 @@ import (
 	"os"
 
 	"github.com/buemura/my-fin/config"
+	"github.com/buemura/my-fin/db/migrations"
 	"github.com/buemura/my-fin/internal/api/routes"
+	"github.com/buemura/my-fin/internal/infra/database"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
 func init() {
-	config.LoadConfigs()
+	config.LoadEnv()
+	database.Connect()
+	migrations.Migrate()
 }
 
 func main() {

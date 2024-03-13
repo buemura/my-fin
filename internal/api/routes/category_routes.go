@@ -2,13 +2,13 @@ package routes
 
 import (
 	"github.com/buemura/my-fin/internal/api/controllers"
+	"github.com/buemura/my-fin/internal/application/usecase"
 	"github.com/buemura/my-fin/internal/infra/database/repositories"
-	"github.com/buemura/my-fin/internal/usecase"
 	"github.com/labstack/echo/v4"
 )
 
 func setupCategorytRouter(app *echo.Group) {
-	categoryRepo := repositories.NewGormCategoryRepository()
+	categoryRepo := repositories.NewPgxCategoryRepository()
 	accountCreateUsecase := usecase.NewCategoryCreateUsecase(categoryRepo)
 	accountDeleteUsecase := usecase.NewCategoryDeleteUsecase(categoryRepo)
 	accountListUsecase := usecase.NewCategoryListUsecase(categoryRepo)

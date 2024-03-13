@@ -6,9 +6,9 @@ import (
 
 	"github.com/buemura/my-fin/internal/api/helpers"
 	"github.com/buemura/my-fin/internal/api/middleware"
+	"github.com/buemura/my-fin/internal/application/usecase"
 	"github.com/buemura/my-fin/internal/constant"
 	"github.com/buemura/my-fin/internal/domain/user"
-	"github.com/buemura/my-fin/internal/usecase"
 	"github.com/buemura/my-fin/pkg/utils"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
@@ -34,7 +34,7 @@ func NewUserController(
 
 func (h *UserController) SignupUser(c echo.Context) error {
 	slog.Info("[UserController.SignupUser] - Validating parameters")
-	body := new(user.UserSignupInput)
+	body := new(user.SignUpUserIn)
 	if err := c.Bind(&body); err != nil {
 		return helpers.BuildErrorResponse(c, err.Error())
 	}
@@ -45,7 +45,7 @@ func (h *UserController) SignupUser(c echo.Context) error {
 		return helpers.BuildErrorResponse(c, err.Error())
 	}
 
-	input := user.UserSignupInput{
+	input := user.SignUpUserIn{
 		Name:     body.Name,
 		Email:    body.Email,
 		Password: body.Password,
@@ -61,7 +61,7 @@ func (h *UserController) SignupUser(c echo.Context) error {
 
 func (h *UserController) SigninUser(c echo.Context) error {
 	slog.Info("[UserController.SigninUser] - Validating parameters")
-	body := new(user.UserSigninInput)
+	body := new(user.SignInUserIn)
 	if err := c.Bind(&body); err != nil {
 		return helpers.BuildErrorResponse(c, err.Error())
 	}
@@ -72,7 +72,7 @@ func (h *UserController) SigninUser(c echo.Context) error {
 		return helpers.BuildErrorResponse(c, err.Error())
 	}
 
-	input := user.UserSigninInput{
+	input := user.SignInUserIn{
 		Email:    body.Email,
 		Password: body.Password,
 	}

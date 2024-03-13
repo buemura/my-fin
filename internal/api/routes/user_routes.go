@@ -3,15 +3,19 @@ package routes
 import (
 	"github.com/buemura/my-fin/internal/api/controllers"
 	"github.com/buemura/my-fin/internal/api/middleware"
+	"github.com/buemura/my-fin/internal/application/usecase"
+	"github.com/buemura/my-fin/internal/infra/adapters"
 	"github.com/buemura/my-fin/internal/infra/database/repositories"
-	"github.com/buemura/my-fin/internal/usecase"
 	"github.com/labstack/echo/v4"
 )
 
 func setupUserRouter(app *echo.Group) {
-	userRepo := repositories.NewGormUserRepository()
-	userSigninUsecase := usecase.NewUserSigninUsecase(userRepo)
-	userSignupUsecase := usecase.NewUserSignupUsecase(userRepo)
+	passHasher := adapters.NewBcryptPasswordHasher()
+	tkGenerator := adapters.NewJwtTokenGenerator()
+
+	userRepo := repositories.NewPgxUserRepository()
+	userSignupUsecase := usecase.NewUserSignupUsecase(userRepo, passHasher)
+	userSigninUsecase := usecase.NewUserSigninUsecase(userRepo, passHasher, tkGenerator)
 	userGetUsecase := usecase.NewUserGetUsecase(userRepo)
 	userController := controllers.NewUserController(*userSigninUsecase, *userSignupUsecase, *userGetUsecase)
 

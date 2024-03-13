@@ -3,13 +3,13 @@ package routes
 import (
 	"github.com/buemura/my-fin/internal/api/controllers"
 	"github.com/buemura/my-fin/internal/api/middleware"
+	"github.com/buemura/my-fin/internal/application/usecase"
 	"github.com/buemura/my-fin/internal/infra/database/repositories"
-	"github.com/buemura/my-fin/internal/usecase"
 	"github.com/labstack/echo/v4"
 )
 
 func setupAccountRouter(app *echo.Group) {
-	accountRepo := repositories.NewGormAccountRepository()
+	accountRepo := repositories.NewPgxAccountRepository()
 	accountCreateUsecase := usecase.NewAccountCreateUsecase(accountRepo)
 	accountDeleteUsecase := usecase.NewAccountDeleteUsecase(accountRepo)
 	accountGetUsecase := usecase.NewAccountGetUsecase(accountRepo)

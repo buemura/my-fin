@@ -14,7 +14,7 @@ type User struct {
 	CreatedAt time.Time `json:"createdAt"`
 }
 
-func NewUser(input UserSignupInput) *User {
+func NewUser(input SignUpUserIn) *User {
 	return &User{
 		ID:        uuid.NewString(),
 		Name:      input.Name,

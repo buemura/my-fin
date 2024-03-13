@@ -1,6 +1,7 @@
 package migrations
 
 import (
+	"context"
 	"fmt"
 	"io/fs"
 	"log"
@@ -9,8 +10,9 @@ import (
 	"time"
 
 	"github.com/buemura/my-fin/internal/infra/database"
+	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"golang.org/x/exp/slices"
-	"gorm.io/gorm"
 )
 
 type Migrations struct {
@@ -20,35 +22,46 @@ type Migrations struct {
 }
 
 func Migrate() error {
-	db := database.DB
-	if err := db.AutoMigrate(&Migrations{}); err != nil {
+	_, err := database.Conn.Exec(context.Background(), "CREATE TABLE IF NOT EXISTS migrations (id SERIAL PRIMARY KEY, file VARCHAR NOT NULL, created_at TIMESTAMP NOT NULL DEFAULT NOW())")
+	if err != nil {
 		return err
 	}
 
-	runMigrations(db)
-
-	return nil
+	return runMigrations(database.Conn)
 }
 
-func runMigrations(db *gorm.DB) error {
+func runMigrations(db *pgxpool.Pool) error {
 	basePath := "./db/migrations/"
 
-	migrationFiles := getRanMigrations(db)
+	executedMiigrationFiles := getExistingMigrations(db)
 	files := getMigrationFiles(basePath)
 
 	for _, file := range files {
-		if strings.Contains(file.Name(), ".sql") && !slices.Contains(migrationFiles, file.Name()) {
-			executeMigrationFile(db, basePath, file)
+		if strings.Contains(file.Name(), ".sql") && !slices.Contains(executedMiigrationFiles, file.Name()) {
+			runMigrationFile(db, basePath, file)
 		}
 	}
 
 	return nil
 }
 
-func getRanMigrations(db *gorm.DB) []string {
-	var migrationFile []string
-	db.Table("migrations").Select("file").Find(&migrationFile)
-	return migrationFile
+func getExistingMigrations(db *pgxpool.Pool) []string {
+	var executedMiigrationFiles []string
+	rows, err := db.Query(context.Background(), "SELECT * FROM migrations")
+	if err != nil {
+		return nil
+	}
+
+	res, err := pgx.CollectRows(rows, pgx.RowToAddrOfStructByPos[Migrations])
+	if err != nil {
+		return nil
+	}
+
+	for _, row := range res {
+		executedMiigrationFiles = append(executedMiigrationFiles, row.File)
+	}
+
+	return executedMiigrationFiles
 }
 
 func getMigrationFiles(basePath string) []fs.DirEntry {
@@ -57,23 +70,26 @@ func getMigrationFiles(basePath string) []fs.DirEntry {
 		log.Fatal(err)
 		return nil
 	}
-
 	return files
 }
 
-func executeMigrationFile(db *gorm.DB, basePath string, file fs.DirEntry) {
+func runMigrationFile(db *pgxpool.Pool, basePath string, file fs.DirEntry) {
 	c, err := os.ReadFile(basePath + file.Name())
 	if err != nil {
 		log.Println(err)
 	}
 
 	fmt.Print("Running migration for: ", file.Name())
-	err = db.Exec(string(c)).Error
+	_, err = db.Exec(context.Background(), string(c))
 	if err != nil {
 		panic("Could not run migration: " + file.Name())
-	} else {
-		fmt.Print(" -")
-		fmt.Println(string("\033[32m"), "[OK]", string("\033[0m"))
-		db.Exec("INSERT INTO migrations (file, created_at) VALUES (?, ?)", file.Name(), time.Now())
+	}
+
+	fmt.Print(" -")
+	fmt.Println(string("\033[32m"), "[OK]", string("\033[0m"))
+
+	_, err = db.Exec(context.Background(), "INSERT INTO migrations (file, created_at) VALUES ($1, $2)", file.Name(), time.Now())
+	if err != nil {
+		panic("Could not update migration table with executed migration: " + file.Name())
 	}
 }
