@@ -26,6 +26,10 @@ func (r *PgxTransactionRepository) FindMany(opts transaction.FindManyOpts) ([]*t
 		`SELECT * FROM transaction WHERE user_id = $1 OFFSET $2 LIMIT $3`,
 		opts.UserId, opts.Offset, opts.Limit,
 	)
+	if err != nil {
+		return nil, err
+	}
+
 	res, err := pgx.CollectRows(rows, pgx.RowToAddrOfStructByPos[transaction.Transaction])
 	if err != nil {
 		return nil, err

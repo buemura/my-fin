@@ -36,13 +36,13 @@ func (h *UserController) SignupUser(c echo.Context) error {
 	slog.Info("[UserController.SignupUser] - Validating parameters")
 	body := new(user.SignUpUserIn)
 	if err := c.Bind(&body); err != nil {
-		return helpers.BuildErrorResponse(c, err.Error())
+		return helpers.HandleHttpError(c, err)
 	}
 
 	slog.Info("[UserController.SignupUser] - Request body: " + utils.StructStringfy(&body))
 	validate := validator.New()
 	if err := validate.Struct(body); err != nil {
-		return helpers.BuildErrorResponse(c, err.Error())
+		return helpers.HandleHttpError(c, err)
 	}
 
 	input := user.SignUpUserIn{
@@ -53,7 +53,7 @@ func (h *UserController) SignupUser(c echo.Context) error {
 
 	res, err := h.userSignupUsecase.Execute(input)
 	if err != nil {
-		return helpers.BuildErrorResponse(c, err.Error())
+		return helpers.HandleHttpError(c, err)
 	}
 
 	return c.JSON(http.StatusCreated, res)
@@ -63,13 +63,13 @@ func (h *UserController) SigninUser(c echo.Context) error {
 	slog.Info("[UserController.SigninUser] - Validating parameters")
 	body := new(user.SignInUserIn)
 	if err := c.Bind(&body); err != nil {
-		return helpers.BuildErrorResponse(c, err.Error())
+		return helpers.HandleHttpError(c, err)
 	}
 
 	slog.Info("[UserController.SigninUser] - Request body: " + utils.StructStringfy(&body))
 	validate := validator.New()
 	if err := validate.Struct(body); err != nil {
-		return helpers.BuildErrorResponse(c, err.Error())
+		return helpers.HandleHttpError(c, err)
 	}
 
 	input := user.SignInUserIn{
@@ -78,7 +78,7 @@ func (h *UserController) SigninUser(c echo.Context) error {
 	}
 	res, err := h.userSigninUsecase.Execute(input)
 	if err != nil {
-		return helpers.BuildErrorResponse(c, err.Error())
+		return helpers.HandleHttpError(c, err)
 	}
 
 	return c.JSON(http.StatusOK, res)
@@ -86,14 +86,14 @@ func (h *UserController) SigninUser(c echo.Context) error {
 
 func (h *UserController) GetMe(c echo.Context) error {
 	slog.Info("[UserController.GetMe] - Validating token")
-	user, ok := c.Get(constant.UserContextKey).(middleware.RquestUser)
+	usr, ok := c.Get(constant.UserContextKey).(middleware.RquestUser)
 	if !ok {
-		return helpers.BuildErrorResponse(c, "permission denied")
+		return helpers.HandleHttpError(c, user.ErrUserPermissionDenied)
 	}
 
-	res, err := h.userGetUsecase.Execute(user.ID)
+	res, err := h.userGetUsecase.Execute(usr.ID)
 	if err != nil {
-		return helpers.BuildErrorResponse(c, err.Error())
+		return helpers.HandleHttpError(c, err)
 	}
 
 	return c.JSON(http.StatusOK, res)

@@ -1,7 +1,6 @@
 package usecase
 
 import (
-	"errors"
 	"log/slog"
 
 	"github.com/buemura/my-fin/internal/domain/user"
@@ -19,12 +18,12 @@ func NewUserGetUsecase(repo user.UserRepository) *UserGetUsecase {
 
 func (usu *UserGetUsecase) Execute(id string) (*user.User, error) {
 	slog.Info("[UserGetUsecase.Execute] - Get user: " + id)
-	user, err := usu.repo.FindById(id)
+	usr, err := usu.repo.FindById(id)
 	if err != nil {
 		return nil, err
 	}
-	if user == nil {
-		return nil, errors.New("user not found")
+	if usr == nil {
+		return nil, user.ErrUserNotFound
 	}
-	return user, nil
+	return usr, nil
 }

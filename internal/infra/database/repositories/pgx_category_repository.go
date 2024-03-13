@@ -38,6 +38,10 @@ func (r *PgxCategoryRepository) FindById(id string) (*category.Category, error) 
 
 func (r *PgxCategoryRepository) FindMany() ([]*category.Category, error) {
 	rows, err := r.db.Query(context.Background(), `SELECT * FROM category`)
+	if err != nil {
+		return nil, err
+	}
+
 	res, err := pgx.CollectRows(rows, pgx.RowToAddrOfStructByPos[category.Category])
 	if err != nil {
 		return nil, err
