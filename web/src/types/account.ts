@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { PaginationMetadata } from "./pagination-metadata";
 
 export type AccountColor = "orange" | "purple" | "green" | "blue" | "black";
@@ -19,4 +20,14 @@ export type AccountsType = {
 export type AccountListType = {
   data: AccountsType;
   metadata: PaginationMetadata;
+};
+
+export const editAccountSchema = z.object({
+  name: z.string(),
+  balance: z.coerce.number(),
+  color: z.string(),
+});
+
+export type EditAccountSchema = z.infer<typeof editAccountSchema> & {
+  color: AccountColor;
 };

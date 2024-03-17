@@ -1,6 +1,10 @@
 import axios from "axios";
 
-import { TransactionType, TransactionTypeEnum } from "@/types";
+import {
+  TransactionListType,
+  TransactionType,
+  TransactionTypeEnum,
+} from "@/types";
 import { env } from "@/env.mjs";
 
 export type GetTransactoinListProps = {
@@ -26,10 +30,10 @@ export type UpdateTransactionProps = Partial<CreateTransactionProps> & {
 
 const apiUser = env.NEXT_PUBLIC_BACKEND_URL + "/user";
 
-export class TransactoinService {
+export class TransactionService {
   static async getTransactoinList(
     props: GetTransactoinListProps
-  ): Promise<TransactionType[]> {
+  ): Promise<TransactionListType> {
     let url = `${apiUser}/${props.userId}/transactions`;
     if (props.page) {
       url += `?page=${props.page}`;
@@ -37,7 +41,7 @@ export class TransactoinService {
         url += `&items=${props.items}`;
       }
     }
-    const { data } = await axios.get<TransactionType[]>(url, {
+    const { data } = await axios.get<TransactionListType>(url, {
       headers: {
         Authorization: `Bearer ${props.accessToken}`,
       },
@@ -61,6 +65,8 @@ export class TransactoinService {
     accessToken: string,
     props: UpdateTransactionProps
   ): Promise<TransactionType> {
+    console.log("heeree");
+
     const { data } = await axios.put<TransactionType>(
       `${apiUser}/${props.userId}/transactions/${props.id}`,
       props,

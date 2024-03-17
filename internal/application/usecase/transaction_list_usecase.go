@@ -3,6 +3,7 @@ package usecase
 import (
 	"log/slog"
 
+	"github.com/buemura/my-fin/internal/domain/common"
 	"github.com/buemura/my-fin/internal/domain/transaction"
 )
 
@@ -16,37 +17,48 @@ func NewTransactionListUsecase(repo transaction.TransactionRepository) *Transact
 	}
 }
 
-func (u *TransactionListUsecase) Execute(opts transaction.TransactionListIn) ([]*transaction.Transaction, error) {
-	slog.Info("[TransactionListUsecase.Execute] - Get transactions for user:" + opts.UserId)
-	params := getTransactionSearchParam(opts)
+func (u *TransactionListUsecase) Execute(in transaction.TransactionListIn) (*transaction.TransactionListOut, error) {
+	slog.Info("[TransactionListUsecase.Execute] - Get transactions for user:" + in.UserId)
+	params := getTransactionSearchParam(in)
 	trxs, err := u.repo.FindMany(params)
 	if err != nil {
 		return nil, err
 	}
-	return trxs, nil
+
+	// TODO: get total items for given params
+
+	return &transaction.TransactionListOut{
+		Data: trxs,
+		Metadata: &common.Metadata{
+			Page:       in.Page,
+			Items:      in.Items,
+			TotalPages: 1,
+			TotalItems: 1,
+		},
+	}, nil
 }
 
-func getTransactionSearchParam(request transaction.TransactionListIn) transaction.FindManyOpts {
+func getTransactionSearchParam(in transaction.TransactionListIn) transaction.FindManyOpts {
 	var opts transaction.FindManyOpts
 
-	opts.UserId = request.UserId
-	opts.Offset = request.Items * (request.Page - 1)
-	opts.Limit = request.Items
+	opts.UserId = in.UserId
+	opts.Offset = in.Items * (in.Page - 1)
+	opts.Limit = in.Items
 
-	if request.AccountId != nil {
-		opts.AccountId = request.AccountId
+	if in.AccountId != nil {
+		opts.AccountId = in.AccountId
 	}
-	if request.CategoryId != nil {
-		opts.CategoryId = request.CategoryId
+	if in.CategoryId != nil {
+		opts.CategoryId = in.CategoryId
 	}
-	if request.Month != nil {
-		opts.Month = request.Month
+	if in.Month != nil {
+		opts.Month = in.Month
 	}
-	if request.Year != nil {
-		opts.Year = request.Year
+	if in.Year != nil {
+		opts.Year = in.Year
 	}
-	if request.Type != nil {
-		opts.Type = request.Type
+	if in.Type != nil {
+		opts.Type = in.Type
 	}
 
 	return opts

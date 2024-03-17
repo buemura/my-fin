@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon, Check, ChevronDown } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -60,7 +59,6 @@ interface TransactionNewFormProps {
 }
 
 export function TransactionNewForm({ defaultType }: TransactionNewFormProps) {
-  const router = useRouter();
   const { accounts } = useAccountStore();
   const { categories } = useCategoryStore();
 
@@ -76,10 +74,10 @@ export function TransactionNewForm({ defaultType }: TransactionNewFormProps) {
     },
   });
 
-  //   const { isPending, isError, mutate } = useMutation({
-  //     mutationFn: (transaction: CreateTransactionProps) =>
-  //       TransactionService.createTransaction(transaction),
-  //   });
+  // const { isPending, isError, mutate } = useMutation({
+  //   mutationFn: (transaction: CreateTransactionProps) =>
+  //     TransactionService.createTransaction(transaction),
+  // });
 
   const handleCreateTransaction = async (data: CreateTransactionSchema) => {
     console.log(data);
@@ -93,7 +91,7 @@ export function TransactionNewForm({ defaultType }: TransactionNewFormProps) {
     // router.reload();
   };
 
-  const categoryList = categories.filter(
+  const categoryList = categories?.filter(
     (category) => category.type === form.getValues("type")
   );
 
@@ -112,7 +110,7 @@ export function TransactionNewForm({ defaultType }: TransactionNewFormProps) {
               <FormLabel>Name</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="Bank name"
+                  placeholder="Transaction title"
                   className="bg-zinc-100 dark:bg-zinc-900"
                   {...field}
                 />
@@ -220,7 +218,7 @@ export function TransactionNewForm({ defaultType }: TransactionNewFormProps) {
                       role="combobox"
                       className="justify-between bg-zinc-100 dark:bg-zinc-900"
                     >
-                      {field.value
+                      {field.value && categoryList.length
                         ? categoryList.find(
                             (category) => category.id === field.value
                           )?.name
@@ -234,26 +232,27 @@ export function TransactionNewForm({ defaultType }: TransactionNewFormProps) {
                     <CommandInput placeholder="Search account..." />
                     <CommandEmpty>No category found.</CommandEmpty>
                     <CommandGroup>
-                      {categoryList.map((category) => (
-                        <CommandItem
-                          className="cursor-pointer"
-                          value={category.name}
-                          key={category.id}
-                          onSelect={() =>
-                            form.setValue("categoryId", category.id)
-                          }
-                        >
-                          <Check
-                            className={cn(
-                              "mr-2 h-4 w-4",
-                              category.id === field.value
-                                ? "opacity-100"
-                                : "opacity-0"
-                            )}
-                          />
-                          {category.name}
-                        </CommandItem>
-                      ))}
+                      {categoryList.length &&
+                        categoryList?.map((category) => (
+                          <CommandItem
+                            className="cursor-pointer"
+                            value={category.name}
+                            key={category.id}
+                            onSelect={() =>
+                              form.setValue("categoryId", category.id)
+                            }
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                category.id === field.value
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                            {category.name}
+                          </CommandItem>
+                        ))}
                     </CommandGroup>
                   </Command>
                 </PopoverContent>

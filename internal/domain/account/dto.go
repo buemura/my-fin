@@ -1,5 +1,7 @@
 package account
 
+import "github.com/buemura/my-fin/internal/domain/common"
+
 type AccountCreateIn struct {
 	UserId  string `json:"userId"`
 	Name    string `json:"name"`
@@ -24,14 +26,7 @@ type AccountListOut struct {
 	TotalBalance int        `json:"totalBalance"`
 }
 
-type Metadata struct {
-	Page       int `json:"page"`
-	Items      int `json:"items"`
-	TotalPages int `json:"totalPages"`
-	TotalItems int `json:"totalItems"`
-}
-
 type AccountList struct {
-	Data     *AccountListOut `json:"data"`
-	Metadata *Metadata       `json:"metadata"`
+	Data     *AccountListOut  `json:"data"`
+	Metadata *common.Metadata `json:"metadata"`
 }

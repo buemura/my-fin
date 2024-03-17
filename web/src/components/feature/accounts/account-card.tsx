@@ -5,7 +5,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Check, ChevronDown, Loader2, WalletIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 import { AccountService, UpdateAccountProps } from "@/api";
 import { Button } from "@/components/ui/button";
@@ -40,7 +39,7 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import { useUserStore } from "@/store";
-import { AccountColor, AccountType } from "@/types";
+import { AccountType, EditAccountSchema, editAccountSchema } from "@/types";
 import {
   capitalizeFirstLetter,
   colors,
@@ -48,18 +47,6 @@ import {
   formatDate,
 } from "@/utils";
 import { AccountDeleteDialog } from "./account-delete-dialog";
-
-const editAccountSchema = z.object({
-  name: z.string().min(1, {
-    message: "Name cannot be empty",
-  }),
-  balance: z.coerce.number(),
-  color: z.string(),
-});
-
-type EditAccountSchema = z.infer<typeof editAccountSchema> & {
-  color: AccountColor;
-};
 
 export function AccountCard(account: AccountType) {
   const [open, setOpen] = useState(false);

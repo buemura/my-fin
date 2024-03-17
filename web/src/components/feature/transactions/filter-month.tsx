@@ -27,12 +27,15 @@ const options: string[] = [
   "Dec",
 ];
 
-interface MonthFilterProps {
+interface TransactionMonthFilterProps {
   title: string;
   setFilter: (value: string) => void;
 }
 
-export function MonthFilter({ title, setFilter }: MonthFilterProps) {
+export function TransactionMonthFilter({
+  title,
+  setFilter,
+}: TransactionMonthFilterProps) {
   const handleCheck = (opt: string) =>
     title === opt ? setFilter("Months") : setFilter(opt);
 

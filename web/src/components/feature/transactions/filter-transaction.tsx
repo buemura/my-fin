@@ -16,15 +16,15 @@ export type TransactionFilterType = "Income" | "Expense" | "Transaction";
 
 const options: TransactionFilterType[] = ["Transaction", "Income", "Expense"];
 
-interface TransactionFilterProps {
+interface TransactionTypeFilterProps {
   title: string;
   setFilter: (value: TransactionFilterType) => void;
 }
 
-export function TransactionFilter({
+export function TransactionTypeFilter({
   title,
   setFilter,
-}: TransactionFilterProps) {
+}: TransactionTypeFilterProps) {
   const handleCheck = (opt: TransactionFilterType) =>
     title !== opt ? setFilter(opt) : null;
 

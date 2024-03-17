@@ -5,6 +5,7 @@ import (
 	"math"
 
 	"github.com/buemura/my-fin/internal/domain/account"
+	"github.com/buemura/my-fin/internal/domain/common"
 )
 
 type AccountListUsecase struct {
@@ -35,7 +36,7 @@ func (acu *AccountListUsecase) Execute(request account.AccountListIn) (*account.
 			Accounts:     accs,
 			TotalBalance: totals.TotalBalance,
 		},
-		Metadata: &account.Metadata{
+		Metadata: &common.Metadata{
 			Page:       request.Page,
 			Items:      request.Items,
 			TotalPages: int(math.Ceil(float64(totals.TotalItems) / float64(request.Items))),

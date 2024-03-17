@@ -1,7 +1,5 @@
-"use client";
-
-import { Dispatch, SetStateAction } from "react";
 import { TrendingDown, TrendingUp, Wallet } from "lucide-react";
+import { Dispatch, SetStateAction } from "react";
 
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TransactionTypeEnum } from "@/types";

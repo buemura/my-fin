@@ -12,12 +12,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-interface YearFilterProps {
+interface TransactionYearFilterProps {
   title: number;
   setFilter: (value: number) => void;
 }
 
-export function YearFilter({ title, setFilter }: YearFilterProps) {
+export function TransactionYearFilter({
+  title,
+  setFilter,
+}: TransactionYearFilterProps) {
   const handleCheck = (opt: number) =>
     title === opt ? setFilter(new Date().getFullYear()) : setFilter(opt);
 
