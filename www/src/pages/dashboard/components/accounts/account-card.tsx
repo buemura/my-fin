@@ -154,25 +154,6 @@ export function AccountCard(account: AccountType) {
               control={form.control}
               name="color"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Color</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="text"
-                      placeholder="Black"
-                      className="bg-zinc-100 dark:bg-zinc-900"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="color"
-              render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>Color</FormLabel>
                   <FormControl>
@@ -182,7 +163,7 @@ export function AccountCard(account: AccountType) {
                           <Button
                             variant="outline"
                             role="combobox"
-                            className="justify-between"
+                            className="justify-between bg-zinc-100 dark:bg-zinc-900"
                           >
                             <div className="flex items-center">
                               <div
@@ -203,6 +184,7 @@ export function AccountCard(account: AccountType) {
                           </Button>
                         </FormControl>
                       </PopoverTrigger>
+
                       <PopoverContent className="w-[200px] p-0">
                         <Command>
                           <CommandInput placeholder="Search account..." />

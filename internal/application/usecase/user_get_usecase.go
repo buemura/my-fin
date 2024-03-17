@@ -23,7 +23,7 @@ func (usu *UserGetUsecase) Execute(id string) (*user.User, error) {
 		return nil, err
 	}
 	if usr == nil {
-		return nil, user.ErrUserNotFound
+		return nil, user.ErrNotFound
 	}
 	return usr, nil
 }

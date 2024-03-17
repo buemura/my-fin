@@ -4,17 +4,16 @@ import { useState } from "react";
 import { Button } from "@/components/ui";
 import { useFetchTransactions } from "@/pages/dashboard/hooks";
 import { getMonthFromString } from "@/utils";
-import { MonthFilter } from "./month-filter";
+import { MonthFilter } from "./filter-month";
+import { TransactionFilter, TransactionFilterType } from "./filter-transaction";
+import { YearFilter } from "./filter-year";
 import { TransactionCard } from "./transaction-card";
-import { TransactionFilter } from "./transaction-filter";
-import { YearFilter } from "./year-filter";
-
-type TrxFilterType = "Transaction" | "Income" | "Expense";
 
 export function Transactions() {
   const { data: trnsactions } = useFetchTransactions();
 
-  const [trxFilter, setTrxFilter] = useState<TrxFilterType>("Transaction");
+  const [trxFilter, setTrxFilter] =
+    useState<TransactionFilterType>("Transaction");
   const [monthFilter, setMonthFilter] = useState<string>("Jan");
   const [yearFilter, setYearFilter] = useState<number>(
     new Date().getFullYear()
@@ -47,7 +46,7 @@ export function Transactions() {
         <span className="text-zinc-900 dark:text-white">My transactions</span>
         <div className="space-y-2">
           {trnsactions?.map((transaction) => (
-            <TransactionCard {...transaction} />
+            <TransactionCard key={transaction.id} {...transaction} />
           ))}
         </div>
       </div>

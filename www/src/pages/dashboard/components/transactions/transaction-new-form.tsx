@@ -114,7 +114,11 @@ export function TransactionNewForm({ defaultType }: TransactionNewFormProps) {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="Bank name" {...field} />
+                <Input
+                  placeholder="Bank name"
+                  className="bg-zinc-100 dark:bg-zinc-900"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -129,7 +133,12 @@ export function TransactionNewForm({ defaultType }: TransactionNewFormProps) {
             <FormItem>
               <FormLabel>Amount</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="1000" {...field} />
+                <Input
+                  type="number"
+                  placeholder="1000"
+                  className="bg-zinc-100 dark:bg-zinc-900"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -148,6 +157,7 @@ export function TransactionNewForm({ defaultType }: TransactionNewFormProps) {
                   <Input
                     type="text"
                     placeholder="EXPENSE"
+                    className="bg-zinc-100 dark:bg-zinc-900"
                     disabled={!!defaultType}
                     {...field}
                   />
@@ -168,7 +178,10 @@ export function TransactionNewForm({ defaultType }: TransactionNewFormProps) {
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
-                    <Button variant="outline">
+                    <Button
+                      variant="outline"
+                      className="bg-zinc-100 dark:bg-zinc-900"
+                    >
                       {field.value ? (
                         format(field.value, "PPP")
                       ) : (
@@ -208,7 +221,7 @@ export function TransactionNewForm({ defaultType }: TransactionNewFormProps) {
                     <Button
                       variant="outline"
                       role="combobox"
-                      className="justify-between"
+                      className="justify-between bg-zinc-100 dark:bg-zinc-900"
                     >
                       {field.value
                         ? categoryList.find(
@@ -266,7 +279,7 @@ export function TransactionNewForm({ defaultType }: TransactionNewFormProps) {
                     <Button
                       variant="outline"
                       role="combobox"
-                      className="justify-between"
+                      className="justify-between bg-zinc-100 dark:bg-zinc-900"
                     >
                       {field.value
                         ? accounts.find((account) => account.id === field.value)

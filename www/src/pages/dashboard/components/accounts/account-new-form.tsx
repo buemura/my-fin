@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Check, ChevronDown, Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -23,12 +23,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui";
-import { useRouterNavigate } from "@/hooks";
+import { colors } from "@/constants";
+import { cn } from "@/lib/utils";
 import { useUserStore } from "@/store";
 import { AccountColor } from "@/types";
-import { cn } from "@/lib/utils";
 import { capitalizeFirstLetter } from "@/utils";
-import { colors } from "@/constants";
+import { useRouterNavigate } from "@/hooks";
 
 const createAccountSchema = z.object({
   userId: z.string().uuid(),
@@ -44,6 +44,7 @@ type CreateAccountSchema = z.infer<typeof createAccountSchema> & {
 };
 
 export function AccountNewForm() {
+  const { invalidateQueries } = useQueryClient();
   const { user } = useUserStore();
   const { router } = useRouterNavigate();
 
@@ -60,6 +61,8 @@ export function AccountNewForm() {
   const { isPending, isError, mutateAsync } = useMutation({
     mutationFn: (account: CreateAccountProps) =>
       AccountService.createAccount(user?.accessToken || "", account),
+    onSuccess: () => invalidateQueries({ queryKey: ["accounts"] }),
+    onError: () => alert("Unable to create"),
   });
 
   const handleCreateAccount = async (data: CreateAccountSchema) => {
@@ -85,7 +88,11 @@ export function AccountNewForm() {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="Bank name" {...field} />
+                <Input
+                  placeholder="Bank name"
+                  className="bg-zinc-100 dark:bg-zinc-900"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -99,7 +106,12 @@ export function AccountNewForm() {
             <FormItem>
               <FormLabel>Balance</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="1000" {...field} />
+                <Input
+                  type="number"
+                  placeholder="1000"
+                  className="bg-zinc-100 dark:bg-zinc-900"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -119,7 +131,7 @@ export function AccountNewForm() {
                       <Button
                         variant="outline"
                         role="combobox"
-                        className="justify-between"
+                        className="justify-between bg-zinc-100 dark:bg-zinc-900"
                       >
                         <div className="flex items-center">
                           <div

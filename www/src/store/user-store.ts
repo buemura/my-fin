@@ -14,12 +14,8 @@ export const useUserStore = create<UserStore>()(
     persist(
       (set) => ({
         user: null,
-        setUser: (user: UserAuthType) => {
-          set(() => ({ user: user }));
-        },
-        logoutUser: () => {
-          set(() => ({ user: null }));
-        },
+        setUser: (user: UserAuthType) => set(() => ({ user: user })),
+        logoutUser: () => set(() => ({ user: null })),
       }),
       {
         name: "user-storage",
