@@ -12,9 +12,14 @@ import {
   FormMessage,
   Input,
 } from "@/components/ui";
+import { useMutation } from "@tanstack/react-query";
+import { UserService } from "@/api";
+import { useRouterNavigate } from "@/hooks";
+import { ROUTES } from "@/router";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
-  name: z.string().email({
+  name: z.string().min(3, {
     message: "Name must not be empty",
   }),
   email: z.string().email({
@@ -28,6 +33,8 @@ const formSchema = z.object({
 type FormSchema = z.infer<typeof formSchema>;
 
 export function SignUpForm() {
+  const { router } = useRouterNavigate();
+
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -37,9 +44,16 @@ export function SignUpForm() {
     },
   });
 
-  function onFormSubmit(values: FormSchema) {
-    console.log(values);
-  }
+  const { isPending, mutateAsync: signUpUser } = useMutation({
+    mutationFn: async (user: FormSchema) => await UserService.signupUser(user),
+    onSuccess: () => router.navigate(ROUTES.DASHBOARD),
+    onError: () => {
+      alert("Unable to sign in");
+      router.reload();
+    },
+  });
+
+  const onFormSubmit = async (payload: FormSchema) => await signUpUser(payload);
 
   return (
     <Form {...form}>
@@ -87,6 +101,7 @@ export function SignUpForm() {
         />
 
         <Button type="submit" className="w-full">
+          {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Sign Up
         </Button>
       </form>

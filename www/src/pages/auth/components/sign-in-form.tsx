@@ -3,7 +3,6 @@ import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { signinUser } from "@/api";
 import {
   Button,
   Form,
@@ -12,13 +11,13 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  Icons,
   Input,
 } from "@/components/ui";
 import { useRouterNavigate } from "@/hooks";
 import { ROUTES } from "@/router";
 import { useUserStore } from "@/store";
 import { Loader2 } from "lucide-react";
+import { UserService } from "@/api";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -43,19 +42,19 @@ export function SignInForm() {
     },
   });
 
-  const { isPending, mutate } = useMutation({
-    mutationFn: async (user: FormSchema) => await signinUser(user),
-    onError: () => {
-      alert("Unable to sign in");
-      router.reload();
-    },
+  const { isPending, mutateAsync: signInUser } = useMutation({
+    mutationFn: async (user: FormSchema) => await UserService.signinUser(user),
     onSuccess: (data) => {
       setUser(data);
       router.navigate(ROUTES.DASHBOARD);
     },
+    onError: () => {
+      alert("Unable to sign in");
+      router.reload();
+    },
   });
 
-  const onFormSubmit = (payload: FormSchema) => mutate(payload);
+  const onFormSubmit = async (payload: FormSchema) => await signInUser(payload);
 
   return (
     <Form {...form}>

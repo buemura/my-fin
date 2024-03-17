@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Check, ChevronDown, Loader2, WalletIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -14,7 +14,6 @@ import {
   CommandItem,
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -24,19 +23,18 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  Icons,
   Input,
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui";
+import { colors } from "@/constants";
 import { useRouterNavigate } from "@/hooks";
+import { cn } from "@/lib/utils";
 import { useUserStore } from "@/store";
 import { AccountColor, AccountType } from "@/types";
 import { capitalizeFirstLetter, formatBRL, formatDate } from "@/utils";
 import { AccountDeleteDialog } from "./account-delete-dialog";
-import { cn } from "@/lib/utils";
-import { colors } from "@/constants";
 
 const editAccountSchema = z.object({
   name: z.string().min(1, {
@@ -51,6 +49,7 @@ type EditAccountSchema = z.infer<typeof editAccountSchema> & {
 };
 
 export function AccountCard(account: AccountType) {
+  const { invalidateQueries } = useQueryClient();
   const { user } = useUserStore();
   const { router } = useRouterNavigate();
 
@@ -63,24 +62,21 @@ export function AccountCard(account: AccountType) {
     },
   });
 
-  const { isPending, isError, mutate } = useMutation({
+  const { isPending, mutateAsync } = useMutation({
     mutationFn: (data: UpdateAccountProps) =>
       AccountService.updateAccountById(user?.accessToken || "", data),
+    onSuccess: () => {
+      invalidateQueries({ queryKey: ["accounts"] });
+      router.reload();
+    },
   });
 
-  const handleEditAccount = async (data: EditAccountSchema) => {
-    mutate({
+  const handleEditAccount = async (data: EditAccountSchema) =>
+    await mutateAsync({
       ...data,
       id: account.id,
       userId: user?.user.id || account.userId,
     });
-
-    if (isError) {
-      alert("Unable to update");
-    }
-
-    router.reload();
-  };
 
   return (
     <Dialog>
@@ -109,7 +105,6 @@ export function AccountCard(account: AccountType) {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Edit account</DialogTitle>
-          <DialogDescription></DialogDescription>
         </DialogHeader>
 
         <Form {...form}>

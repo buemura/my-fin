@@ -15,23 +15,34 @@ import {
 } from "@/components/ui";
 import { useUserStore } from "@/store";
 import { AccountType } from "@/types";
+import { useRouterNavigate } from "@/hooks";
 
 export function AccountDeleteDialog(account: AccountType) {
-  const { invalidateQueries } = useQueryClient();
   const { user } = useUserStore();
+  const { router } = useRouterNavigate();
+  const { invalidateQueries } = useQueryClient();
 
-  const { isPending, mutateAsync } = useMutation({
+  const {
+    isPending,
+    isError,
+    mutateAsync: deleteAccount,
+  } = useMutation({
     mutationFn: () =>
       AccountService.deleteAccountById(
         user?.accessToken || "",
         user?.user.id || account.userId,
         account.id
       ),
-    onSuccess: () => invalidateQueries({ queryKey: ["accounts"] }),
-    onError: () => alert("Unable to delete"),
+    onSuccess: () => {
+      invalidateQueries({ queryKey: ["accounts"] });
+    },
   });
 
-  const handleDeleteAccount = async () => await mutateAsync();
+  const handleDeleteAccount = async () => {
+    await deleteAccount();
+    if (isError) alert("Unable to delete");
+    router.reload();
+  };
 
   return (
     <Dialog>
