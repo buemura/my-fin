@@ -16,7 +16,7 @@ func NewAccountUpdateUsecase(repo account.AccountRepository) *AccountUpdateUseca
 	}
 }
 
-func (acu *AccountUpdateUsecase) Execute(accountId string, input account.AccountUpdateInput) (*account.Account, error) {
+func (acu *AccountUpdateUsecase) Execute(accountId string, input account.AccountUpdateIn) (*account.Account, error) {
 	slog.Info("[AccountUpdateUsecase.Execute] - Update account: " + accountId)
 	acc, err := acu.repo.FindById(accountId)
 	if err != nil {

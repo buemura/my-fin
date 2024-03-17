@@ -88,7 +88,7 @@ func (h *UserController) GetMe(c echo.Context) error {
 	slog.Info("[UserController.GetMe] - Validating token")
 	usr, ok := c.Get(constant.UserContextKey).(middleware.RquestUser)
 	if !ok {
-		return helpers.HandleHttpError(c, user.ErrUserPermissionDenied)
+		return helpers.HandleHttpError(c, user.ErrPermissionDenied)
 	}
 
 	res, err := h.userGetUsecase.Execute(usr.ID)

@@ -28,12 +28,12 @@ func (uc *UserSigninUsecase) Execute(input user.SignInUserIn) (*user.SignInUserO
 		return nil, err
 	}
 	if usr == nil {
-		return nil, user.ErrUserNotFound
+		return nil, user.ErrNotFound
 	}
 
 	validPassword := uc.passwordHasher.Compare(input.Password, usr.Password)
 	if !validPassword {
-		return nil, user.ErrUserInvalidCredential
+		return nil, user.ErrInvalidCredential
 	}
 
 	token, err := uc.tokenGenerator.Generate(usr.ID)

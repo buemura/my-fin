@@ -3,6 +3,7 @@ package user
 import (
 	"time"
 
+	"github.com/buemura/my-fin/internal/domain/common"
 	"github.com/google/uuid"
 )
 
@@ -14,12 +15,24 @@ type User struct {
 	CreatedAt time.Time `json:"createdAt"`
 }
 
-func NewUser(input SignUpUserIn) *User {
+func NewUser(in SignUpUserIn) (*User, error) {
+	err := validate(in)
+	if err != nil {
+		return nil, err
+	}
+
 	return &User{
 		ID:        uuid.NewString(),
-		Name:      input.Name,
-		Email:     input.Email,
-		Password:  input.Password,
+		Name:      in.Name,
+		Email:     in.Email,
+		Password:  in.Password,
 		CreatedAt: time.Now(),
+	}, nil
+}
+
+func validate(in SignUpUserIn) error {
+	if in.Name == "" || in.Email == "" || in.Password == "" {
+		return common.ErrMissingArgument
 	}
+	return nil
 }

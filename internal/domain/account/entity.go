@@ -3,6 +3,7 @@ package account
 import (
 	"time"
 
+	"github.com/buemura/my-fin/internal/domain/common"
 	"github.com/google/uuid"
 )
 
@@ -16,14 +17,26 @@ type Account struct {
 	UpdatedAt time.Time `json:"updatedAt"`
 }
 
-func NewAccount(input AccountCreateInput) *Account {
+func NewAccount(in AccountCreateIn) (*Account, error) {
+	err := validate(in)
+	if err != nil {
+		return nil, err
+	}
+
 	return &Account{
 		ID:        uuid.NewString(),
-		UserId:    input.UserId,
-		Name:      input.Name,
-		Balance:   input.Balance,
-		Color:     input.Color,
+		UserId:    in.UserId,
+		Name:      in.Name,
+		Balance:   in.Balance,
+		Color:     in.Color,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
+	}, nil
+}
+
+func validate(in AccountCreateIn) error {
+	if in.UserId == "" || in.Name == "" || in.Color == "" {
+		return common.ErrMissingArgument
 	}
+	return nil
 }

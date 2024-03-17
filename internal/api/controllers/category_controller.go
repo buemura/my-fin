@@ -35,7 +35,7 @@ func NewCategoryController(
 
 func (h *CategoryController) Create(c echo.Context) error {
 	slog.Info("[CategoryController.Create] - Validating parameters")
-	body := new(category.CategoryCreateInput)
+	body := new(category.CategoryCreateIn)
 	if err := c.Bind(&body); err != nil {
 		return helpers.HandleHttpError(c, err)
 	}
@@ -46,7 +46,7 @@ func (h *CategoryController) Create(c echo.Context) error {
 		return helpers.HandleHttpError(c, err)
 	}
 
-	input := category.CategoryCreateInput{
+	input := category.CategoryCreateIn{
 		Name: body.Name,
 		Type: body.Type,
 	}
@@ -82,7 +82,7 @@ func (h *CategoryController) Update(c echo.Context) error {
 	slog.Info("[CategoryController.Update] - Validating parameters")
 	categoryId := c.Param("categoryId")
 
-	body := new(category.CategoryUpdateInput)
+	body := new(category.CategoryUpdateIn)
 	if err := c.Bind(&body); err != nil {
 		return helpers.HandleHttpError(c, err)
 	}
@@ -93,7 +93,7 @@ func (h *CategoryController) Update(c echo.Context) error {
 		return helpers.HandleHttpError(c, err)
 	}
 
-	input := category.CategoryUpdateInput{
+	input := category.CategoryUpdateIn{
 		Name: body.Name,
 		Type: body.Type,
 	}

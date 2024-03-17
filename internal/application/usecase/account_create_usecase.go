@@ -16,9 +16,13 @@ func NewAccountCreateUsecase(repo account.AccountRepository) *AccountCreateUseca
 	}
 }
 
-func (acu *AccountCreateUsecase) Execute(input account.AccountCreateInput) (*account.Account, error) {
+func (acu *AccountCreateUsecase) Execute(input account.AccountCreateIn) (*account.Account, error) {
 	slog.Info("[AccountCreateUsecase.Execute] - Create account: " + input.Name)
-	acc := account.NewAccount(input)
+	acc, err := account.NewAccount(input)
+	if err != nil {
+		return nil, err
+	}
+
 	res, err := acu.repo.Save(acc)
 	if err != nil {
 		return nil, err

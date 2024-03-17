@@ -16,7 +16,7 @@ func NewTransactionListUsecase(repo transaction.TransactionRepository) *Transact
 	}
 }
 
-func (u *TransactionListUsecase) Execute(opts transaction.TransactionListInput) ([]*transaction.Transaction, error) {
+func (u *TransactionListUsecase) Execute(opts transaction.TransactionListIn) ([]*transaction.Transaction, error) {
 	slog.Info("[TransactionListUsecase.Execute] - Get transactions for user:" + opts.UserId)
 	params := getTransactionSearchParam(opts)
 	trxs, err := u.repo.FindMany(params)
@@ -26,7 +26,7 @@ func (u *TransactionListUsecase) Execute(opts transaction.TransactionListInput) 
 	return trxs, nil
 }
 
-func getTransactionSearchParam(request transaction.TransactionListInput) transaction.FindManyOpts {
+func getTransactionSearchParam(request transaction.TransactionListIn) transaction.FindManyOpts {
 	var opts transaction.FindManyOpts
 
 	opts.UserId = request.UserId

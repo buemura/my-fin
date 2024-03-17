@@ -26,7 +26,7 @@ func (uc *UserSignupUsecase) Execute(input user.SignUpUserIn) (*user.UserOut, er
 		return nil, err
 	}
 	if userExists != nil {
-		return nil, user.ErrUserAlreadyExists
+		return nil, user.ErrAlreadyExists
 	}
 
 	hashedPassword, err := uc.passwordHasher.Hash(input.Password)
@@ -35,7 +35,11 @@ func (uc *UserSignupUsecase) Execute(input user.SignUpUserIn) (*user.UserOut, er
 	}
 
 	input.Password = hashedPassword
-	u := user.NewUser(input)
+	u, err := user.NewUser(input)
+	if err != nil {
+		return nil, err
+	}
+
 	usr, err := uc.repo.Save(u)
 	if err != nil {
 		return nil, err

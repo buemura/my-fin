@@ -37,7 +37,7 @@ func NewTransactionController(
 
 func (h *TransactionController) Create(c echo.Context) error {
 	slog.Info("[TransactionController.Create] - Validating parameters")
-	body := new(transaction.TransactionCreateInput)
+	body := new(transaction.TransactionCreateIn)
 	if err := c.Bind(&body); err != nil {
 		return helpers.HandleHttpError(c, err)
 	}
@@ -49,7 +49,7 @@ func (h *TransactionController) Create(c echo.Context) error {
 	}
 
 	userId := c.Param("userId")
-	input := transaction.TransactionCreateInput{
+	input := transaction.TransactionCreateIn{
 		UserId:     userId,
 		AccountId:  body.AccountId,
 		CategoryId: body.CategoryId,
@@ -91,7 +91,7 @@ func (h *TransactionController) Update(c echo.Context) error {
 	slog.Info("[TransactionController.Update] - Validating parameters")
 	transactionId := c.Param("transactionId")
 
-	body := new(transaction.TransactionUpdateInput)
+	body := new(transaction.TransactionUpdateIn)
 	if err := c.Bind(&body); err != nil {
 		return helpers.HandleHttpError(c, err)
 	}
@@ -102,7 +102,7 @@ func (h *TransactionController) Update(c echo.Context) error {
 		return helpers.HandleHttpError(c, err)
 	}
 
-	input := transaction.TransactionUpdateInput{
+	input := transaction.TransactionUpdateIn{
 		AccountId:  body.AccountId,
 		CategoryId: body.CategoryId,
 		Name:       body.Name,
@@ -117,7 +117,7 @@ func (h *TransactionController) Update(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
-func getTransactionSearchParams(c echo.Context) transaction.TransactionListInput {
+func getTransactionSearchParams(c echo.Context) transaction.TransactionListIn {
 	var page, items int
 	var err error
 
@@ -131,7 +131,7 @@ func getTransactionSearchParams(c echo.Context) transaction.TransactionListInput
 	if err != nil {
 		items = constant.DEFAULT_ACCOUNT_ITEMS
 	}
-	return transaction.TransactionListInput{
+	return transaction.TransactionListIn{
 		UserId: c.Param("userId"),
 		Page:   page,
 		Items:  items,

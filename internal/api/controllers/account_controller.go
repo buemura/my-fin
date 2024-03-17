@@ -40,7 +40,7 @@ func NewAccountController(
 
 func (h *AccountController) Create(c echo.Context) error {
 	slog.Info("[AccountController.Create] - Validating parameters")
-	body := new(account.AccountCreateInput)
+	body := new(account.AccountCreateIn)
 	if err := c.Bind(&body); err != nil {
 		return helpers.HandleHttpError(c, err)
 	}
@@ -52,7 +52,7 @@ func (h *AccountController) Create(c echo.Context) error {
 	}
 
 	userId := c.Param("userId")
-	input := account.AccountCreateInput{
+	input := account.AccountCreateIn{
 		UserId:  userId,
 		Name:    body.Name,
 		Balance: body.Balance,
@@ -82,7 +82,7 @@ func (h *AccountController) List(c echo.Context) error {
 	userId := c.Param("userId")
 	page, items := getPaginationParams(c)
 
-	res, err := h.AccountListUsecase.Execute(account.AccountListInput{
+	res, err := h.AccountListUsecase.Execute(account.AccountListIn{
 		UserId: userId,
 		Page:   page,
 		Items:  items,
@@ -107,7 +107,7 @@ func (h *AccountController) Update(c echo.Context) error {
 	slog.Info("[AccountController.Update] - Validating parameters")
 	accountId := c.Param("accountId")
 
-	body := new(account.AccountUpdateInput)
+	body := new(account.AccountUpdateIn)
 	if err := c.Bind(&body); err != nil {
 		return helpers.HandleHttpError(c, err)
 	}
@@ -118,7 +118,7 @@ func (h *AccountController) Update(c echo.Context) error {
 		return helpers.HandleHttpError(c, err)
 	}
 
-	input := account.AccountUpdateInput{
+	input := account.AccountUpdateIn{
 		Name:    body.Name,
 		Balance: body.Balance,
 		Color:   body.Color,

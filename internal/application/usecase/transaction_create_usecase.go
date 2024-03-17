@@ -16,9 +16,13 @@ func NewTransactionCreateUsecase(repo transaction.TransactionRepository) *Transa
 	}
 }
 
-func (u *TransactionCreateUsecase) Execute(input transaction.TransactionCreateInput) (*transaction.Transaction, error) {
+func (u *TransactionCreateUsecase) Execute(input transaction.TransactionCreateIn) (*transaction.Transaction, error) {
 	slog.Info("[TransactionCreateUsecase.Execute] - Create transaction for account:" + input.AccountId)
-	t := transaction.NewTransaction(input)
+	t, err := transaction.NewTransaction(input)
+	if err != nil {
+		return nil, err
+	}
+
 	res, err := u.repo.Save(t)
 	if err != nil {
 		return nil, err

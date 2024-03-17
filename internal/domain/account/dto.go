@@ -1,25 +1,25 @@
 package account
 
-type AccountCreateInput struct {
+type AccountCreateIn struct {
 	UserId  string `json:"userId"`
 	Name    string `json:"name"`
 	Balance int    `json:"balance"`
 	Color   string `json:"color"`
 }
 
-type AccountUpdateInput struct {
+type AccountUpdateIn struct {
 	Name    *string `json:"name"`
 	Balance *int    `json:"balance"`
 	Color   *string `json:"color"`
 }
 
-type AccountListInput struct {
+type AccountListIn struct {
 	UserId string `json:"userId"`
 	Page   int    `json:"page"`
 	Items  int    `json:"items"`
 }
 
-type AccountListOutput struct {
+type AccountListOut struct {
 	Accounts     []*Account `json:"accounts"`
 	TotalBalance int        `json:"totalBalance"`
 }
@@ -32,6 +32,6 @@ type Metadata struct {
 }
 
 type AccountList struct {
-	Data     *AccountListOutput `json:"data"`
-	Metadata *Metadata          `json:"metadata"`
+	Data     *AccountListOut `json:"data"`
+	Metadata *Metadata       `json:"metadata"`
 }

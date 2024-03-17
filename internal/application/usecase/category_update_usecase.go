@@ -16,7 +16,7 @@ func NewCategoryUpdateUsecase(repo category.CategoryRepository) *CategoryUpdateU
 	}
 }
 
-func (u *CategoryUpdateUsecase) Execute(categoryId string, input category.CategoryUpdateInput) (*category.Category, error) {
+func (u *CategoryUpdateUsecase) Execute(categoryId string, input category.CategoryUpdateIn) (*category.Category, error) {
 	slog.Info("[CategoryUpdateUsecase.Execute] - Update category: " + categoryId)
 	cat, err := u.repo.FindById(categoryId)
 	if err != nil {

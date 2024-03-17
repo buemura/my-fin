@@ -16,9 +16,13 @@ func NewCategoryCreateUsecase(repo category.CategoryRepository) *CategoryCreateU
 	}
 }
 
-func (u *CategoryCreateUsecase) Execute(input category.CategoryCreateInput) (*category.Category, error) {
+func (u *CategoryCreateUsecase) Execute(input category.CategoryCreateIn) (*category.Category, error) {
 	slog.Info("[CategoryCreateUsecase.Execute] - Create category: " + input.Name)
-	cat := category.NewCategory(input)
+	cat, err := category.NewCategory(input)
+	if err != nil {
+		return nil, err
+	}
+
 	res, err := u.repo.Save(cat)
 	if err != nil {
 		return nil, err

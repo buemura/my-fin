@@ -16,7 +16,7 @@ func NewTransactionUpdateUsecase(repo transaction.TransactionRepository) *Transa
 	}
 }
 
-func (u *TransactionUpdateUsecase) Execute(transactionId string, input transaction.TransactionUpdateInput) (*transaction.Transaction, error) {
+func (u *TransactionUpdateUsecase) Execute(transactionId string, input transaction.TransactionUpdateIn) (*transaction.Transaction, error) {
 	slog.Info("[TransactionUpdateUsecase.Execute] - Update transaction:" + transactionId)
 	trx, err := u.repo.FindById(transactionId)
 	if err != nil {
