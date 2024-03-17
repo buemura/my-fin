@@ -10,5 +10,6 @@ type AccountRepository interface {
 	FindByUserId(userId string, skip, offset int) ([]*Account, error)
 	GetTotalsByUserId(userId string) (*AccountTotals, error)
 	Save(account *Account) (*Account, error)
+	Update(account *Account) (*Account, error)
 	Delete(accountId string) error
 }

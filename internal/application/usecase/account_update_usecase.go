@@ -33,7 +33,7 @@ func (acu *AccountUpdateUsecase) Execute(accountId string, input account.Account
 		acc.Color = *input.Color
 	}
 
-	res, err := acu.repo.Save(acc)
+	res, err := acu.repo.Update(acc)
 	if err != nil {
 		return nil, err
 	}

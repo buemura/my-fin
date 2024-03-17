@@ -80,6 +80,18 @@ func (r *PgxAccountRepository) Save(acc *account.Account) (*account.Account, err
 	return acc, nil
 }
 
+func (r *PgxAccountRepository) Update(acc *account.Account) (*account.Account, error) {
+	_, err := r.db.Exec(
+		context.Background(),
+		`UPDATE public.account SET name = $1, balance = $2, color = $3, updated_at = $4 WHERE id = $5`,
+		acc.Name, acc.Balance, acc.Color, acc.UpdatedAt, acc.ID,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return acc, nil
+}
+
 func (r *PgxAccountRepository) Delete(accountId string) error {
 	_, err := r.db.Exec(
 		context.Background(),
