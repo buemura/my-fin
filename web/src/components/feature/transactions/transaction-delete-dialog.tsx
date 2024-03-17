@@ -22,9 +22,9 @@ import { TransactionType } from "@/types";
 
 export function TransactionDeleteDialog(transaction: TransactionType) {
   const [open, setOpen] = useState(false);
-  const queryCache = useQueryClient();
   const { user } = useUserStore();
   const { toast } = useToast();
+  const queryCache = useQueryClient();
 
   const { isPending, mutateAsync: deleteTransaction } = useMutation({
     mutationFn: () =>
@@ -37,14 +37,14 @@ export function TransactionDeleteDialog(transaction: TransactionType) {
       queryCache.invalidateQueries({ queryKey: ["transactions"] });
       toast({
         title: "Successfully deleted transaction.",
-        className: "bg-emerald-600 text-white",
+        className: "bg-emerald-500 text-white",
       });
       setOpen(false);
     },
     onError: () =>
       toast({
         title: "Failed to delete transaction.",
-        className: "bg-red-600 text-white",
+        className: "bg-red-500 text-white",
       }),
   });
 

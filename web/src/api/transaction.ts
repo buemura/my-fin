@@ -65,8 +65,6 @@ export class TransactionService {
     accessToken: string,
     props: UpdateTransactionProps
   ): Promise<TransactionType> {
-    console.log("heeree");
-
     const { data } = await axios.put<TransactionType>(
       `${apiUser}/${props.userId}/transactions/${props.id}`,
       props,

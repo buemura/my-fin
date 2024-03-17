@@ -82,24 +82,19 @@ export function TransactionCard(t: TransactionType) {
       queryCache.invalidateQueries({ queryKey: ["transactions"] });
       toast({
         title: "Successfully updated transaction.",
-        className: "bg-emerald-600 text-white",
+        className: "bg-emerald-500 text-white",
       });
       setOpen(false);
     },
     onError: () =>
       toast({
         title: "Failed to update transaction.",
-        className: "bg-red-600 text-white",
+        className: "bg-red-500 text-white",
       }),
   });
 
-  const handleEditTransaction = async (data: EditTransactionSchema) => {
-    console.log("hahah");
-
+  const handleEditTransaction = async (data: EditTransactionSchema) =>
     await mutateAsync({ id: t.id, ...data });
-  };
-
-  console.log(categories);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

@@ -27,7 +27,12 @@ export function CreateResourceTabs({ setOpen }: CreateResourceTabsProps) {
         icon={
           <TrendingDown className="w-6 h-6 bg-red-100 dark:bg-red-950 text-red-500 dark:text-red-200 rounded-full p-1" />
         }
-        child={<TransactionNewForm defaultType={TransactionTypeEnum.EXPENSE} />}
+        child={
+          <TransactionNewForm
+            defaultType={TransactionTypeEnum.EXPENSE}
+            setOpen={setOpen}
+          />
+        }
       />
 
       <TabContent
@@ -37,7 +42,12 @@ export function CreateResourceTabs({ setOpen }: CreateResourceTabsProps) {
         icon={
           <TrendingUp className="w-6 h-6 bg-emerald-100 dark:bg-emerald-950 text-emerald-500 dark:text-emerald-200 rounded-full p-1" />
         }
-        child={<TransactionNewForm defaultType={TransactionTypeEnum.INCOME} />}
+        child={
+          <TransactionNewForm
+            defaultType={TransactionTypeEnum.INCOME}
+            setOpen={setOpen}
+          />
+        }
       />
 
       <TabContent

@@ -1,11 +1,14 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { CalendarIcon, Check, ChevronDown } from "lucide-react";
+import { CalendarIcon, Check, ChevronDown, Loader2 } from "lucide-react";
+import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { TransactionService } from "@/api";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -29,8 +32,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
-import { useAccountStore, useCategoryStore } from "@/store";
+import { useAccountStore, useCategoryStore, useUserStore } from "@/store";
 import { TransactionTypeEnum } from "@/types";
 
 const createTransactionSchema = z.object({
@@ -56,11 +60,18 @@ type CreateTransactionSchema = z.infer<typeof createTransactionSchema> & {
 
 interface TransactionNewFormProps {
   defaultType?: TransactionTypeEnum | null | undefined;
+  setOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-export function TransactionNewForm({ defaultType }: TransactionNewFormProps) {
+export function TransactionNewForm({
+  defaultType,
+  setOpen,
+}: TransactionNewFormProps) {
+  const { user } = useUserStore();
   const { accounts } = useAccountStore();
   const { categories } = useCategoryStore();
+  const { toast } = useToast();
+  const queryCache = useQueryClient();
 
   const form = useForm<CreateTransactionSchema>({
     resolver: zodResolver(createTransactionSchema),
@@ -74,22 +85,29 @@ export function TransactionNewForm({ defaultType }: TransactionNewFormProps) {
     },
   });
 
-  // const { isPending, isError, mutate } = useMutation({
-  //   mutationFn: (transaction: CreateTransactionProps) =>
-  //     TransactionService.createTransaction(transaction),
-  // });
+  const { isPending, mutateAsync } = useMutation({
+    mutationFn: (input: CreateTransactionSchema) =>
+      TransactionService.createTransaction(user?.accessToken || "", {
+        ...input,
+        userId: user?.user.id || "",
+      }),
+    onSuccess: () => {
+      queryCache.invalidateQueries({ queryKey: ["transactions"] });
+      toast({
+        title: "Successfully created transaction.",
+        className: "bg-emerald-500 text-white",
+      });
+      setOpen(false);
+    },
+    onError: () =>
+      toast({
+        title: "Failed to create transaction.",
+        className: "bg-red-500 text-white",
+      }),
+  });
 
-  const handleCreateTransaction = async (data: CreateTransactionSchema) => {
-    console.log(data);
-
-    // mutate(data);
-
-    // if (isError) {
-    //   alert("Unable to create");
-    // }
-
-    // router.reload();
-  };
+  const handleCreateTransaction = async (data: CreateTransactionSchema) =>
+    await mutateAsync(data);
 
   const categoryList = categories?.filter(
     (category) => category.type === form.getValues("type")
@@ -323,7 +341,7 @@ export function TransactionNewForm({ defaultType }: TransactionNewFormProps) {
           type="submit"
           className="bg-emerald-700 hover:bg-emerald-800 text-white"
         >
-          {/* {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} */}
+          {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Submit
         </Button>
       </form>
