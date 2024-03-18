@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { PaginationMetadata } from "./pagination-metadata";
+import { PaginationMetadata } from "./metadata";
 
 export type AccountColor = "orange" | "purple" | "green" | "blue" | "black";
 

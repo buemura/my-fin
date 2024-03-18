@@ -6,7 +6,6 @@ import { format } from "date-fns";
 import { CalendarIcon, Check, ChevronDown, Loader2 } from "lucide-react";
 import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 import { TransactionService } from "@/api";
 import { Button } from "@/components/ui/button";
@@ -35,28 +34,11 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import { useAccountStore, useCategoryStore, useUserStore } from "@/store";
-import { TransactionTypeEnum } from "@/types";
-
-const createTransactionSchema = z.object({
-  accountId: z.string().uuid({
-    message: "Select a valid account",
-  }),
-  categoryId: z.string().uuid({
-    message: "Select a valid category",
-  }),
-  name: z.string().min(1, {
-    message: "Name cannot be empty",
-  }),
-  amount: z.coerce.number().min(1, {
-    message: "Amount cannot be 0",
-  }),
-  type: z.string(),
-  date: z.date(),
-});
-
-type CreateTransactionSchema = z.infer<typeof createTransactionSchema> & {
-  type: TransactionTypeEnum;
-};
+import {
+  CreateTransactionSchema,
+  TransactionTypeEnum,
+  createTransactionSchema,
+} from "@/types";
 
 interface TransactionNewFormProps {
   defaultType?: TransactionTypeEnum | null | undefined;

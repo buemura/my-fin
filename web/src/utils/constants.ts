@@ -12,3 +12,18 @@ export const types: TransactionTypeEnum[] = [
   TransactionTypeEnum.INCOME,
   TransactionTypeEnum.EXPENSE,
 ];
+
+export const MonthsAbbv: string[] = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];

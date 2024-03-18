@@ -2,6 +2,7 @@
 
 import { ChevronDown } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -10,22 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-
-const options: string[] = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
+import { MonthsAbbv } from "@/utils";
 
 interface TransactionMonthFilterProps {
   title: string;
@@ -51,7 +37,7 @@ export function TransactionMonthFilter({
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>Months</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {options.map((opt) => (
+        {MonthsAbbv.map((opt) => (
           <DropdownMenuCheckboxItem
             key={opt}
             className="cursor-pointer"
