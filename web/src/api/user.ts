@@ -1,7 +1,6 @@
 import axios from "axios";
 
-import { getAccessToken } from "@/actions/get-access-token";
-import { setCookie } from "@/actions/set-cookie";
+import { getAccessToken, setCookie } from "@/actions/cookie";
 import { env } from "@/env.mjs";
 import { UserAuthType, UserType } from "@/types/user";
 

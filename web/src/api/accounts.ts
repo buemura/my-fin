@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { getAccessToken } from "@/actions/get-access-token";
+import { getAccessToken } from "@/actions/cookie";
 import { env } from "@/env.mjs";
 import { AccountColor, AccountListType, AccountType } from "@/types/account";
 

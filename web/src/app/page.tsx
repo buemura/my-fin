@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-import { getAccessToken } from "@/actions/get-access-token";
+import { getAccessToken } from "@/actions/cookie";
 import { AccountSection } from "@/components/feature/accounts/account-section";
 import { CreateResourceButton } from "@/components/feature/resource/create-resource-button";
 import { TransactionSection } from "@/components/feature/transactions/transaction-section";
