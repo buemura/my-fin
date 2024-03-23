@@ -3,6 +3,7 @@
 import { Loader2, Trash2Icon } from "lucide-react";
 import { useState } from "react";
 
+import { useMutateAccountDelete } from "@/api/account/mutations";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -14,7 +15,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useMutateAccountDelete } from "@/hooks";
 import { AccountType } from "@/types";
 
 export function AccountDeleteDialog(account: AccountType) {

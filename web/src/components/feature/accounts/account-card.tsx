@@ -5,6 +5,7 @@ import { Check, ChevronDown, Loader2, WalletIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
+import { useMutateAccountUpdate } from "@/api/account/mutations";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -34,7 +35,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useMutateAccountUpdate } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { useUserStore } from "@/store";
 import { AccountType, EditAccountSchema, editAccountSchema } from "@/types";

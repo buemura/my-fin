@@ -1,8 +1,8 @@
 "use client";
 
-import { useAccountQuery } from "@/hooks";
-import AccountList from "./account-list";
+import { useAccountQuery } from "@/api/account/queries";
 import { currencyFormatter } from "@/utils";
+import AccountList from "./account-list";
 
 export function AccountSection() {
   const { data, isLoading } = useAccountQuery();

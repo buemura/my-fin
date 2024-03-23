@@ -1,36 +1,16 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { AccountService, CreateAccountProps, UpdateAccountProps } from "@/api";
 import { useToast } from "@/components/ui/use-toast";
-import { useAccountStore, useUserStore } from "@/store";
+import { useUserStore } from "@/store";
 import { AccountType } from "@/types";
-
-const ACCOUNT_QUERY_KEY = "accounts";
-
-export function useAccountQuery() {
-  const { user } = useUserStore();
-  const { setAccounts } = useAccountStore();
-
-  const query = useQuery({
-    queryKey: [ACCOUNT_QUERY_KEY],
-    queryFn: async () =>
-      await AccountService.getAccountList({
-        userId: user!.id,
-        page: 1,
-      }),
-  });
-
-  const { data } = query;
-
-  useEffect(() => {
-    setAccounts(data?.data.accounts || []);
-  }, [query.isSuccess]);
-
-  return query;
-}
+import {
+  ACCOUNT_QUERY_KEY,
+  AccountService,
+  CreateAccountProps,
+  UpdateAccountProps,
+} from "./api";
 
 export function useMutateAccountCreate() {
   const { toast } = useToast();

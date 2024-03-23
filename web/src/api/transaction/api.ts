@@ -8,6 +8,9 @@ import {
   TransactionTypeEnum,
 } from "@/types";
 
+const apiUser = env.NEXT_PUBLIC_BACKEND_URL + "/user";
+export const TRANSACTION_QUERY_KEY = "transactins";
+
 export type GetTransactoinListProps = {
   userId: string;
   page?: number;
@@ -27,8 +30,6 @@ export type CreateTransactionProps = {
 export type UpdateTransactionProps = Partial<CreateTransactionProps> & {
   id: string;
 };
-
-const apiUser = env.NEXT_PUBLIC_BACKEND_URL + "/user";
 
 export class TransactionService {
   static async getTransactoinList(

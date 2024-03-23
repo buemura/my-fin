@@ -4,6 +4,9 @@ import { getAccessToken } from "@/actions/cookie";
 import { env } from "@/env.mjs";
 import { AccountColor, AccountListType, AccountType } from "@/types/account";
 
+const apiUser = env.NEXT_PUBLIC_BACKEND_URL + "/user";
+export const ACCOUNT_QUERY_KEY = "accounts";
+
 export type GetAccountListProps = {
   userId: string;
   page?: number;
@@ -21,8 +24,6 @@ export type UpdateAccountProps = Partial<CreateAccountProps> & {
   id: string;
   userId: string;
 };
-
-const apiUser = env.NEXT_PUBLIC_BACKEND_URL + "/user";
 
 export class AccountService {
   static async getAccountList(

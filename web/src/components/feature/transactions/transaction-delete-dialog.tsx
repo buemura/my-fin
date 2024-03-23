@@ -3,6 +3,7 @@
 import { Loader2, Trash2Icon } from "lucide-react";
 import { useState } from "react";
 
+import { useMutateTransactionDelete } from "@/api/transaction/mutations";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -14,7 +15,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useMutateTransactionDelete } from "@/hooks";
 import { TransactionType } from "@/types";
 
 export function TransactionDeleteDialog(transaction: TransactionType) {

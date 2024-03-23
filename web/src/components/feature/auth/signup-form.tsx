@@ -2,10 +2,9 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 
-import { UserService } from "@/api";
-import { useMutation } from "@tanstack/react-query";
+import { useMutateUserSignup } from "@/api/user/mutations";
+import { UserSignupSchema, userSignupSchema } from "@/types";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "../../ui/button";
@@ -18,28 +17,13 @@ import {
   FormMessage,
 } from "../../ui/form";
 import { Input } from "../../ui/input";
-import { useToast } from "../../ui/use-toast";
-
-const formSchema = z.object({
-  name: z.string().min(3, {
-    message: "Name must not be empty",
-  }),
-  email: z.string().email({
-    message: "Email must be a valid email",
-  }),
-  password: z.string().min(8, {
-    message: "Password must contain at least 8 characters",
-  }),
-});
-
-type FormSchema = z.infer<typeof formSchema>;
 
 export function SignUpForm() {
-  const { toast } = useToast();
   const router = useRouter();
+  const { mutateAsync, isPending } = useMutateUserSignup();
 
-  const form = useForm<FormSchema>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<UserSignupSchema>({
+    resolver: zodResolver(userSignupSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -47,19 +31,10 @@ export function SignUpForm() {
     },
   });
 
-  const { isPending, mutateAsync: signUpUser } = useMutation({
-    mutationFn: async (user: FormSchema) => await UserService.signupUser(user),
-    onSuccess: () => router.push("/signin"),
-    onError: () => {
-      toast({
-        title: "Failed to signup.",
-        className: "bg-red-600 text-white",
-      });
-      router.refresh();
-    },
-  });
-
-  const onFormSubmit = async (payload: FormSchema) => await signUpUser(payload);
+  const onFormSubmit = async (payload: UserSignupSchema) =>
+    await mutateAsync(payload)
+      .then(() => router.push("/signin"))
+      .catch(() => router.refresh());
 
   return (
     <Form {...form}>

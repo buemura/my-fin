@@ -1,26 +1,15 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { TransactionService, UpdateTransactionProps } from "@/api";
 import { useToast } from "@/components/ui/use-toast";
 import { useUserStore } from "@/store";
 import { CreateTransactionSchema, TransactionType } from "@/types";
-
-const TRANSACTION_QUERY_KEY = "transactins";
-
-export function useTransactionQuery() {
-  const { user } = useUserStore();
-
-  return useQuery({
-    queryKey: [TRANSACTION_QUERY_KEY],
-    queryFn: async () =>
-      await TransactionService.getTransactoinList({
-        userId: user!.id,
-        page: 1,
-      }),
-  });
-}
+import {
+  TRANSACTION_QUERY_KEY,
+  TransactionService,
+  UpdateTransactionProps,
+} from "./api";
 
 export function useMutateTransactionDelete() {
   const { user } = useUserStore();

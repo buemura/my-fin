@@ -3,8 +3,9 @@
 import { FilterIcon } from "lucide-react";
 import { useState } from "react";
 
+import { useCategoryQuery } from "@/api/category/queries";
+import { useTransactionQuery } from "@/api/transaction/queries";
 import { Button } from "@/components/ui/button";
-import { useCategoryQuery, useTransactionQuery } from "@/hooks";
 import { getMonthFromString } from "@/utils";
 import { TransactionMonthFilter } from "./filter-month";
 import {
@@ -15,8 +16,8 @@ import { TransactionYearFilter } from "./filter-year";
 import TransactionList from "./transaction-list";
 
 export function TransactionSection() {
+  const _ = useCategoryQuery();
   const { data: trnsactionList, isLoading } = useTransactionQuery();
-  useCategoryQuery();
 
   const [trxFilter, setTrxFilter] =
     useState<TransactionFilterType>("Transaction");

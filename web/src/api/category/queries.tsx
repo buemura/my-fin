@@ -3,10 +3,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 
-import { CategoryService } from "@/api";
 import { useCategoryStore } from "@/store";
-
-const CATEGORY_QUERY_KEY = "categories";
+import { CATEGORY_QUERY_KEY, CategoryService } from "./api";
 
 export function useCategoryQuery() {
   const { setCategories } = useCategoryStore();
