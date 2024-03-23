@@ -1,13 +1,11 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Check, ChevronDown, Loader2 } from "lucide-react";
 import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { AccountService, CreateAccountProps } from "@/api";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -30,7 +28,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useToast } from "@/components/ui/use-toast";
+import { useMutateAccountCreate } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { useUserStore } from "@/store";
 import { AccountColor } from "@/types";
@@ -55,8 +53,7 @@ interface AccountNewFormProps {
 
 export function AccountNewForm({ setOpen }: AccountNewFormProps) {
   const { user } = useUserStore();
-  const { toast } = useToast();
-  const queryCache = useQueryClient();
+  const { mutateAsync, isPending } = useMutateAccountCreate();
 
   const form = useForm<CreateAccountSchema>({
     resolver: zodResolver(createAccountSchema),
@@ -68,26 +65,8 @@ export function AccountNewForm({ setOpen }: AccountNewFormProps) {
     },
   });
 
-  const { isPending, mutateAsync } = useMutation({
-    mutationFn: (account: CreateAccountProps) =>
-      AccountService.createAccount(account),
-    onSuccess: () => {
-      queryCache.invalidateQueries({ queryKey: ["accounts"] });
-      toast({
-        title: "Successfully created account.",
-        className: "bg-emerald-600 text-white",
-      });
-      setOpen(false);
-    },
-    onError: () =>
-      toast({
-        title: "Failed to create account.",
-        className: "bg-red-600 text-white",
-      }),
-  });
-
   const handleCreateAccount = async (data: CreateAccountSchema) =>
-    await mutateAsync(data);
+    await mutateAsync(data).then(() => setOpen(false));
 
   return (
     <Form {...form}>

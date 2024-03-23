@@ -1,12 +1,10 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Check, ChevronDown, Loader2, WalletIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { AccountService, UpdateAccountProps } from "@/api";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -36,7 +34,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useToast } from "@/components/ui/use-toast";
+import { useMutateAccountUpdate } from "@/hooks";
 import { cn } from "@/lib/utils";
 import { useUserStore } from "@/store";
 import { AccountType, EditAccountSchema, editAccountSchema } from "@/types";
@@ -51,8 +49,8 @@ import { AccountDeleteDialog } from "./account-delete-dialog";
 export function AccountCard(account: AccountType) {
   const [open, setOpen] = useState(false);
   const { user } = useUserStore();
-  const { toast } = useToast();
-  const queryCache = useQueryClient();
+
+  const { mutateAsync, isPending } = useMutateAccountUpdate();
 
   const form = useForm<EditAccountSchema>({
     resolver: zodResolver(editAccountSchema),
@@ -63,30 +61,12 @@ export function AccountCard(account: AccountType) {
     },
   });
 
-  const { isPending, mutateAsync } = useMutation({
-    mutationFn: (data: UpdateAccountProps) =>
-      AccountService.updateAccountById(data),
-    onSuccess: () => {
-      queryCache.invalidateQueries({ queryKey: ["accounts"] });
-      toast({
-        title: "Successfully updated account.",
-        className: "bg-emerald-600 text-white",
-      });
-      setOpen(false);
-    },
-    onError: () =>
-      toast({
-        title: "Failed to update account.",
-        className: "bg-red-600 text-white",
-      }),
-  });
-
   const handleEditAccount = async (data: EditAccountSchema) =>
     await mutateAsync({
       ...data,
       id: account.id,
       userId: user?.id || account.userId,
-    });
+    }).then(() => setOpen(false));
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

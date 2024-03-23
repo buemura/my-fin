@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   BanknoteIcon,
   CheckIcon,
@@ -11,7 +10,6 @@ import {
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { TransactionService, UpdateTransactionProps } from "@/api";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -41,9 +39,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useToast } from "@/components/ui/use-toast";
+import { useMutateTransactionUpdate } from "@/hooks";
 import { cn } from "@/lib/utils";
-import { useAccountStore, useCategoryStore, useUserStore } from "@/store";
+import { useAccountStore, useCategoryStore } from "@/store";
 import {
   EditTransactionSchema,
   TransactionType,
@@ -59,11 +57,9 @@ import { TransactionDeleteDialog } from "./transaction-delete-dialog";
 
 export function TransactionCard(t: TransactionType) {
   const [open, setOpen] = useState(false);
-  const { toast } = useToast();
-  const { user } = useUserStore();
   const { accounts } = useAccountStore();
   const { categories } = useCategoryStore();
-  const queryCache = useQueryClient();
+  const { mutateAsync, isPending } = useMutateTransactionUpdate();
 
   const transactionColor = t.type === "EXPENSE" ? "#bf3939" : "#29a358";
   const transactionSymbol = t.type === "INCOME" ? "+ " : "- ";
@@ -80,26 +76,8 @@ export function TransactionCard(t: TransactionType) {
     },
   });
 
-  const { isPending, mutateAsync } = useMutation({
-    mutationFn: (data: UpdateTransactionProps) =>
-      TransactionService.updateTransactionById(data),
-    onSuccess: () => {
-      queryCache.invalidateQueries({ queryKey: ["transactions"] });
-      toast({
-        title: "Successfully updated transaction.",
-        className: "bg-emerald-500 text-white",
-      });
-      setOpen(false);
-    },
-    onError: () =>
-      toast({
-        title: "Failed to update transaction.",
-        className: "bg-red-500 text-white",
-      }),
-  });
-
   const handleEditTransaction = async (data: EditTransactionSchema) =>
-    await mutateAsync({ id: t.id, ...data });
+    await mutateAsync({ id: t.id, ...data }).then(() => setOpen(false));
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

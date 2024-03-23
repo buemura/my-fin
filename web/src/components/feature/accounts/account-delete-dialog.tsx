@@ -1,10 +1,8 @@
 "use client";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2, Trash2Icon } from "lucide-react";
 import { useState } from "react";
 
-import { AccountService } from "@/api";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -16,35 +14,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useToast } from "@/components/ui/use-toast";
-import { useUserStore } from "@/store";
+import { useMutateAccountDelete } from "@/hooks";
 import { AccountType } from "@/types";
 
 export function AccountDeleteDialog(account: AccountType) {
   const [open, setOpen] = useState(false);
-  const queryCache = useQueryClient();
-  const { user } = useUserStore();
-  const { toast } = useToast();
+  const { mutateAsync, isPending } = useMutateAccountDelete();
 
-  const { isPending, mutateAsync: deleteAccount } = useMutation({
-    mutationFn: () =>
-      AccountService.deleteAccountById(user?.id || account.userId, account.id),
-    onSuccess: () => {
-      queryCache.invalidateQueries({ queryKey: ["accounts"] });
-      toast({
-        title: "Successfully deleted account.",
-        className: "bg-emerald-600 text-white",
-      });
-      setOpen(false);
-    },
-    onError: () =>
-      toast({
-        title: "Failed to delete account.",
-        className: "bg-red-600 text-white",
-      }),
-  });
-
-  const handleDeleteAccount = async () => await deleteAccount();
+  const handleDeleteAccount = async () =>
+    await mutateAsync(account).then(() => setOpen(false));
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

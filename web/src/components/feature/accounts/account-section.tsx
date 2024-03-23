@@ -1,11 +1,11 @@
 "use client";
 
-import { useFetchAccounts } from "@/hooks";
+import { useAccountQuery } from "@/hooks";
 import AccountList from "./account-list";
 import { currencyFormatter } from "@/utils";
 
 export function AccountSection() {
-  const { data, isLoading } = useFetchAccounts();
+  const { data, isLoading } = useAccountQuery();
 
   return (
     <div className="bg-emerald-700 p-4 lg:p-8 rounded-2xl space-y-5 flex flex-col justify-between h-1/2 lg:w-full lg:h-full">

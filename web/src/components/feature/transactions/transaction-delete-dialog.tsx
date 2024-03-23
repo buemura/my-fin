@@ -1,10 +1,8 @@
 "use client";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2, Trash2Icon } from "lucide-react";
 import { useState } from "react";
 
-import { TransactionService } from "@/api";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -16,35 +14,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useToast } from "@/components/ui/use-toast";
-import { useUserStore } from "@/store";
+import { useMutateTransactionDelete } from "@/hooks";
 import { TransactionType } from "@/types";
 
 export function TransactionDeleteDialog(transaction: TransactionType) {
   const [open, setOpen] = useState(false);
-  const { user } = useUserStore();
-  const { toast } = useToast();
-  const queryCache = useQueryClient();
+  const { mutateAsync, isPending } = useMutateTransactionDelete();
 
-  const { isPending, mutateAsync: deleteTransaction } = useMutation({
-    mutationFn: () =>
-      TransactionService.deleteTransactionById(user?.id || "", transaction.id),
-    onSuccess: () => {
-      queryCache.invalidateQueries({ queryKey: ["transactions"] });
-      toast({
-        title: "Successfully deleted transaction.",
-        className: "bg-emerald-500 text-white",
-      });
-      setOpen(false);
-    },
-    onError: () =>
-      toast({
-        title: "Failed to delete transaction.",
-        className: "bg-red-500 text-white",
-      }),
-  });
-
-  const handleDeleteTransaction = async () => await deleteTransaction();
+  const handleDeleteTransaction = async () =>
+    await mutateAsync(transaction).then(() => setOpen(false));
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

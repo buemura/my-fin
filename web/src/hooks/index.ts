@@ -1,3 +1,3 @@
-export * from "./useFetchAccounts";
-export * from "./useFetchCategories";
-export * from "./useFetchTransactions";
+export * from "./useAccounts";
+export * from "./useCategories";
+export * from "./useTransactions";

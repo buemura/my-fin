@@ -1,13 +1,11 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { CalendarIcon, Check, ChevronDown, Loader2 } from "lucide-react";
 import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 
-import { TransactionService } from "@/api";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -31,9 +29,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useToast } from "@/components/ui/use-toast";
+import { useMutateTransactionCreate } from "@/hooks";
 import { cn } from "@/lib/utils";
-import { useAccountStore, useCategoryStore, useUserStore } from "@/store";
+import { useAccountStore, useCategoryStore } from "@/store";
 import {
   CreateTransactionSchema,
   TransactionTypeEnum,
@@ -49,11 +47,10 @@ export function TransactionNewForm({
   defaultType,
   setOpen,
 }: TransactionNewFormProps) {
-  const { user } = useUserStore();
   const { accounts } = useAccountStore();
   const { categories } = useCategoryStore();
-  const { toast } = useToast();
-  const queryCache = useQueryClient();
+
+  const { mutateAsync, isPending } = useMutateTransactionCreate();
 
   const form = useForm<CreateTransactionSchema>({
     resolver: zodResolver(createTransactionSchema),
@@ -67,29 +64,8 @@ export function TransactionNewForm({
     },
   });
 
-  const { isPending, mutateAsync } = useMutation({
-    mutationFn: (input: CreateTransactionSchema) =>
-      TransactionService.createTransaction({
-        ...input,
-        userId: user?.id || "",
-      }),
-    onSuccess: () => {
-      queryCache.invalidateQueries({ queryKey: ["transactions"] });
-      toast({
-        title: "Successfully created transaction.",
-        className: "bg-emerald-500 text-white",
-      });
-      setOpen(false);
-    },
-    onError: () =>
-      toast({
-        title: "Failed to create transaction.",
-        className: "bg-red-500 text-white",
-      }),
-  });
-
   const handleCreateTransaction = async (data: CreateTransactionSchema) =>
-    await mutateAsync(data);
+    await mutateAsync(data).then(() => setOpen(false));
 
   const categoryList = categories?.filter(
     (category) => category.type === form.getValues("type")

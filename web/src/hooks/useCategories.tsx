@@ -6,11 +6,13 @@ import { useEffect } from "react";
 import { CategoryService } from "@/api";
 import { useCategoryStore } from "@/store";
 
-export const useFetchCategories = () => {
+const CATEGORY_QUERY_KEY = "categories";
+
+export function useCategoryQuery() {
   const { setCategories } = useCategoryStore();
 
   const query = useQuery({
-    queryKey: ["categories"],
+    queryKey: [CATEGORY_QUERY_KEY],
     queryFn: async () => await CategoryService.getCategoryList(),
   });
 
@@ -19,4 +21,4 @@ export const useFetchCategories = () => {
   }, [query.isSuccess]);
 
   return query;
-};
+}

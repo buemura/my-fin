@@ -4,7 +4,7 @@ import { FilterIcon } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { useFetchCategories, useFetchTransactions } from "@/hooks";
+import { useCategoryQuery, useTransactionQuery } from "@/hooks";
 import { getMonthFromString } from "@/utils";
 import { TransactionMonthFilter } from "./filter-month";
 import {
@@ -15,8 +15,8 @@ import { TransactionYearFilter } from "./filter-year";
 import TransactionList from "./transaction-list";
 
 export function TransactionSection() {
-  const { data: trnsactionList, isLoading } = useFetchTransactions();
-  useFetchCategories();
+  const { data: trnsactionList, isLoading } = useTransactionQuery();
+  useCategoryQuery();
 
   const [trxFilter, setTrxFilter] =
     useState<TransactionFilterType>("Transaction");
