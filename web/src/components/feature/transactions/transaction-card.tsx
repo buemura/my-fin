@@ -2,7 +2,12 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Check, ChevronDown, Loader2, WalletIcon } from "lucide-react";
+import {
+  BanknoteIcon,
+  CheckIcon,
+  ChevronDownIcon,
+  Loader2Icon,
+} from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -101,7 +106,7 @@ export function TransactionCard(t: TransactionType) {
       <DialogTrigger asChild>
         <div className="bg-white dark:bg-zinc-800 rounded-xl flex justify-between items-center px-4 py-4 cursor-pointer">
           <div className="flex items-center gap-4">
-            <WalletIcon className="p-1 rounded-full w-8 h-8" />
+            <BanknoteIcon className="p-1 rounded-full w-8 h-8" />
 
             <div className="flex flex-col">
               <span className="text-zinc-800 dark:text-white text-md">
@@ -204,7 +209,7 @@ export function TransactionCard(t: TransactionType) {
                                   )
                                 : "Select type"}
                             </div>
-                            <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            <ChevronDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                           </Button>
                         </FormControl>
                       </PopoverTrigger>
@@ -221,7 +226,7 @@ export function TransactionCard(t: TransactionType) {
                                 key={c}
                                 onSelect={() => form.setValue("type", c)}
                               >
-                                <Check
+                                <CheckIcon
                                   className={cn(
                                     "mr-2 h-4 w-4",
                                     c === field.value
@@ -268,7 +273,7 @@ export function TransactionCard(t: TransactionType) {
                                 (category) => category.id === field.value
                               )?.name
                             : "Select category"}
-                          <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          <ChevronDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
@@ -287,7 +292,7 @@ export function TransactionCard(t: TransactionType) {
                                   form.setValue("categoryId", category.id)
                                 }
                               >
-                                <Check
+                                <CheckIcon
                                   className={cn(
                                     "mr-2 h-4 w-4",
                                     category.id === field.value
@@ -327,7 +332,7 @@ export function TransactionCard(t: TransactionType) {
                                 (account) => account.id === field.value
                               )?.name
                             : "Select account"}
-                          <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          <ChevronDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
@@ -345,7 +350,7 @@ export function TransactionCard(t: TransactionType) {
                                 form.setValue("accountId", account.id)
                               }
                             >
-                              <Check
+                              <CheckIcon
                                 className={cn(
                                   "mr-2 h-4 w-4",
                                   account.id === field.value
@@ -370,7 +375,9 @@ export function TransactionCard(t: TransactionType) {
                 type="submit"
                 className="bg-emerald-700 hover:bg-emerald-800 text-white"
               >
-                {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {isPending && (
+                  <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
+                )}
                 Submit
               </Button>
 

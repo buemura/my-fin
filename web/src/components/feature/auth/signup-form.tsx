@@ -8,7 +8,7 @@ import { UserService } from "@/api";
 import { useMutation } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import {
   Form,
   FormControl,
@@ -16,9 +16,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
-import { useToast } from "../ui/use-toast";
+} from "../../ui/form";
+import { Input } from "../../ui/input";
+import { useToast } from "../../ui/use-toast";
 
 const formSchema = z.object({
   name: z.string().min(3, {

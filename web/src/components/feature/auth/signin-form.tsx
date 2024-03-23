@@ -9,7 +9,7 @@ import { z } from "zod";
 import { UserService } from "@/api";
 import { useUserStore } from "@/store";
 import { useRouter } from "next/navigation";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import {
   Form,
   FormControl,
@@ -17,9 +17,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
-import { useToast } from "../ui/use-toast";
+} from "../../ui/form";
+import { Input } from "../../ui/input";
+import { useToast } from "../../ui/use-toast";
 
 const formSchema = z.object({
   email: z.string().email({
