@@ -28,11 +28,7 @@ export function TransactionDeleteDialog(transaction: TransactionType) {
 
   const { isPending, mutateAsync: deleteTransaction } = useMutation({
     mutationFn: () =>
-      TransactionService.deleteTransactionById(
-        user?.accessToken || "",
-        user?.user.id || "",
-        transaction.id
-      ),
+      TransactionService.deleteTransactionById(user?.id || "", transaction.id),
     onSuccess: () => {
       queryCache.invalidateQueries({ queryKey: ["transactions"] });
       toast({

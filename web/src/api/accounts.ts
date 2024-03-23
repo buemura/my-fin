@@ -1,10 +1,10 @@
 import axios from "axios";
 
-import { AccountColor, AccountListType, AccountType } from "@/types/account";
+import { getAccessToken } from "@/actions/get-access-token";
 import { env } from "@/env.mjs";
+import { AccountColor, AccountListType, AccountType } from "@/types/account";
 
 export type GetAccountListProps = {
-  accessToken: string;
   userId: string;
   page?: number;
   items?: number;
@@ -28,6 +28,11 @@ export class AccountService {
   static async getAccountList(
     props: GetAccountListProps
   ): Promise<AccountListType> {
+    const accessToken = await getAccessToken();
+    if (!accessToken) {
+      throw new Error("Missing access_token");
+    }
+
     let url = `${apiUser}/${props.userId}/accounts`;
     if (props.page) {
       url += `?page=${props.page}`;
@@ -35,18 +40,21 @@ export class AccountService {
         url += `&items=${props.items}`;
       }
     }
+
     const { data } = await axios.get<AccountListType>(url, {
       headers: {
-        Authorization: `Bearer ${props.accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     });
     return data;
   }
 
-  static async createAccount(
-    accessToken: string,
-    props: CreateAccountProps
-  ): Promise<AccountType> {
+  static async createAccount(props: CreateAccountProps): Promise<AccountType> {
+    const accessToken = await getAccessToken();
+    if (!accessToken) {
+      throw new Error("Missing access_token");
+    }
+
     const { data } = await axios.post<AccountType>(
       `${apiUser}/${props.userId}/accounts`,
       props,
@@ -56,9 +64,13 @@ export class AccountService {
   }
 
   static async updateAccountById(
-    accessToken: string,
     props: UpdateAccountProps
   ): Promise<AccountType> {
+    const accessToken = await getAccessToken();
+    if (!accessToken) {
+      throw new Error("Missing access_token");
+    }
+
     const { data } = await axios.put<AccountType>(
       `${apiUser}/${props.userId}/accounts/${props.id}`,
       props,
@@ -68,10 +80,14 @@ export class AccountService {
   }
 
   static async deleteAccountById(
-    accessToken: string,
     userId: string,
     accountId: string
   ): Promise<AccountType> {
+    const accessToken = await getAccessToken();
+    if (!accessToken) {
+      throw new Error("Missing access_token");
+    }
+
     const { data } = await axios.delete<AccountType>(
       `${apiUser}/${userId}/accounts/${accountId}`,
       { headers: { Authorization: `Bearer ${accessToken}` } }

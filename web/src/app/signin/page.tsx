@@ -1,10 +1,18 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
+import { getAccessToken } from "@/actions/get-access-token";
 import { SignInForm } from "@/components/feature/signin-form";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-export default function Page() {
+export default async function Page() {
+  const token = await getAccessToken();
+
+  if (token) {
+    return redirect("/");
+  }
+
   return (
     <div className="container relative h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
       <Link

@@ -11,9 +11,8 @@ export const useFetchTransactions = () => {
   return useQuery({
     queryKey: ["transactions"],
     queryFn: async () =>
-      TransactionService.getTransactoinList({
-        accessToken: user?.accessToken || "",
-        userId: user?.user.id || "",
+      await TransactionService.getTransactoinList({
+        userId: user!.id,
         page: 1,
       }),
   });

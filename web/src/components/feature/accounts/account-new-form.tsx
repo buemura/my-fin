@@ -61,7 +61,7 @@ export function AccountNewForm({ setOpen }: AccountNewFormProps) {
   const form = useForm<CreateAccountSchema>({
     resolver: zodResolver(createAccountSchema),
     defaultValues: {
-      userId: user?.user.id,
+      userId: user?.id,
       name: "",
       balance: 1,
       color: "black",
@@ -70,7 +70,7 @@ export function AccountNewForm({ setOpen }: AccountNewFormProps) {
 
   const { isPending, mutateAsync } = useMutation({
     mutationFn: (account: CreateAccountProps) =>
-      AccountService.createAccount(user?.accessToken || "", account),
+      AccountService.createAccount(account),
     onSuccess: () => {
       queryCache.invalidateQueries({ queryKey: ["accounts"] });
       toast({

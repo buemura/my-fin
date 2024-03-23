@@ -4,10 +4,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { useMutation } from "@tanstack/react-query";
 import { UserService } from "@/api";
+import { useMutation } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Button } from "../ui/button";
 import {
   Form,
   FormControl,
@@ -17,7 +18,7 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+import { useToast } from "../ui/use-toast";
 
 const formSchema = z.object({
   name: z.string().min(3, {
@@ -34,6 +35,7 @@ const formSchema = z.object({
 type FormSchema = z.infer<typeof formSchema>;
 
 export function SignUpForm() {
+  const { toast } = useToast();
   const router = useRouter();
 
   const form = useForm<FormSchema>({
@@ -47,9 +49,12 @@ export function SignUpForm() {
 
   const { isPending, mutateAsync: signUpUser } = useMutation({
     mutationFn: async (user: FormSchema) => await UserService.signupUser(user),
-    onSuccess: () => router.push("/"),
+    onSuccess: () => router.push("/signin"),
     onError: () => {
-      alert("Unable to sign in");
+      toast({
+        title: "Failed to signup.",
+        className: "bg-red-600 text-white",
+      });
       router.refresh();
     },
   });

@@ -1,7 +1,7 @@
 import axios from "axios";
 
-import { ICategory } from "@/types";
 import { env } from "@/env.mjs";
+import { ICategory } from "@/types";
 
 const apiUser = env.NEXT_PUBLIC_BACKEND_URL;
 

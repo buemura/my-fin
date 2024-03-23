@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Check, ChevronDown, Loader2, WalletIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { TransactionService, UpdateTransactionProps } from "@/api";
@@ -77,7 +77,7 @@ export function TransactionCard(t: TransactionType) {
 
   const { isPending, mutateAsync } = useMutation({
     mutationFn: (data: UpdateTransactionProps) =>
-      TransactionService.updateTransactionById(user?.accessToken || "", data),
+      TransactionService.updateTransactionById(data),
     onSuccess: () => {
       queryCache.invalidateQueries({ queryKey: ["transactions"] });
       toast({
@@ -99,7 +99,7 @@ export function TransactionCard(t: TransactionType) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <div className="bg-white dark:bg-zinc-800 rounded-xl flex justify-between items-center px-4 py-4">
+        <div className="bg-white dark:bg-zinc-800 rounded-xl flex justify-between items-center px-4 py-4 cursor-pointer">
           <div className="flex items-center gap-4">
             <WalletIcon className="p-1 rounded-full w-8 h-8" />
 
@@ -118,7 +118,7 @@ export function TransactionCard(t: TransactionType) {
             style={{ color: transactionColor }}
           >
             {transactionSymbol}
-            {currencyFormatter.format(t.amount)}
+            {currencyFormatter.format(t.amount / 100)}
           </span>
         </div>
       </DialogTrigger>

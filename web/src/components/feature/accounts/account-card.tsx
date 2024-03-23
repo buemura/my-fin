@@ -65,7 +65,7 @@ export function AccountCard(account: AccountType) {
 
   const { isPending, mutateAsync } = useMutation({
     mutationFn: (data: UpdateAccountProps) =>
-      AccountService.updateAccountById(user?.accessToken || "", data),
+      AccountService.updateAccountById(data),
     onSuccess: () => {
       queryCache.invalidateQueries({ queryKey: ["accounts"] });
       toast({
@@ -85,7 +85,7 @@ export function AccountCard(account: AccountType) {
     await mutateAsync({
       ...data,
       id: account.id,
-      userId: user?.user.id || account.userId,
+      userId: user?.id || account.userId,
     });
 
   return (

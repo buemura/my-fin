@@ -1,7 +1,9 @@
 import axios from "axios";
 
-import { UserAuthType, UserType } from "@/types/user";
+import { getAccessToken } from "@/actions/get-access-token";
+import { setCookie } from "@/actions/set-cookie";
 import { env } from "@/env.mjs";
+import { UserAuthType, UserType } from "@/types/user";
 
 export type SigninUserProps = {
   email: string;
@@ -10,10 +12,6 @@ export type SigninUserProps = {
 
 export type SignupUserProps = SigninUserProps & {
   name: string;
-};
-
-export type GetUserProps = {
-  accessToken: string;
 };
 
 const apiUser = env.NEXT_PUBLIC_BACKEND_URL + "/user";
@@ -26,10 +24,22 @@ export class UserService {
 
   static async signinUser(body: SigninUserProps): Promise<UserAuthType> {
     const { data } = await axios.post<UserAuthType>(`${apiUser}/signin`, body);
+
+    if (data && data.accessToken) {
+      setCookie("access_token", data?.accessToken, {
+        secure: true,
+      });
+    }
+
     return data;
   }
 
-  static async getUser({ accessToken }: GetUserProps): Promise<UserType> {
+  static async getUser(): Promise<UserType> {
+    const accessToken = await getAccessToken();
+    if (!accessToken) {
+      throw new Error("Missing access_token");
+    }
+
     const { data } = await axios.get<UserType>(`${apiUser}/me`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,

@@ -13,15 +13,16 @@ export const useFetchAccounts = () => {
   const query = useQuery({
     queryKey: ["accounts"],
     queryFn: async () =>
-      AccountService.getAccountList({
-        accessToken: user?.accessToken || "",
-        userId: user?.user.id || "",
+      await AccountService.getAccountList({
+        userId: user!.id,
         page: 1,
       }),
   });
 
+  const { data } = query;
+
   useEffect(() => {
-    setAccounts(query.data?.data.accounts || []);
+    setAccounts(data?.data.accounts || []);
   }, [query.isSuccess]);
 
   return query;

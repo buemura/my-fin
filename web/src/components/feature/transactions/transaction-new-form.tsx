@@ -69,9 +69,9 @@ export function TransactionNewForm({
 
   const { isPending, mutateAsync } = useMutation({
     mutationFn: (input: CreateTransactionSchema) =>
-      TransactionService.createTransaction(user?.accessToken || "", {
+      TransactionService.createTransaction({
         ...input,
-        userId: user?.user.id || "",
+        userId: user?.id || "",
       }),
     onSuccess: () => {
       queryCache.invalidateQueries({ queryKey: ["transactions"] });

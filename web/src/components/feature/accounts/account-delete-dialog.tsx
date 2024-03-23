@@ -28,11 +28,7 @@ export function AccountDeleteDialog(account: AccountType) {
 
   const { isPending, mutateAsync: deleteAccount } = useMutation({
     mutationFn: () =>
-      AccountService.deleteAccountById(
-        user?.accessToken || "",
-        user?.user.id || account.userId,
-        account.id
-      ),
+      AccountService.deleteAccountById(user?.id || account.userId, account.id),
     onSuccess: () => {
       queryCache.invalidateQueries({ queryKey: ["accounts"] });
       toast({

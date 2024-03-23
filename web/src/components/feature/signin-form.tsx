@@ -19,6 +19,7 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
+import { useToast } from "../ui/use-toast";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -33,6 +34,7 @@ type FormSchema = z.infer<typeof formSchema>;
 
 export function SignInForm() {
   const { setUser } = useUserStore();
+  const { toast } = useToast();
   const router = useRouter();
 
   const form = useForm<FormSchema>({
@@ -45,12 +47,15 @@ export function SignInForm() {
 
   const { isPending, mutateAsync: signInUser } = useMutation({
     mutationFn: async (user: FormSchema) => await UserService.signinUser(user),
-    onSuccess: (data) => {
-      setUser(data);
+    onSuccess: ({ user }) => {
+      setUser(user);
       router.push("/");
     },
     onError: () => {
-      alert("Unable to sign in");
+      toast({
+        title: "Failed to signin.",
+        className: "bg-red-600 text-white",
+      });
       router.refresh();
     },
   });

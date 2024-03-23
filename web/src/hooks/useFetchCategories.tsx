@@ -11,7 +11,7 @@ export const useFetchCategories = () => {
 
   const query = useQuery({
     queryKey: ["categories"],
-    queryFn: async () => CategoryService.getCategoryList(),
+    queryFn: async () => await CategoryService.getCategoryList(),
   });
 
   useEffect(() => {
