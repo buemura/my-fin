@@ -22,12 +22,14 @@ export type AccountListType = {
   metadata: PaginationMetadata;
 };
 
-export const editAccountSchema = z.object({
-  name: z.string(),
+export const accountSchema = z.object({
+  name: z.string().min(1, {
+    message: "Name cannot be empty",
+  }),
   balance: z.coerce.number(),
   color: z.string(),
 });
 
-export type EditAccountSchema = z.infer<typeof editAccountSchema> & {
+export type AccountSchema = z.infer<typeof accountSchema> & {
   color: AccountColor;
 };

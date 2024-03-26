@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { useToast } from "@/components/ui/use-toast";
 import { useUserStore } from "@/store";
-import { CreateTransactionSchema, TransactionType } from "@/types";
+import { TransactionSchema, TransactionType } from "@/types";
 import {
   TRANSACTION_QUERY_KEY,
   TransactionService,
@@ -12,13 +12,12 @@ import {
 } from "./api";
 
 export function useMutateTransactionDelete() {
-  const { user } = useUserStore();
   const { toast } = useToast();
   const queryCache = useQueryClient();
 
   return useMutation({
     mutationFn: (transaction: TransactionType) =>
-      TransactionService.deleteTransactionById(user!.id, transaction.id),
+      TransactionService.deleteTransactionById(transaction.id),
     onSuccess: () => {
       queryCache.invalidateQueries({ queryKey: [TRANSACTION_QUERY_KEY] });
       toast({
@@ -40,10 +39,9 @@ export function useMutateTransactionCreate() {
   const queryCache = useQueryClient();
 
   return useMutation({
-    mutationFn: (input: CreateTransactionSchema) =>
+    mutationFn: (input: TransactionSchema) =>
       TransactionService.createTransaction({
         ...input,
-        userId: user!.id,
       }),
     onSuccess: () => {
       queryCache.invalidateQueries({ queryKey: [TRANSACTION_QUERY_KEY] });

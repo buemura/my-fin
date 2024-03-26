@@ -8,7 +8,7 @@ export const colors: AccountColor[] = [
   "blue",
 ];
 
-export const types: TransactionTypeEnum[] = [
+export const transactionTypes: TransactionTypeEnum[] = [
   TransactionTypeEnum.INCOME,
   TransactionTypeEnum.EXPENSE,
 ];

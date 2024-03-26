@@ -2,11 +2,12 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, ChevronDown, Loader2 } from "lucide-react";
-import { Dispatch, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 
-import { useMutateAccountCreate } from "@/api/account/mutations";
+import {
+  useMutateAccountCreate,
+  useMutateAccountUpdate,
+} from "@/api/account/mutations";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -30,50 +31,49 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { useUserStore } from "@/store";
-import { AccountColor } from "@/types";
+import { AccountSchema, AccountType, accountSchema } from "@/types";
 import { capitalizeFirstLetter, colors } from "@/utils";
+import { useRouter } from "next/navigation";
+import { AccountDeleteDialog } from "./account-delete-dialog";
 
-const createAccountSchema = z.object({
-  userId: z.string().uuid(),
-  name: z.string().min(1, {
-    message: "Name cannot be empty",
-  }),
-  balance: z.coerce.number(),
-  color: z.string(),
-});
-
-type CreateAccountSchema = z.infer<typeof createAccountSchema> & {
-  color: AccountColor;
-};
-
-interface AccountNewFormProps {
-  setOpen: Dispatch<SetStateAction<boolean>>;
+interface AccountFormProps {
+  account?: AccountType;
+  isEdit: boolean;
 }
 
-export function AccountNewForm({ setOpen }: AccountNewFormProps) {
-  const { user } = useUserStore();
-  const { mutateAsync, isPending } = useMutateAccountCreate();
+export function AccountForm({ account, isEdit }: AccountFormProps) {
+  const router = useRouter();
 
-  const form = useForm<CreateAccountSchema>({
-    resolver: zodResolver(createAccountSchema),
+  const { mutateAsync: createAccount, isPending: createAccountPending } =
+    useMutateAccountCreate();
+  const { mutateAsync: updateAccount, isPending: updateAccountPending } =
+    useMutateAccountUpdate();
+
+  const form = useForm<AccountSchema>({
+    resolver: zodResolver(accountSchema),
     defaultValues: {
-      userId: user?.id,
-      name: "",
-      balance: 1,
-      color: "black",
+      name: account?.name ?? "",
+      balance: account?.balance ?? 1,
+      color: account?.color ?? "black",
     },
   });
 
-  const handleCreateAccount = async (data: CreateAccountSchema) =>
-    await mutateAsync(data).then(() => setOpen(false));
+  const handleSubmit = async (data: AccountSchema) => {
+    if (isEdit) {
+      return updateAccount({ ...data, id: account?.id ?? "" }).then(() =>
+        router.push("/")
+      );
+    }
+
+    return createAccount(data).then(() => router.push("/"));
+  };
+
+  // const handleCreateAccount = async (data: AccountSchema) =>
+  //   await mutateAsync(data).then(() => router.push("/"));
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(handleCreateAccount)}
-        className="space-y-4"
-      >
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="name"
@@ -180,13 +180,19 @@ export function AccountNewForm({ setOpen }: AccountNewFormProps) {
           )}
         />
 
-        <Button
-          type="submit"
-          className="bg-emerald-700 hover:bg-emerald-800 text-white"
-        >
-          {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Submit
-        </Button>
+        <div className="flex items-center justify-between">
+          <Button
+            type="submit"
+            className="bg-emerald-700 hover:bg-emerald-800 text-white"
+          >
+            {(createAccountPending || updateAccountPending) && (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            )}
+            Submit
+          </Button>
+
+          {isEdit && account && <AccountDeleteDialog {...account} />}
+        </div>
       </form>
     </Form>
   );

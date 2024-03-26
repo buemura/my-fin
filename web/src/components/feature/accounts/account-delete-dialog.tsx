@@ -1,7 +1,6 @@
 "use client";
 
 import { Loader2, Trash2Icon } from "lucide-react";
-import { useState } from "react";
 
 import { useMutateAccountDelete } from "@/api/account/mutations";
 import { Button } from "@/components/ui/button";
@@ -16,16 +15,17 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { AccountType } from "@/types";
+import { useRouter } from "next/navigation";
 
 export function AccountDeleteDialog(account: AccountType) {
-  const [open, setOpen] = useState(false);
+  const router = useRouter();
   const { mutateAsync, isPending } = useMutateAccountDelete();
 
   const handleDeleteAccount = async () =>
-    await mutateAsync(account).then(() => setOpen(false));
+    await mutateAsync(account).then(() => router.push("/"));
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog>
       <DialogTrigger asChild>
         <Trash2Icon className="p-2 rounded-lg w-10 h-10 bg-red-100 dark:bg-red-900 text-red-500 dark:text-red-300 cursor-pointer hover:bg-red-200 dark:hover:bg-red-950" />
       </DialogTrigger>

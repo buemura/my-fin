@@ -31,7 +31,7 @@ export type ExpenseListType = {
   metadata: PaginationMetadata;
 };
 
-export const createTransactionSchema = z.object({
+export const transactionSchema = z.object({
   accountId: z.string().uuid({
     message: "Select a valid account",
   }),
@@ -44,23 +44,8 @@ export const createTransactionSchema = z.object({
   amount: z.coerce.number().min(1, {
     message: "Amount cannot be 0",
   }),
-  type: z.string(),
-  date: z.date(),
-});
-
-export type CreateTransactionSchema = z.infer<
-  typeof createTransactionSchema
-> & {
-  type: TransactionTypeEnum;
-};
-
-export const editTransactionSchema = z.object({
-  accountId: z.string(),
-  categoryId: z.string(),
-  name: z.string(),
-  amount: z.coerce.number(),
   type: z.nativeEnum(TransactionTypeEnum),
   date: z.date(),
 });
 
-export type EditTransactionSchema = z.infer<typeof editTransactionSchema> & {};
+export type TransactionSchema = z.infer<typeof transactionSchema>;

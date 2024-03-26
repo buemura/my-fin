@@ -11,7 +11,7 @@ export function useTransactionQuery() {
   return useQuery({
     queryKey: [TRANSACTION_QUERY_KEY],
     queryFn: async () =>
-      await TransactionService.getTransactoinList({
+      await TransactionService.getTransactionList({
         userId: user!.id,
         page: 1,
       }),

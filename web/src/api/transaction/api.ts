@@ -8,17 +8,15 @@ import {
   TransactionTypeEnum,
 } from "@/types";
 
-const apiUser = env.NEXT_PUBLIC_BACKEND_URL + "/user";
+const apiUrl = env.NEXT_PUBLIC_BACKEND_URL;
 export const TRANSACTION_QUERY_KEY = "transactins";
 
 export type GetTransactoinListProps = {
-  userId: string;
   page?: number;
   items?: number;
 };
 
 export type CreateTransactionProps = {
-  userId: string;
   accountId: string;
   categoryId: string;
   name: string;
@@ -32,7 +30,23 @@ export type UpdateTransactionProps = Partial<CreateTransactionProps> & {
 };
 
 export class TransactionService {
-  static async getTransactoinList(
+  static async getTransaction(transactionId: string): Promise<TransactionType> {
+    const accessToken = await getAccessToken();
+    if (!accessToken) {
+      throw new Error("Missing access_token");
+    }
+
+    const url = `${apiUrl}/transactions/${transactionId}`;
+
+    const { data } = await axios.get<TransactionType>(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return data;
+  }
+
+  static async getTransactionList(
     props: GetTransactoinListProps
   ): Promise<TransactionListType> {
     const accessToken = await getAccessToken();
@@ -40,7 +54,7 @@ export class TransactionService {
       throw new Error("Missing access_token");
     }
 
-    let url = `${apiUser}/${props.userId}/transactions`;
+    let url = `${apiUrl}/transactions`;
     if (props.page) {
       url += `?page=${props.page}`;
       if (props.items) {
@@ -65,7 +79,7 @@ export class TransactionService {
     }
 
     const { data } = await axios.post<TransactionType>(
-      `${apiUser}/${props.userId}/transactions`,
+      `${apiUrl}/transactions`,
       props,
       { headers: { Authorization: `Bearer ${accessToken}` } }
     );
@@ -81,7 +95,7 @@ export class TransactionService {
     }
 
     const { data } = await axios.put<TransactionType>(
-      `${apiUser}/${props.userId}/transactions/${props.id}`,
+      `${apiUrl}/transactions/${props.id}`,
       props,
       { headers: { Authorization: `Bearer ${accessToken}` } }
     );
@@ -89,7 +103,6 @@ export class TransactionService {
   }
 
   static async deleteTransactionById(
-    userId: string,
     transactionId: string
   ): Promise<TransactionType> {
     const accessToken = await getAccessToken();
@@ -98,7 +111,7 @@ export class TransactionService {
     }
 
     const { data } = await axios.delete<TransactionType>(
-      `${apiUser}/${userId}/transactions/${transactionId}`,
+      `${apiUrl}/transactions/${transactionId}`,
       { headers: { Authorization: `Bearer ${accessToken}` } }
     );
     return data;

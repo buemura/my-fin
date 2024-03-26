@@ -4,17 +4,19 @@ import { getAccessToken } from "@/actions/cookie";
 import { env } from "@/env.mjs";
 import { AccountColor, AccountListType, AccountType } from "@/types/account";
 
-const apiUser = env.NEXT_PUBLIC_BACKEND_URL + "/user";
+const apiUrl = env.NEXT_PUBLIC_BACKEND_URL;
 export const ACCOUNT_QUERY_KEY = "accounts";
 
+export type GetAccountProps = {
+  accountId: string;
+};
+
 export type GetAccountListProps = {
-  userId: string;
   page?: number;
   items?: number;
 };
 
 export type CreateAccountProps = {
-  userId: string;
   name: string;
   balance: number;
   color: AccountColor;
@@ -22,10 +24,25 @@ export type CreateAccountProps = {
 
 export type UpdateAccountProps = Partial<CreateAccountProps> & {
   id: string;
-  userId: string;
 };
 
 export class AccountService {
+  static async getAccount(props: GetAccountProps): Promise<AccountType> {
+    const accessToken = await getAccessToken();
+    if (!accessToken) {
+      throw new Error("Missing access_token");
+    }
+
+    const url = `${apiUrl}/accounts/${props.accountId}`;
+
+    const { data } = await axios.get<AccountType>(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return data;
+  }
+
   static async getAccountList(
     props: GetAccountListProps
   ): Promise<AccountListType> {
@@ -34,7 +51,7 @@ export class AccountService {
       throw new Error("Missing access_token");
     }
 
-    let url = `${apiUser}/${props.userId}/accounts`;
+    let url = `${apiUrl}/accounts`;
     if (props.page) {
       url += `?page=${props.page}`;
       if (props.items) {
@@ -57,7 +74,7 @@ export class AccountService {
     }
 
     const { data } = await axios.post<AccountType>(
-      `${apiUser}/${props.userId}/accounts`,
+      `${apiUrl}/accounts`,
       props,
       { headers: { Authorization: `Bearer ${accessToken}` } }
     );
@@ -73,7 +90,7 @@ export class AccountService {
     }
 
     const { data } = await axios.put<AccountType>(
-      `${apiUser}/${props.userId}/accounts/${props.id}`,
+      `${apiUrl}/accounts/${props.id}`,
       props,
       { headers: { Authorization: `Bearer ${accessToken}` } }
     );
@@ -90,7 +107,7 @@ export class AccountService {
     }
 
     const { data } = await axios.delete<AccountType>(
-      `${apiUser}/${userId}/accounts/${accountId}`,
+      `${apiUrl}/accounts/${accountId}`,
       { headers: { Authorization: `Bearer ${accessToken}` } }
     );
     return data;

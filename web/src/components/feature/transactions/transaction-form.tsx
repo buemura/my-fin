@@ -2,11 +2,22 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
-import { CalendarIcon, Check, ChevronDown, Loader2 } from "lucide-react";
-import { Dispatch, SetStateAction } from "react";
+import {
+  CalendarIcon,
+  Check,
+  CheckIcon,
+  ChevronDown,
+  ChevronDownIcon,
+  Loader2,
+  TrendingDownIcon,
+  TrendingUpIcon,
+} from "lucide-react";
 import { useForm } from "react-hook-form";
 
-import { useMutateTransactionCreate } from "@/api/transaction/mutations";
+import {
+  useMutateTransactionCreate,
+  useMutateTransactionUpdate,
+} from "@/api/transaction/mutations";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -33,50 +44,56 @@ import {
 import { cn } from "@/lib/utils";
 import { useAccountStore, useCategoryStore } from "@/store";
 import {
-  CreateTransactionSchema,
+  TransactionSchema,
+  TransactionType,
   TransactionTypeEnum,
-  createTransactionSchema,
+  transactionSchema,
 } from "@/types";
+import { capitalizeFirstLetter, transactionTypes } from "@/utils";
+import { useRouter } from "next/navigation";
+import { TransactionDeleteDialog } from "./transaction-delete-dialog";
 
-interface TransactionNewFormProps {
-  defaultType?: TransactionTypeEnum | null | undefined;
-  setOpen: Dispatch<SetStateAction<boolean>>;
+interface TransactionFormProps {
+  transaction?: TransactionType;
+  isEdit: boolean;
 }
 
-export function TransactionNewForm({
-  defaultType,
-  setOpen,
-}: TransactionNewFormProps) {
+export function TransactionForm({ transaction, isEdit }: TransactionFormProps) {
+  const router = useRouter();
   const { accounts } = useAccountStore();
   const { categories } = useCategoryStore();
+  const {
+    mutateAsync: createTransaction,
+    isPending: createTransactionPending,
+  } = useMutateTransactionCreate();
+  const {
+    mutateAsync: updateTransaction,
+    isPending: updateTransactionPending,
+  } = useMutateTransactionUpdate();
 
-  const { mutateAsync, isPending } = useMutateTransactionCreate();
-
-  const form = useForm<CreateTransactionSchema>({
-    resolver: zodResolver(createTransactionSchema),
+  const form = useForm<TransactionSchema>({
+    resolver: zodResolver(transactionSchema),
     defaultValues: {
-      accountId: "",
-      categoryId: "",
-      name: "",
-      amount: 1,
-      type: defaultType ? defaultType : TransactionTypeEnum.EXPENSE,
-      date: new Date(),
+      accountId: transaction?.accountId ?? "",
+      categoryId: transaction?.categoryId ?? "",
+      name: transaction?.name ?? "",
+      amount: transaction?.amount ?? 1,
     },
   });
 
-  const handleCreateTransaction = async (data: CreateTransactionSchema) =>
-    await mutateAsync(data).then(() => setOpen(false));
+  const handleSubmit = async (data: TransactionSchema) => {
+    if (isEdit) {
+      return updateTransaction({ ...data, id: transaction?.id ?? "" }).then(
+        () => router.push("/")
+      );
+    }
 
-  const categoryList = categories?.filter(
-    (category) => category.type === form.getValues("type")
-  );
+    return createTransaction(data).then(() => router.push("/"));
+  };
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(handleCreateTransaction)}
-        className="space-y-4"
-      >
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
         {/* NAME */}
         <FormField
           control={form.control}
@@ -116,28 +133,68 @@ export function TransactionNewForm({
           )}
         />
 
-        {/* TYPE */}
-        {!defaultType && (
-          <FormField
-            control={form.control}
-            name="type"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Type</FormLabel>
-                <FormControl>
-                  <Input
-                    type="text"
-                    placeholder="EXPENSE"
-                    className="bg-zinc-100 dark:bg-zinc-900"
-                    disabled={!!defaultType}
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        )}
+        {/* Type */}
+        <FormField
+          control={form.control}
+          name="type"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>Type</FormLabel>
+              <FormControl>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        className="justify-between bg-zinc-100 dark:bg-zinc-900"
+                      >
+                        <div className="flex items-center gap-2">
+                          <TransactionTypeIcon type={field.value} />
+
+                          {field.value
+                            ? capitalizeFirstLetter(
+                                transactionTypes
+                                  .find((c) => c === field.value)
+                                  ?.toLowerCase() || ""
+                              )
+                            : "Select type"}
+                        </div>
+                        <ChevronDownIcon className="h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+
+                  <PopoverContent className="p-0">
+                    <Command>
+                      <CommandInput placeholder="Search type..." />
+                      <CommandEmpty>No type found.</CommandEmpty>
+                      <CommandGroup>
+                        {transactionTypes.map((tp) => (
+                          <CommandItem
+                            className="cursor-pointer flex gap-2"
+                            value={tp.toLowerCase()}
+                            key={tp}
+                            onSelect={() => form.setValue("type", tp)}
+                          >
+                            <CheckIcon
+                              className={cn(
+                                "h-4 w-4",
+                                tp === field.value ? "opacity-100" : "opacity-0"
+                              )}
+                            />
+                            {capitalizeFirstLetter(tp.toLowerCase())}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         {/* DATE */}
         <FormField
@@ -145,13 +202,16 @@ export function TransactionNewForm({
           name="date"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel>Date</FormLabel>
+              <FormLabel>Transaction date</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
                     <Button
-                      variant="outline"
-                      className="bg-zinc-100 dark:bg-zinc-900"
+                      variant={"outline"}
+                      className={cn(
+                        "pl-3 text-left font-normal bg-zinc-100 dark:bg-zinc-900",
+                        !field.value && "text-muted-foreground"
+                      )}
                     >
                       {field.value ? (
                         format(field.value, "PPP")
@@ -194,8 +254,8 @@ export function TransactionNewForm({
                       role="combobox"
                       className="justify-between bg-zinc-100 dark:bg-zinc-900"
                     >
-                      {field.value && categoryList.length
-                        ? categoryList.find(
+                      {field.value && categories.length
+                        ? categories.find(
                             (category) => category.id === field.value
                           )?.name
                         : "Select category"}
@@ -208,8 +268,8 @@ export function TransactionNewForm({
                     <CommandInput placeholder="Search account..." />
                     <CommandEmpty>No category found.</CommandEmpty>
                     <CommandGroup>
-                      {categoryList.length &&
-                        categoryList?.map((category) => (
+                      {categories.length &&
+                        categories?.map((category) => (
                           <CommandItem
                             className="cursor-pointer"
                             value={category.name}
@@ -295,14 +355,39 @@ export function TransactionNewForm({
           )}
         />
 
-        <Button
-          type="submit"
-          className="bg-emerald-700 hover:bg-emerald-800 text-white"
-        >
-          {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Submit
-        </Button>
+        <div className="flex items-center justify-between">
+          <Button
+            type="submit"
+            className="bg-emerald-700 hover:bg-emerald-800 text-white"
+          >
+            {(createTransactionPending || updateTransactionPending) && (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            )}
+            Submit
+          </Button>
+
+          {isEdit && transaction && (
+            <TransactionDeleteDialog {...transaction} />
+          )}
+        </div>
       </form>
     </Form>
   );
+}
+
+function TransactionTypeIcon({ type }: { type: TransactionTypeEnum }) {
+  const typeMap = {
+    [TransactionTypeEnum.EXPENSE]: (
+      <TrendingDownIcon className="w-6 h-6 bg-red-100 dark:bg-red-950 text-red-500 dark:text-red-200 rounded-full p-1" />
+    ),
+    [TransactionTypeEnum.INCOME]: (
+      <TrendingUpIcon className="w-6 h-6 bg-emerald-100 dark:bg-emerald-950 text-emerald-500 dark:text-emerald-200 rounded-full p-1" />
+    ),
+  };
+
+  if (!typeMap[type]) {
+    return null;
+  }
+
+  return typeMap[type];
 }

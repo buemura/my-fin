@@ -6,9 +6,11 @@ import (
 	"strconv"
 
 	"github.com/buemura/my-fin/internal/api/helpers"
+	"github.com/buemura/my-fin/internal/api/middleware"
 	"github.com/buemura/my-fin/internal/application/usecase"
 	"github.com/buemura/my-fin/internal/constant"
 	"github.com/buemura/my-fin/internal/domain/transaction"
+	"github.com/buemura/my-fin/internal/domain/user"
 	"github.com/buemura/my-fin/pkg/utils"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
@@ -18,6 +20,7 @@ type TransactionController struct {
 	TransactionCreateUsecase usecase.TransactionCreateUsecase
 	TransactionDeleteUsecase usecase.TransactionDeleteUsecase
 	TransactionListUsecase   usecase.TransactionListUsecase
+	TransactionGetUsecase    usecase.TransactionGetUsecase
 	TransactionUpdateUsecase usecase.TransactionUpdateUsecase
 }
 
@@ -25,12 +28,14 @@ func NewTransactionController(
 	TransactionCreateUsecase usecase.TransactionCreateUsecase,
 	TransactionDeleteUsecase usecase.TransactionDeleteUsecase,
 	TransactionListUsecase usecase.TransactionListUsecase,
+	TransactionGetUsecase usecase.TransactionGetUsecase,
 	TransactionUpdateUsecase usecase.TransactionUpdateUsecase,
 ) *TransactionController {
 	return &TransactionController{
 		TransactionCreateUsecase: TransactionCreateUsecase,
 		TransactionDeleteUsecase: TransactionDeleteUsecase,
 		TransactionListUsecase:   TransactionListUsecase,
+		TransactionGetUsecase:    TransactionGetUsecase,
 		TransactionUpdateUsecase: TransactionUpdateUsecase,
 	}
 }
@@ -48,9 +53,13 @@ func (h *TransactionController) Create(c echo.Context) error {
 		return helpers.HandleHttpError(c, err)
 	}
 
-	userId := c.Param("userId")
+	usr, ok := c.Get(constant.UserContextKey).(middleware.RquestUser)
+	if !ok {
+		return helpers.HandleHttpError(c, user.ErrPermissionDenied)
+	}
+
 	input := transaction.TransactionCreateIn{
-		UserId:     userId,
+		UserId:     usr.ID,
 		AccountId:  body.AccountId,
 		CategoryId: body.CategoryId,
 		Name:       body.Name,
@@ -81,6 +90,16 @@ func (h *TransactionController) List(c echo.Context) error {
 	slog.Info("[TransactionController.List] - Validating parameters")
 	params := getTransactionSearchParams(c)
 	res, err := h.TransactionListUsecase.Execute(params)
+	if err != nil {
+		return helpers.HandleHttpError(c, err)
+	}
+	return c.JSON(http.StatusOK, res)
+}
+
+func (h *TransactionController) Get(c echo.Context) error {
+	slog.Info("[TransactionController.Get] - Validating parameters")
+	transactionId := c.Param("transactionId")
+	res, err := h.TransactionGetUsecase.Execute(transactionId)
 	if err != nil {
 		return helpers.HandleHttpError(c, err)
 	}
@@ -131,8 +150,11 @@ func getTransactionSearchParams(c echo.Context) transaction.TransactionListIn {
 	if err != nil {
 		items = constant.DEFAULT_ACCOUNT_ITEMS
 	}
+
+	u := c.Get(constant.UserContextKey).(middleware.RquestUser)
+
 	return transaction.TransactionListIn{
-		UserId: c.Param("userId"),
+		UserId: u.ID,
 		Page:   page,
 		Items:  items,
 	}

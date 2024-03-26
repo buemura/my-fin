@@ -6,9 +6,11 @@ import (
 	"strconv"
 
 	"github.com/buemura/my-fin/internal/api/helpers"
+	"github.com/buemura/my-fin/internal/api/middleware"
 	"github.com/buemura/my-fin/internal/application/usecase"
 	"github.com/buemura/my-fin/internal/constant"
 	"github.com/buemura/my-fin/internal/domain/account"
+	"github.com/buemura/my-fin/internal/domain/user"
 	"github.com/buemura/my-fin/pkg/utils"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
@@ -40,6 +42,12 @@ func NewAccountController(
 
 func (h *AccountController) Create(c echo.Context) error {
 	slog.Info("[AccountController.Create] - Validating parameters")
+
+	usr, ok := c.Get(constant.UserContextKey).(middleware.RquestUser)
+	if !ok {
+		return helpers.HandleHttpError(c, user.ErrPermissionDenied)
+	}
+
 	body := new(account.AccountCreateIn)
 	if err := c.Bind(&body); err != nil {
 		return helpers.HandleHttpError(c, err)
@@ -51,9 +59,8 @@ func (h *AccountController) Create(c echo.Context) error {
 		return helpers.HandleHttpError(c, err)
 	}
 
-	userId := c.Param("userId")
 	input := account.AccountCreateIn{
-		UserId:  userId,
+		UserId:  usr.ID,
 		Name:    body.Name,
 		Balance: body.Balance,
 		Color:   body.Color,
@@ -79,11 +86,15 @@ func (h *AccountController) Delete(c echo.Context) error {
 
 func (h *AccountController) List(c echo.Context) error {
 	slog.Info("[AccountController.List] - Validating parameters")
-	userId := c.Param("userId")
+
+	usr, ok := c.Get(constant.UserContextKey).(middleware.RquestUser)
+	if !ok {
+		return helpers.HandleHttpError(c, user.ErrPermissionDenied)
+	}
 	page, items := getPaginationParams(c)
 
 	res, err := h.AccountListUsecase.Execute(account.AccountListIn{
-		UserId: userId,
+		UserId: usr.ID,
 		Page:   page,
 		Items:  items,
 	})

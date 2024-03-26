@@ -1,10 +1,10 @@
 import { PlusCircleIcon } from "lucide-react";
+import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AccountListType } from "@/types";
 import { AccountCard } from "./account-card";
-import { AccountNewDialog } from "./account-new-dialog";
 
 interface AccountListProps {
   data: AccountListType | undefined;
@@ -23,7 +23,7 @@ export default function AccountList({ data, loading }: AccountListProps) {
 
   if (!data || !data.data.accounts.length)
     return (
-      <AccountNewDialog>
+      <Link href="/account/new">
         <Button
           variant="default"
           className="h-28 w-full flex gap-2 border border-dashed border-white text-white bg-emerald-800 hover:bg-emerald-900"
@@ -31,7 +31,7 @@ export default function AccountList({ data, loading }: AccountListProps) {
           <PlusCircleIcon />
           New account
         </Button>
-      </AccountNewDialog>
+      </Link>
     );
 
   return (
