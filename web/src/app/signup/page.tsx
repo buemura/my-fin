@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { getAccessToken } from "@/actions/cookie";
-import { SignUpForm } from "@/components/feature/signup-form";
+import { SignUpForm } from "@/components/feature/auth/signup-form";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
