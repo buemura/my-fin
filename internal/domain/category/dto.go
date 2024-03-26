@@ -1,11 +1,11 @@
 package category
 
-type CategoryCreateInput struct {
+type CategoryCreateIn struct {
 	Name string `json:"name"`
 	Type string `json:"type"`
 }
 
-type CategoryUpdateInput struct {
+type CategoryUpdateIn struct {
 	Name *string `json:"name"`
 	Type *string `json:"type"`
 }

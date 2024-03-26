@@ -1,11 +1,12 @@
 package middleware
 
 import (
+	"errors"
 	"net/http"
 	"strings"
 
 	"github.com/buemura/my-fin/internal/constant"
-	"github.com/buemura/my-fin/internal/infra/encryption"
+	"github.com/buemura/my-fin/internal/infra/adapters"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
 )
@@ -17,56 +18,47 @@ type RquestUser struct {
 func extractAndValidateToken(c echo.Context) (jwt.MapClaims, error) {
 	authorization := c.Request().Header["Authorization"]
 	if len(authorization) == 0 {
-		return nil, c.JSON(http.StatusUnauthorized, map[string]string{
-			"error": "Missing JWT Token",
-		})
+		return nil, errors.New("missing JWT Token")
 	}
 	if authorization[0] == "" {
-		return nil, c.JSON(http.StatusUnauthorized, map[string]string{
-			"error": "Missing JWT Token",
-		})
+		return nil, errors.New("missing JWT Token")
 	}
 	token := strings.Split(authorization[0], "Bearer ")
 	if len(token) == 1 {
-		return nil, c.JSON(http.StatusUnauthorized, map[string]string{
-			"error": "Missing JWT Token",
-		})
+		return nil, errors.New("missing JWT Token")
 	}
-	jwtToken, err := encryption.ParseToken(token[1])
+	jwtToken, err := adapters.NewJwtTokenGenerator().Parse(token[1])
 	if err != nil {
-		return nil, c.JSON(http.StatusUnauthorized, map[string]string{
-			"error": "Unauthorized",
-		})
+		return nil, err
 	}
-	return jwtToken, nil
+	return jwtToken.(jwt.MapClaims), nil
 }
 
 func extractAndSetUser(c echo.Context, token jwt.MapClaims) error {
-	id := token["sub"]
-	str, ok := id.(string)
+	id, ok := token["sub"].(string)
 	if !ok {
-		return c.JSON(http.StatusForbidden, map[string]string{
-			"error": "Unable to determine requester user",
-		})
+		return errors.New("unable to determine requester user")
 	}
 
 	c.Set(constant.UserContextKey, RquestUser{
-		ID: str,
+		ID: id,
 	})
 	return nil
 }
 
 func EnsureAuth(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		var jwtToken jwt.MapClaims
-		var err error
-
-		if jwtToken, err = extractAndValidateToken(c); err != nil {
-			return err
+		jwtToken, err := extractAndValidateToken(c)
+		if err != nil {
+			return c.JSON(http.StatusUnauthorized, map[string]string{
+				"error": err.Error(),
+			})
 		}
 
-		if err = extractAndSetUser(c, jwtToken); err != nil {
-			return err
+		if err := extractAndSetUser(c, jwtToken); err != nil {
+			return c.JSON(http.StatusForbidden, map[string]string{
+				"error": err.Error(),
+			})
 		}
 		return next(c)
 	}

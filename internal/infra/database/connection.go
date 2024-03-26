@@ -1,28 +1,29 @@
 package database
 
 import (
-	"github.com/spf13/viper"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
-	"gorm.io/gorm/schema"
+	"context"
+	"fmt"
+	"os"
+
+	"github.com/buemura/my-fin/config"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-var DB *gorm.DB
+var (
+	Conn *pgxpool.Pool
+)
 
-func Connect() error {
-	var err error
-	dsn := viper.GetString("DATABASE_URL")
-	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
-		// Logger: logger.Default.LogMode(logger.Info),
-		Logger: logger.Default.LogMode(logger.Silent),
-		NamingStrategy: schema.NamingStrategy{
-			SingularTable: true,
-		},
-	})
+func Connect() {
+	dbConfig, err := pgxpool.ParseConfig(config.DATABASE_URL)
 	if err != nil {
-		panic("Failed to connect to database")
+		fmt.Fprintf(os.Stderr, "Failed to create pool config: %v\n", err)
+		os.Exit(1)
 	}
 
-	return nil
+	pool, err := pgxpool.NewWithConfig(context.Background(), dbConfig)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+		os.Exit(1)
+	}
+	Conn = pool
 }

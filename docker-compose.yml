@@ -1,18 +1,18 @@
 version: "3.5"
 
 services:
-  api01:
-    build: .
-    hostname: api01
-    restart: unless-stopped
-    environment:
-      - PORT=8080
-      - JWT_SECRET=secre_key
-      - DATABASE_URL="host=db user=admin password=admin port=5432 dbname=my_fin"
-    ports:
-      - "8080:8080"
-    depends_on:
-      - db
+  # api01:
+  #   build: .
+  #   hostname: api01
+  #   restart: unless-stopped
+  #   environment:
+  #     - PORT=8080
+  #     - JWT_SECRET=secre_key
+  #     - DATABASE_URL="host=db user=admin password=admin port=5432 dbname=my_fin"
+  #   ports:
+  #     - "8080:8080"
+  #   depends_on:
+  #     - db
 
   db:
     image: postgres:latest

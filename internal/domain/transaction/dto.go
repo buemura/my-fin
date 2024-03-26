@@ -1,8 +1,12 @@
 package transaction
 
-import "time"
+import (
+	"time"
 
-type TransactionCreateInput struct {
+	"github.com/buemura/my-fin/internal/domain/common"
+)
+
+type TransactionCreateIn struct {
 	UserId     string    `json:"userId"`
 	AccountId  string    `json:"accountId"`
 	CategoryId string    `json:"categoryId"`
@@ -12,7 +16,7 @@ type TransactionCreateInput struct {
 	Date       time.Time `json:"date"`
 }
 
-type TransactionUpdateInput struct {
+type TransactionUpdateIn struct {
 	AccountId  *string    `json:"accountId"`
 	CategoryId *string    `json:"categoryId"`
 	Name       *string    `json:"name"`
@@ -21,7 +25,7 @@ type TransactionUpdateInput struct {
 	Date       *time.Time `json:"date"`
 }
 
-type TransactionListInput struct {
+type TransactionListIn struct {
 	UserId     string  `json:"userId"`
 	Page       int     `json:"page"`
 	Items      int     `json:"items"`
@@ -30,4 +34,9 @@ type TransactionListInput struct {
 	Type       *string `json:"type"`
 	Month      *int    `json:"month"`
 	Year       *int    `json:"year"`
+}
+
+type TransactionListOut struct {
+	Data     []*Transaction   `json:"data"`
+	Metadata *common.Metadata `json:"metadata"`
 }

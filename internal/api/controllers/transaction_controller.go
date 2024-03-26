@@ -6,9 +6,11 @@ import (
 	"strconv"
 
 	"github.com/buemura/my-fin/internal/api/helpers"
+	"github.com/buemura/my-fin/internal/api/middleware"
+	"github.com/buemura/my-fin/internal/application/usecase"
 	"github.com/buemura/my-fin/internal/constant"
 	"github.com/buemura/my-fin/internal/domain/transaction"
-	"github.com/buemura/my-fin/internal/usecase"
+	"github.com/buemura/my-fin/internal/domain/user"
 	"github.com/buemura/my-fin/pkg/utils"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
@@ -18,6 +20,7 @@ type TransactionController struct {
 	TransactionCreateUsecase usecase.TransactionCreateUsecase
 	TransactionDeleteUsecase usecase.TransactionDeleteUsecase
 	TransactionListUsecase   usecase.TransactionListUsecase
+	TransactionGetUsecase    usecase.TransactionGetUsecase
 	TransactionUpdateUsecase usecase.TransactionUpdateUsecase
 }
 
@@ -25,19 +28,21 @@ func NewTransactionController(
 	TransactionCreateUsecase usecase.TransactionCreateUsecase,
 	TransactionDeleteUsecase usecase.TransactionDeleteUsecase,
 	TransactionListUsecase usecase.TransactionListUsecase,
+	TransactionGetUsecase usecase.TransactionGetUsecase,
 	TransactionUpdateUsecase usecase.TransactionUpdateUsecase,
 ) *TransactionController {
 	return &TransactionController{
 		TransactionCreateUsecase: TransactionCreateUsecase,
 		TransactionDeleteUsecase: TransactionDeleteUsecase,
 		TransactionListUsecase:   TransactionListUsecase,
+		TransactionGetUsecase:    TransactionGetUsecase,
 		TransactionUpdateUsecase: TransactionUpdateUsecase,
 	}
 }
 
 func (h *TransactionController) Create(c echo.Context) error {
 	slog.Info("[TransactionController.Create] - Validating parameters")
-	body := new(transaction.TransactionCreateInput)
+	body := new(transaction.TransactionCreateIn)
 	if err := c.Bind(&body); err != nil {
 		return helpers.HandleHttpError(c, err)
 	}
@@ -48,9 +53,13 @@ func (h *TransactionController) Create(c echo.Context) error {
 		return helpers.HandleHttpError(c, err)
 	}
 
-	userId := c.Param("userId")
-	input := transaction.TransactionCreateInput{
-		UserId:     userId,
+	usr, ok := c.Get(constant.UserContextKey).(middleware.RquestUser)
+	if !ok {
+		return helpers.HandleHttpError(c, user.ErrPermissionDenied)
+	}
+
+	input := transaction.TransactionCreateIn{
+		UserId:     usr.ID,
 		AccountId:  body.AccountId,
 		CategoryId: body.CategoryId,
 		Name:       body.Name,
@@ -87,11 +96,21 @@ func (h *TransactionController) List(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
+func (h *TransactionController) Get(c echo.Context) error {
+	slog.Info("[TransactionController.Get] - Validating parameters")
+	transactionId := c.Param("transactionId")
+	res, err := h.TransactionGetUsecase.Execute(transactionId)
+	if err != nil {
+		return helpers.HandleHttpError(c, err)
+	}
+	return c.JSON(http.StatusOK, res)
+}
+
 func (h *TransactionController) Update(c echo.Context) error {
 	slog.Info("[TransactionController.Update] - Validating parameters")
 	transactionId := c.Param("transactionId")
 
-	body := new(transaction.TransactionUpdateInput)
+	body := new(transaction.TransactionUpdateIn)
 	if err := c.Bind(&body); err != nil {
 		return helpers.HandleHttpError(c, err)
 	}
@@ -102,7 +121,7 @@ func (h *TransactionController) Update(c echo.Context) error {
 		return helpers.HandleHttpError(c, err)
 	}
 
-	input := transaction.TransactionUpdateInput{
+	input := transaction.TransactionUpdateIn{
 		AccountId:  body.AccountId,
 		CategoryId: body.CategoryId,
 		Name:       body.Name,
@@ -117,7 +136,7 @@ func (h *TransactionController) Update(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
-func getTransactionSearchParams(c echo.Context) transaction.TransactionListInput {
+func getTransactionSearchParams(c echo.Context) transaction.TransactionListIn {
 	var page, items int
 	var err error
 
@@ -131,8 +150,11 @@ func getTransactionSearchParams(c echo.Context) transaction.TransactionListInput
 	if err != nil {
 		items = constant.DEFAULT_ACCOUNT_ITEMS
 	}
-	return transaction.TransactionListInput{
-		UserId: c.Param("userId"),
+
+	u := c.Get(constant.UserContextKey).(middleware.RquestUser)
+
+	return transaction.TransactionListIn{
+		UserId: u.ID,
 		Page:   page,
 		Items:  items,
 	}
