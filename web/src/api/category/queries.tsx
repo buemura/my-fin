@@ -16,7 +16,7 @@ export function useCategoryQuery() {
 
   useEffect(() => {
     setCategories(query.data ?? []);
-  }, [query.isSuccess]);
+  }, [query.isSuccess, query.data, setCategories]);
 
   return query;
 }

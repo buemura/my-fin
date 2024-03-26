@@ -21,7 +21,7 @@ export function useAccountQuery() {
 
   useEffect(() => {
     setAccounts(data?.data.accounts || []);
-  }, [query.isSuccess]);
+  }, [query.isSuccess, data?.data.accounts, setAccounts]);
 
   return query;
 }
