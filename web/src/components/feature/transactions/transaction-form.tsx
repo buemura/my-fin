@@ -77,9 +77,14 @@ export function TransactionForm({ transaction, isEdit }: TransactionFormProps) {
       accountId: transaction?.accountId ?? "",
       categoryId: transaction?.categoryId ?? "",
       name: transaction?.name ?? "",
+      type: transaction?.type ?? TransactionTypeEnum.EXPENSE,
       amount: transaction?.amount ?? 1,
+      date: transaction?.date ?? new Date(),
     },
   });
+
+  // form.setValue("type", transaction?.type ?? TransactionTypeEnum.EXPENSE);
+  // form.setValue("date", transaction?.date ?? new Date());
 
   const handleSubmit = async (data: TransactionSchema) => {
     if (isEdit) {

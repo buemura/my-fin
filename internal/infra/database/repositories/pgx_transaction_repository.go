@@ -66,6 +66,18 @@ func (r *PgxTransactionRepository) Save(in *transaction.Transaction) (*transacti
 	return in, nil
 }
 
+func (r *PgxTransactionRepository) Update(in *transaction.Transaction) (*transaction.Transaction, error) {
+	_, err := r.db.Exec(
+		context.Background(),
+		`UPDATE public.transaction SET account_id = $1, category_id = $2, name = $3, amount = $4, type = $5, date = $6 WHERE id = $7`,
+		in.AccountId, in.CategoryId, in.Name, in.Amount, in.Type, in.Date, in.ID,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return in, nil
+}
+
 func (r *PgxTransactionRepository) Delete(transactionId string) error {
 	_, err := r.db.Exec(
 		context.Background(),

@@ -15,5 +15,6 @@ type TransactionRepository interface {
 	FindMany(opts FindManyOpts) ([]*Transaction, error)
 	FindById(transactionId string) (*Transaction, error)
 	Save(transaction *Transaction) (*Transaction, error)
+	Update(transaction *Transaction) (*Transaction, error)
 	Delete(transactionId string) error
 }

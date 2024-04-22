@@ -16,33 +16,9 @@ func NewTransactionUpdateUsecase(repo transaction.TransactionRepository) *Transa
 	}
 }
 
-func (u *TransactionUpdateUsecase) Execute(transactionId string, input transaction.TransactionUpdateIn) (*transaction.Transaction, error) {
-	slog.Info("[TransactionUpdateUsecase.Execute] - Update transaction:" + transactionId)
-	trx, err := u.repo.FindById(transactionId)
-	if err != nil {
-		return nil, err
-	}
-
-	if input.AccountId != nil {
-		trx.AccountId = *input.AccountId
-	}
-	if input.CategoryId != nil {
-		trx.CategoryId = *input.CategoryId
-	}
-	if input.Name != nil {
-		trx.Name = *input.Name
-	}
-	if input.Amount != nil {
-		trx.Amount = *input.Amount
-	}
-	if input.Type != nil {
-		trx.Type = *input.Type
-	}
-	if input.Date != nil {
-		trx.Date = *input.Date
-	}
-
-	res, err := u.repo.Save(trx)
+func (u *TransactionUpdateUsecase) Execute(trx *transaction.Transaction) (*transaction.Transaction, error) {
+	slog.Info("[TransactionUpdateUsecase.Execute] - Update transaction:" + trx.ID)
+	res, err := u.repo.Update(trx)
 	if err != nil {
 		return nil, err
 	}

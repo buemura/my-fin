@@ -17,11 +17,12 @@ import (
 )
 
 type TransactionController struct {
-	TransactionCreateUsecase usecase.TransactionCreateUsecase
-	TransactionDeleteUsecase usecase.TransactionDeleteUsecase
-	TransactionListUsecase   usecase.TransactionListUsecase
-	TransactionGetUsecase    usecase.TransactionGetUsecase
-	TransactionUpdateUsecase usecase.TransactionUpdateUsecase
+	TransactionCreateUsecase       usecase.TransactionCreateUsecase
+	TransactionDeleteUsecase       usecase.TransactionDeleteUsecase
+	TransactionListUsecase         usecase.TransactionListUsecase
+	TransactionGetUsecase          usecase.TransactionGetUsecase
+	TransactionUpdateUsecase       usecase.TransactionUpdateUsecase
+	AccountIncrementBalanceUsecase usecase.AccountIncrementBalanceUsecase
 }
 
 func NewTransactionController(
@@ -30,13 +31,15 @@ func NewTransactionController(
 	TransactionListUsecase usecase.TransactionListUsecase,
 	TransactionGetUsecase usecase.TransactionGetUsecase,
 	TransactionUpdateUsecase usecase.TransactionUpdateUsecase,
+	AccountIncrementBalanceUsecase usecase.AccountIncrementBalanceUsecase,
 ) *TransactionController {
 	return &TransactionController{
-		TransactionCreateUsecase: TransactionCreateUsecase,
-		TransactionDeleteUsecase: TransactionDeleteUsecase,
-		TransactionListUsecase:   TransactionListUsecase,
-		TransactionGetUsecase:    TransactionGetUsecase,
-		TransactionUpdateUsecase: TransactionUpdateUsecase,
+		TransactionCreateUsecase:       TransactionCreateUsecase,
+		TransactionDeleteUsecase:       TransactionDeleteUsecase,
+		TransactionListUsecase:         TransactionListUsecase,
+		TransactionGetUsecase:          TransactionGetUsecase,
+		TransactionUpdateUsecase:       TransactionUpdateUsecase,
+		AccountIncrementBalanceUsecase: AccountIncrementBalanceUsecase,
 	}
 }
 
@@ -69,6 +72,11 @@ func (h *TransactionController) Create(c echo.Context) error {
 	}
 
 	res, err := h.TransactionCreateUsecase.Execute(input)
+	if err != nil {
+		return helpers.HandleHttpError(c, err)
+	}
+
+	_, err = h.AccountIncrementBalanceUsecase.Execute(input.AccountId, input.Amount)
 	if err != nil {
 		return helpers.HandleHttpError(c, err)
 	}
@@ -129,10 +137,31 @@ func (h *TransactionController) Update(c echo.Context) error {
 		Type:       body.Type,
 		Date:       body.Date,
 	}
-	res, err := h.TransactionUpdateUsecase.Execute(transactionId, input)
+
+	// Get transaction
+	trx, err := h.TransactionGetUsecase.Execute(transactionId)
 	if err != nil {
 		return helpers.HandleHttpError(c, err)
 	}
+
+	amountToUpdate := 0
+	if *input.Type == "EXPENSE" {
+		amountToUpdate += (trx.Amount)
+	}
+
+	trxToUpdate := getUpdateParams(trx, input)
+
+	// Update transaction
+	res, err := h.TransactionUpdateUsecase.Execute(trxToUpdate)
+	if err != nil {
+		return helpers.HandleHttpError(c, err)
+	}
+
+	_, err = h.AccountIncrementBalanceUsecase.Execute(res.AccountId, amountToUpdate)
+	if err != nil {
+		return helpers.HandleHttpError(c, err)
+	}
+
 	return c.JSON(http.StatusOK, res)
 }
 
@@ -158,4 +187,27 @@ func getTransactionSearchParams(c echo.Context) transaction.TransactionListIn {
 		Page:   page,
 		Items:  items,
 	}
+}
+
+func getUpdateParams(trx *transaction.Transaction, input transaction.TransactionUpdateIn) *transaction.Transaction {
+	if input.AccountId != nil {
+		trx.AccountId = *input.AccountId
+	}
+	if input.CategoryId != nil {
+		trx.CategoryId = *input.CategoryId
+	}
+	if input.Name != nil {
+		trx.Name = *input.Name
+	}
+	if input.Amount != nil {
+		trx.Amount = *input.Amount
+	}
+	if input.Type != nil {
+		trx.Type = *input.Type
+	}
+	if input.Date != nil {
+		trx.Date = *input.Date
+	}
+
+	return trx
 }

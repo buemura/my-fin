@@ -10,17 +10,20 @@ import (
 
 func setupTransactionRouter(app *echo.Group) {
 	transactionRepo := repositories.NewPgxTransactionRepository()
+	accountRepo := repositories.NewPgxAccountRepository()
 	transactionCreateUsecase := usecase.NewTransactionCreateUsecase(transactionRepo)
 	transactionDeleteUsecase := usecase.NewTransactionDeleteUsecase(transactionRepo)
 	transactionListUsecase := usecase.NewTransactionListUsecase(transactionRepo)
 	transactionGetUsecase := usecase.NewTransactionGetUsecase(transactionRepo)
 	transactionUpdateUsecase := usecase.NewTransactionUpdateUsecase(transactionRepo)
+	accountIncrementBalanceUsecase := usecase.NewAccountIncrementBalanceUsecase(accountRepo)
 	transactionController := controllers.NewTransactionController(
 		*transactionCreateUsecase,
 		*transactionDeleteUsecase,
 		*transactionListUsecase,
 		*transactionGetUsecase,
 		*transactionUpdateUsecase,
+		*accountIncrementBalanceUsecase,
 	)
 
 	app.GET("/transactions", transactionController.List, middleware.EnsureAuth)
